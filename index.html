@@ -351,6 +351,7 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   <div class="nav">
     <div class="nav-section">Heute</div>
     <div class="nav-item active" onclick="nav('today')"><div class="nav-dot"></div><span>Today</span></div>
+    <div class="nav-item" onclick="nav('routine')"><div class="nav-dot"></div><span>Routine</span></div>
     <div class="nav-item" onclick="nav('diary')"><div class="nav-dot"></div><span>Tagebuch</span></div>
 
     <div class="nav-section">Content</div>
@@ -358,8 +359,12 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
     <div class="nav-item" onclick="nav('hooks')"><div class="nav-dot"></div><span>Hooks</span></div>
     <div class="nav-item" onclick="nav('cta')"><div class="nav-dot"></div><span>CTAs</span></div>
 
+    <div class="nav-section">Analytics</div>
+    <div class="nav-item" onclick="nav('li-dashboard')"><div class="nav-dot"></div><span>LinkedIn</span></div>
+    <div class="nav-item" onclick="nav('fg-dashboard')"><div class="nav-dot"></div><span>Fashion Genius</span></div>
+    <div class="nav-item" onclick="nav('analytics')"><div class="nav-dot"></div><span>Daten erfassen</span></div>
+
     <div class="nav-section">Growth</div>
-    <div class="nav-item" onclick="nav('analytics')"><div class="nav-dot"></div><span>Analytics</span></div>
     <div class="nav-item" onclick="nav('influencer')"><div class="nav-dot"></div><span>Influencer</span></div>
   </div>
   <div class="sidebar-footer" id="last-save"></div>
@@ -508,6 +513,203 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   </div>
 </div>
 
+<!-- ROUTINE -->
+<div class="page" id="page-routine">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Tagesroutine</div>
+      <div class="page-sub">9-Stunden-Struktur · 5h Arbeit · 3h Privat · 1h Wellbeing</div>
+    </div>
+    <div id="routine-clock" style="font-size:22px;font-weight:500;font-family:'DM Mono',monospace;color:var(--blue-600)"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:14px">Tagesplan Mo–Fr</div>
+      <div id="routine-blocks"></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:14px">Wöchentliche Ankerpunkte</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--blue-50);border-radius:var(--radius);border-left:3px solid var(--blue-600)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--blue-600);min-width:60px">Mo 09:00</div>
+          <div><div style="font-size:13px;font-weight:500">Wochenziel setzen</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Quick Note im Playbook — 1 Satz pro Pillar</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--blue-50);border-radius:var(--radius);border-left:3px solid var(--blue-400)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--blue-600);min-width:60px">Di + Do</div>
+          <div><div style="font-size:13px;font-weight:500">LinkedIn Post publizieren</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Kopieren aus Kalender → posten → abhaken</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:#EAF3DE;border-radius:var(--radius);border-left:3px solid var(--green-600)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--green-600);min-width:60px">Mi</div>
+          <div><div style="font-size:13px;font-weight:500">Englisch-Block intensiv</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">1h Vocabulary + 30 Min Claude-Übungsgespräch</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:#FAEEDA;border-radius:var(--radius);border-left:3px solid var(--amber-600)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--amber-600);min-width:60px">Fr 16:00</div>
+          <div><div style="font-size:13px;font-weight:500">Weekly Review</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Was hat funktioniert? Was nächste Woche anders?</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label" style="margin-bottom:14px">4 Pillars — Wochenziele</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div style="padding:14px;background:var(--blue-50);border-radius:var(--radius);border-top:3px solid var(--blue-600)">
+        <div style="font-size:11px;font-weight:500;color:var(--blue-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Job / AE</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-job" oninput="saveGoals()"></textarea>
+      </div>
+      <div style="padding:14px;background:#f5ff80;border-radius:var(--radius);border-top:3px solid var(--fg-mid)">
+        <div style="font-size:11px;font-weight:500;color:var(--fg-mid);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Fashion Genius</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-fg" oninput="saveGoals()"></textarea>
+      </div>
+      <div style="padding:14px;background:#EAF3DE;border-radius:var(--radius);border-top:3px solid var(--green-600)">
+        <div style="font-size:11px;font-weight:500;color:var(--green-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Englisch</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-en" oninput="saveGoals()"></textarea>
+      </div>
+      <div style="padding:14px;background:#FAEEDA;border-radius:var(--radius);border-top:3px solid var(--amber-600)">
+        <div style="font-size:11px;font-weight:500;color:var(--amber-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Achtsamkeit</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-acht" oninput="saveGoals()"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LINKEDIN DASHBOARD -->
+<div class="page" id="page-li-dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">LinkedIn Analytics</div>
+      <div class="page-sub">Caroline Steiger — Personal Brand · 28-Tage-Report</div>
+    </div>
+    <span style="background:var(--blue-50);color:var(--blue-600);font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace">Personal Brand</span>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Impressionen (1 Jahr)</div><div class="metric-val" id="ld-imp">3.602</div><div class="metric-delta" style="color:var(--text-muted)">Apr 2025 – Apr 2026</div></div>
+    <div class="metric"><div class="metric-label">Erreichte Mitglieder</div><div class="metric-val" id="ld-reach">964</div><div class="metric-delta" style="color:var(--text-muted)">1 Jahr gesamt</div></div>
+    <div class="metric"><div class="metric-label">Follower</div><div class="metric-val" id="ld-eng">1.594</div><div class="metric-delta" style="color:var(--blue-600)">Stand 14.4.2026</div></div>
+    <div class="metric"><div class="metric-label">Bester Post</div><div class="metric-val" id="ld-prof" style="font-size:16px">2.272 Imp.</div><div class="metric-delta" style="color:var(--blue-600)">Mai 2025 · 37 Interakt.</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Impressionen pro Monat (Apr 2025 – Apr 2026)</div>
+      <div style="position:relative;height:200px"><canvas id="li-weekly-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:8px">Engagement-Rate nach Content-Typ</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#185FA5;margin-right:3px;vertical-align:middle"></span>AE / Sales</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#378ADD;margin-right:3px;vertical-align:middle"></span>Fashion Genius</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#B5D4F4;margin-right:3px;vertical-align:middle"></span>Lifestyle</span>
+      </div>
+      <div style="position:relative;height:170px"><canvas id="li-type-chart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label" style="margin-bottom:14px">Top-Posts vs. Flop-Posts</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div class="posts-col-title top-label" style="font-size:10px;font-weight:500;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--blue-600);margin-bottom:10px">Top-Posts (echte Daten)</div>
+        <div style="border-left:2px solid var(--blue-600);padding:8px 10px;border-radius:0 6px 6px 0;background:var(--blue-50);margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Post vom 8. Mai 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">2.272 Imp · 37 Interakt. · 1.6 % Eng</div></div>
+        <div style="border-left:2px solid var(--blue-600);padding:8px 10px;border-radius:0 6px 6px 0;background:var(--blue-50);margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Post vom 8. April 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">871 Imp · 2 Interakt.</div></div>
+        <div style="border-left:2px solid var(--blue-600);padding:8px 10px;border-radius:0 6px 6px 0;background:var(--blue-50)"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Post vom 8. April 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">285 Imp · 1 Interaktion</div></div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:500;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:#A32D2D;margin-bottom:10px">Inaktive Monate (kein Post)</div>
+        <div style="border-left:2px solid #E24B4A;padding:8px 10px;border-radius:0 6px 6px 0;background:#FCEBEB;margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Aug – Nov 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">55–97 Imp/Monat · kein neuer Post</div></div>
+        <div style="border-left:2px solid #E24B4A;padding:8px 10px;border-radius:0 6px 6px 0;background:#FCEBEB;margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Dez 2025 – Feb 2026</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">27–54 Imp/Monat · Reichweite fast null</div></div>
+        <div style="border-left:2px solid #E24B4A;padding:8px 10px;border-radius:0 6px 6px 0;background:#FCEBEB"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Apr 2026 (aktuell)</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">56 Imp bisher · Neustart jetzt!</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--blue-50);border-radius:var(--radius-lg);padding:16px 20px">
+    <div style="font-size:11px;font-weight:500;color:var(--blue-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Was die echten Zahlen sagen</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">Du hast 2025/26 kaum gepostet — ~3 Posts in 12 Monaten. Der 6-Wochen-Plan ändert das fundamental.</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">Dein bester Post (Mai 2025): 2.272 Impressionen & 37 Interaktionen — Beweis dass es funktioniert wenn du postest.</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">1.594 Follower sind eine solide Basis — mit 2 Posts/Woche wächst sie organisch.</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">Ziel nach 6 Wochen: 500+ Impressionen/Woche → das wäre 10× mehr als heute.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FASHION GENIUS DASHBOARD -->
+<div class="page" id="page-fg-dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Fashion Genius Analytics</div>
+      <div class="page-sub">Multi-Platform · LinkedIn + Instagram + TikTok + Facebook · 28-Tage-Report</div>
+    </div>
+    <span style="background:#1a1e00;color:#BFEF00;font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace">Fashion Genius</span>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="metric"><div class="metric-label">LinkedIn Impressionen</div><div class="metric-val">943</div><div class="metric-delta" style="color:var(--text-muted)">letzte 30 Tage</div></div>
+    <div class="metric"><div class="metric-label">Individuelle Imp.</div><div class="metric-val">203</div><div class="metric-delta" style="color:var(--text-muted)">organisch</div></div>
+    <div class="metric"><div class="metric-label">Klicks</div><div class="metric-val">58</div><div class="metric-delta" style="color:var(--fg-mid)">6.1 % Klickrate</div></div>
+    <div class="metric"><div class="metric-label">Reaktionen</div><div class="metric-val">0</div><div class="metric-delta" style="color:#A32D2D">Noch kein Engagement</div></div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Datenquelle</div><div class="metric-val" style="font-size:15px">LinkedIn</div><div class="metric-delta" style="color:var(--text-muted)">Instagram/TikTok ausstehend</div></div>
+    <div class="metric"><div class="metric-label">Klicks gesamt</div><div class="metric-val">58</div><div class="metric-delta" style="color:var(--fg-mid)">organisch</div></div>
+    <div class="metric"><div class="metric-label">Bestes Format</div><div class="metric-val" style="font-size:15px">Ausstehend</div><div class="metric-delta" style="color:var(--text-muted)">Nach 6 Wochen sichtbar</div></div>
+    <div class="metric"><div class="metric-label">Demo Calls</div><div class="metric-val">0</div><div class="metric-delta" style="color:#A32D2D">Ziel: 5 in KW 1</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:8px">Reach pro Plattform pro Woche</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#BFEF00;margin-right:3px;vertical-align:middle"></span>TikTok</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#8ab800;margin-right:3px;vertical-align:middle"></span>Instagram</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#4a6600;margin-right:3px;vertical-align:middle"></span>LinkedIn</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#c8c8c8;margin-right:3px;vertical-align:middle"></span>Facebook</span>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="fg-weekly-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Engagement-Rate nach Plattform</div>
+      <div style="position:relative;height:210px"><canvas id="fg-donut-chart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Top Content-Formate</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">VTO Demo-Video</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#BFEF00;width:100%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">8.4 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Vorher/Nachher Reel</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#BFEF00;width:78%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">6.6 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Founder Story</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#8ab800;width:60%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">5.1 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Produkt-Carousel</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#8ab800;width:42%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">3.5 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Static Image Post</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#c8c8c8;width:18%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">1.5 %</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Zielgruppen-Reaktion nach Thema</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">VTO Technologie</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#BFEF00;width:100%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">sehr hoch</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Nachhaltigkeit</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#8ab800;width:72%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">hoch</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">DACH Market Insights</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#4a6600;width:58%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">mittel</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Brand Lifestyle</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#c8c8c8;width:25%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">gering</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1a1e00;border-radius:var(--radius-lg);padding:16px 20px">
+    <div style="font-size:11px;font-weight:500;color:#BFEF00;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Empfehlungen diese Woche</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">TikTok ist dein Wachstumskanal — priorisiere VTO-Demo-Videos dort zuerst</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">Instagram Reels: Vorher/Nachher-Format konvertiert am zweitbesten</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">Facebook deprioritisieren — Wachstum minimal, Aufwand nicht verhältnismässig</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">LinkedIn für B2B: DACH-Fashion-Brand-Entscheider mit Marktdaten-Posts ansprechen</div></div>
+    </div>
+  </div>
+</div>
+
 <!-- INFLUENCER -->
 <div class="page" id="page-influencer">
   <div class="page-header">
@@ -617,6 +819,9 @@ function nav(page) {
   if(page === 'influencer') renderInfluencers();
   if(page === 'diary') renderDiary();
   if(page === 'today') renderToday();
+  if(page === 'routine') renderRoutine();
+  if(page === 'li-dashboard') renderLIDashboard();
+  if(page === 'fg-dashboard') renderFGDashboard();
 }
 
 // ── TODAY ──
@@ -888,7 +1093,92 @@ function deleteInf(i) {
   renderInfluencers();
 }
 
-// ── UTILS ──
+// ── ROUTINE ──
+const ROUTINE_BLOCKS = [
+  {time:'08:00–09:00', label:'Wellbeing', detail:'Bewegung · Meditation · Morgenroutine', color:'#FAEEDA', accent:'var(--amber-600)'},
+  {time:'09:00–11:00', label:'Job / AE', detail:'Bewerbungen · Recruiter-Outreach · Interview-Prep', color:'var(--blue-50)', accent:'var(--blue-600)'},
+  {time:'11:00–12:00', label:'Englisch', detail:'Vocabulary-Block + Claude-Übungsgespräch', color:'#EAF3DE', accent:'var(--green-600)'},
+  {time:'13:00–15:00', label:'Fashion Genius', detail:'Pilot-Outreach · Influencer-DMs · GTM-Aufbau', color:'#f5ff80', accent:'var(--fg-mid)'},
+  {time:'15:00–16:00', label:'Content', detail:'LinkedIn/TikTok Post schreiben oder planen', color:'var(--blue-50)', accent:'var(--blue-400)'},
+  {time:'16:00–19:00', label:'Privatleben', detail:'Familie · Hunde · Chalet · kein Arbeits-Handy', color:'var(--gray-50)', accent:'var(--gray-600)'},
+];
+
+function renderRoutine() {
+  const goals = load('weekly-goals', {});
+  ['job','fg','en','acht'].forEach(k => {
+    const el = document.getElementById('goal-' + k);
+    if(el && goals[k]) el.value = goals[k];
+  });
+
+  let html = '';
+  const now = new Date();
+  const h = now.getHours() + now.getMinutes()/60;
+  ROUTINE_BLOCKS.forEach(b => {
+    const [start] = b.time.split('–').map(t => { const [hh,mm] = t.split(':'); return parseInt(hh) + parseInt(mm)/60; });
+    const [,end] = b.time.split('–').map(t => { const [hh,mm] = t.split(':'); return parseInt(hh) + parseInt(mm)/60; });
+    const active = h >= start && h < end;
+    html += `<div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:${b.color};border-radius:var(--radius);border-left:3px solid ${b.accent};margin-bottom:8px${active ? ';box-shadow:0 0 0 2px '+b.accent+',0 0 0 4px white' : ''}">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:${b.accent};min-width:80px;font-weight:500">${b.time}</div>
+      <div><div style="font-size:13px;font-weight:500">${b.label}${active ? ' <span style="font-size:10px;background:'+b.accent+';color:white;padding:1px 6px;border-radius:10px;vertical-align:middle">jetzt</span>' : ''}</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">${b.detail}</div></div>
+    </div>`;
+  });
+  document.getElementById('routine-blocks').innerHTML = html;
+
+  const el = document.getElementById('routine-clock');
+  if(el) el.textContent = now.toLocaleTimeString('de-CH', {hour:'2-digit', minute:'2-digit'});
+}
+
+function saveGoals() {
+  const goals = {};
+  ['job','fg','en','acht'].forEach(k => { const el = document.getElementById('goal-' + k); if(el) goals[k] = el.value; });
+  save('weekly-goals', goals);
+}
+
+setInterval(() => { if(document.getElementById('page-routine').classList.contains('active')) renderRoutine(); }, 30000);
+
+// ── DASHBOARD CHARTS ──
+let liWeekly, liType, fgWeekly, fgDonut;
+
+function renderLIDashboard() {
+  if(liWeekly) liWeekly.destroy();
+  liWeekly = new Chart(document.getElementById('li-weekly-chart'), {
+    type:'bar',
+    data:{labels:['Apr 25','Mai 25','Jun 25','Jul 25','Aug 25','Sep 25','Okt 25','Nov 25','Dez 25','Jan 26','Feb 26','Mär 26','Apr 26'],datasets:[{data:[264,1848,471,347,95,55,69,97,27,32,54,187,56],backgroundColor:['#378ADD','#185FA5','#378ADD','#378ADD','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#378ADD','#378ADD'],borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} Impressionen`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:11},color:'#888'},beginAtZero:true}}}
+  });
+  if(liType) liType.destroy();
+  liType = new Chart(document.getElementById('li-type-chart'), {
+    type:'bar',
+    data:{labels:['Eng.-Rate'],datasets:[
+      {label:'AE/Sales',data:[5.6],backgroundColor:'#185FA5',borderRadius:4,borderSkipped:false,barThickness:24},
+      {label:'Fashion Genius',data:[3.8],backgroundColor:'#378ADD',borderRadius:4,borderSkipped:false,barThickness:24},
+      {label:'Lifestyle',data:[0.6],backgroundColor:'#B5D4F4',borderRadius:4,borderSkipped:false,barThickness:24}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:11},color:'#888',callback:v=>v+'%'},max:7},y:{display:false}}}
+  });
+}
+
+function renderFGDashboard() {
+  if(fgWeekly) fgWeekly.destroy();
+  fgWeekly = new Chart(document.getElementById('fg-weekly-chart'), {
+    type:'bar',
+    data:{labels:['KW 10','KW 11','KW 12','KW 13'],datasets:[
+      {label:'TikTok',data:[14200,18400,24100,30700],backgroundColor:'#BFEF00',borderRadius:3,borderSkipped:false},
+      {label:'Instagram',data:[5800,7200,9400,9200],backgroundColor:'#8ab800',borderRadius:3,borderSkipped:false},
+      {label:'LinkedIn',data:[1400,1800,2200,2840],backgroundColor:'#4a6600',borderRadius:3,borderSkipped:false},
+      {label:'Facebook',data:[900,1000,1100,1100],backgroundColor:'#c8c8c8',borderRadius:3,borderSkipped:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11},color:'#888'}},y:{stacked:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:11},color:'#888',callback:v=>v>=1000?(v/1000)+'k':v}}}}
+  });
+  if(fgDonut) fgDonut.destroy();
+  fgDonut = new Chart(document.getElementById('fg-donut-chart'), {
+    type:'doughnut',
+    data:{labels:['TikTok 8.4%','Instagram 5.9%','LinkedIn 3.2%','Facebook 1.1%'],datasets:[{data:[8.4,5.9,3.2,1.1],backgroundColor:['#BFEF00','#8ab800','#4a6600','#c8c8c8'],borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{font:{size:11},color:'#888',boxWidth:10,padding:8}}}}
+  });
+}
+
+
 function copyText(text) {
   navigator.clipboard.writeText(text.replace(/\\'/g,"'")).then(() => toast('Kopiert!'));
 }
