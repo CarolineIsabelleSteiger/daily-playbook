@@ -365,6 +365,8 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
     <div class="nav-item" onclick="nav('analytics')"><div class="nav-dot"></div><span>Daten erfassen</span></div>
 
     <div class="nav-section">Growth</div>
+    <div class="nav-item" onclick="nav('jobs')"><div class="nav-dot"></div><span>Bewerbungen</span></div>
+    <div class="nav-item" onclick="nav('pilots')"><div class="nav-dot"></div><span>FG Piloten</span></div>
     <div class="nav-item" onclick="nav('influencer')"><div class="nav-dot"></div><span>Influencer</span></div>
   </div>
   <div class="sidebar-footer" id="last-save"></div>
@@ -392,6 +394,16 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
 
   <div class="section-label">Heutige Posts</div>
   <div id="today-posts"></div>
+
+  <div style="margin-top:24px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <div class="section-label" style="margin-bottom:0">Kalender-Einträge</div>
+    <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">1 Klick → Google Calendar öffnet sich vorausgefüllt → Speichern</div>
+  </div>
+  <div id="calendar-widget">
+    <div id="gcal-links"></div>
+  </div>
+  </div>
 
   <div style="margin-top:28px">
   <div class="section-label">Quick Note</div>
@@ -710,6 +722,116 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   </div>
 </div>
 
+<!-- BEWERBUNGS-TRACKER -->
+<div class="page" id="page-jobs">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Bewerbungs-Tracker</div>
+      <div class="page-sub">Job Search Pipeline · AE / Freelancer / Head of Sales</div>
+    </div>
+    <button class="save-btn" onclick="showAddJob()">+ Bewerbung hinzufügen</button>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px" id="job-kpis">
+    <div class="metric"><div class="metric-label">Total Bewerbungen</div><div class="metric-val" id="jkpi-total">0</div></div>
+    <div class="metric"><div class="metric-label">In Progress</div><div class="metric-val" id="jkpi-progress">0</div><div class="metric-delta" style="color:var(--blue-600)">Interview / Gespräch</div></div>
+    <div class="metric"><div class="metric-label">Angebote</div><div class="metric-val" id="jkpi-offer">0</div><div class="metric-delta" style="color:var(--green-600)">Offer erhalten</div></div>
+    <div class="metric"><div class="metric-label">Abgelehnt</div><div class="metric-val" id="jkpi-rejected">0</div></div>
+  </div>
+
+  <div id="add-job-form" style="display:none;margin-bottom:16px">
+    <div class="card">
+      <div class="section-label">Neue Bewerbung</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="analytics-field"><label>Unternehmen</label><input id="job-company" placeholder="z.B. Fortinet"></div>
+        <div class="analytics-field"><label>Position</label><input id="job-title" placeholder="z.B. Senior AE DACH"></div>
+        <div class="analytics-field"><label>Kontakt</label><input id="job-contact" placeholder="z.B. Robin (Recruiter)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+        <div class="analytics-field"><label>Datum beworben</label><input id="job-date" type="date"></div>
+        <div class="analytics-field"><label>Kanal</label>
+          <select id="job-channel" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option>LinkedIn</option><option>Direkt</option><option>Recruiter</option><option>Empfehlung</option>
+          </select>
+        </div>
+        <div class="analytics-field"><label>Status</label>
+          <select id="job-status" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option value="beworben">Beworben</option>
+            <option value="interview">Interview / Gespräch</option>
+            <option value="angebot">Angebot erhalten</option>
+            <option value="abgelehnt">Abgelehnt</option>
+            <option value="pausiert">Pausiert</option>
+          </select>
+        </div>
+      </div>
+      <div class="analytics-field" style="margin-bottom:12px"><label>Notiz</label><input id="job-note" placeholder="z.B. 2. Interview am 25.4. mit Manuel Eberenz"></div>
+      <button class="save-btn" onclick="addJob()">Speichern</button>
+      <button onclick="document.getElementById('add-job-form').style.display='none'" style="margin-left:10px;padding:8px 16px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;font-size:13px">Abbrechen</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 4px;margin-bottom:6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">
+    <span>Unternehmen</span><span>Position</span><span>Kontakt</span><span>Datum</span><span>Status / Notiz</span>
+  </div>
+  <div id="job-list"></div>
+</div>
+
+<!-- FASHION GENIUS PILOT-TRACKER -->
+<div class="page" id="page-pilots">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Fashion Genius — Pilot-Tracker</div>
+      <div class="page-sub">Prospects · Demo-Calls · Pilot-Kunden · Deals</div>
+    </div>
+    <button class="save-btn" onclick="showAddPilot()">+ Prospect hinzufügen</button>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Prospects</div><div class="metric-val" id="pkpi-total">0</div></div>
+    <div class="metric"><div class="metric-label">Demo-Calls</div><div class="metric-val" id="pkpi-demo">0</div><div class="metric-delta" style="color:var(--blue-600)">gebucht / durchgeführt</div></div>
+    <div class="metric"><div class="metric-label">Aktive Piloten</div><div class="metric-val" id="pkpi-pilot">0</div><div class="metric-delta" style="color:var(--fg-mid)">Ziel: 3 in KW 1–4</div></div>
+    <div class="metric"><div class="metric-label">Umsatz CHF</div><div class="metric-val" id="pkpi-rev">0</div></div>
+  </div>
+
+  <div id="add-pilot-form" style="display:none;margin-bottom:16px">
+    <div class="card">
+      <div class="section-label">Neuer Prospect / Pilot</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="analytics-field"><label>Marke / Brand</label><input id="pilot-brand" placeholder="z.B. Zalando CH"></div>
+        <div class="analytics-field"><label>Kontaktperson</label><input id="pilot-contact" placeholder="z.B. Anna Müller, CEO"></div>
+        <div class="analytics-field"><label>Plattform</label><input id="pilot-platform" placeholder="z.B. Shopify / WooCommerce"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+        <div class="analytics-field"><label>Kanal</label>
+          <select id="pilot-channel" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option>LinkedIn</option><option>TikTok DM</option><option>Instagram DM</option><option>E-Mail</option><option>Empfehlung</option>
+          </select>
+        </div>
+        <div class="analytics-field"><label>Status</label>
+          <select id="pilot-status" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option value="prospect">Prospect</option>
+            <option value="kontaktiert">Kontaktiert</option>
+            <option value="demo">Demo-Call</option>
+            <option value="pilot">Aktiver Pilot</option>
+            <option value="kunde">Kunde</option>
+            <option value="abgelehnt">Abgelehnt</option>
+          </select>
+        </div>
+        <div class="analytics-field"><label>CHF (Pilot)</label><input id="pilot-rev" type="number" placeholder="z.B. 500"></div>
+        <div class="analytics-field"><label>Datum</label><input id="pilot-date" type="date"></div>
+      </div>
+      <div class="analytics-field" style="margin-bottom:12px"><label>Notiz</label><input id="pilot-note" placeholder="z.B. Plus-Size Marke, sehr interessiert an VTO"></div>
+      <button class="save-btn" onclick="addPilot()">Speichern</button>
+      <button onclick="document.getElementById('add-pilot-form').style.display='none'" style="margin-left:10px;padding:8px 16px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;font-size:13px">Abbrechen</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 80px 100px;gap:8px;padding:0 4px;margin-bottom:6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">
+    <span>Brand</span><span>Kontakt</span><span>Notiz</span><span>CHF</span><span>Status</span>
+  </div>
+  <div id="pilot-list"></div>
+</div>
+
 <!-- INFLUENCER -->
 <div class="page" id="page-influencer">
   <div class="page-header">
@@ -816,6 +938,8 @@ function nav(page) {
   if(page === 'hooks') renderHooks();
   if(page === 'cta') renderCTAs();
   if(page === 'analytics') renderAnalytics();
+  if(page === 'jobs') renderJobs();
+  if(page === 'pilots') renderPilots();
   if(page === 'influencer') renderInfluencers();
   if(page === 'diary') renderDiary();
   if(page === 'today') renderToday();
@@ -1179,6 +1303,148 @@ function renderFGDashboard() {
 }
 
 
+// ── GOOGLE CALENDAR LINKS ──
+function buildGCalLink(title, startISO, endISO, desc, recur) {
+  const fmt = d => d.replace(/[-:]/g,'').replace('.000Z','Z');
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: title,
+    dates: fmt(startISO) + '/' + fmt(endISO),
+    details: desc || '',
+    recur: recur || ''
+  });
+  return 'https://calendar.google.com/calendar/render?' + params.toString();
+}
+
+function renderGCalLinks() {
+  const BASE = '20260420'; // Monday 20 April 2026
+  const ENTRIES = [
+    {title:'🌅 Wellbeing — Bewegung & Morgenroutine', start:'T080000', end:'T090000', days:'MO,TU,WE,TH,FR', color:'#FAEEDA', accent:'#854F0B', label:'Mo–Fr täglich', desc:'Bewegung / Meditation / Morgenroutine\nPlaybook: carolineisabellesteiger.github.io/daily-playbook'},
+    {title:'💼 Job / AE — Bewerbungen & Recruiter-Outreach', start:'T090000', end:'T110000', days:'MO,TU,WE,TH,FR', color:'#E6F1FB', accent:'#185FA5', label:'Mo–Fr täglich', desc:'Bewerbungen · Recruiter-Outreach · Interview-Prep\nFortinet (Robin) + BMC (Zenobia)'},
+    {title:'🇬🇧 Englisch — Business Fluency', start:'T110000', end:'T120000', days:'MO,TU,WE,TH,FR', color:'#EAF3DE', accent:'#3B6D11', label:'Mo–Fr täglich', desc:'Vocabulary-Block + Claude-Übungsgespräch'},
+    {title:'🍽 Mittagspause', start:'T120000', end:'T130000', days:'MO,TU,WE,TH,FR', color:'#F1EFE8', accent:'#888', label:'Mo–Fr täglich', desc:'Keine Arbeit — Energie tanken'},
+    {title:'✨ Fashion Genius — GTM & Outreach', start:'T130000', end:'T150000', days:'MO,TU,WE,TH,FR', color:'#f5ff80', accent:'#5a7000', label:'Mo–Fr täglich', desc:'Pilot-Outreach · Influencer-DMs · GTM-Aufbau'},
+    {title:'📝 Content — Post schreiben & planen', start:'T150000', end:'T160000', days:'MO,TU,WE,TH,FR', color:'#E6F1FB', accent:'#378ADD', label:'Mo–Fr täglich', desc:'LinkedIn/TikTok Post schreiben oder planen'},
+    {title:'📊 Analytics Check — LinkedIn & Fashion Genius', start:'T090000', end:'T093000', days:'MO', color:'#E6F1FB', accent:'#185FA5', label:'Jeden Montag', desc:'LinkedIn Analytics prüfen · Wochenziel setzen\nPlaybook: carolineisabellesteiger.github.io/daily-playbook', offsetDays:0},
+    {title:'🚀 LinkedIn Post publizieren — Dienstag', start:'T150000', end:'T151500', days:'TU', color:'#E6F1FB', accent:'#185FA5', label:'Jeden Dienstag', desc:'Post aus Playbook kopieren → LinkedIn → posten', offsetDays:1},
+    {title:'🚀 LinkedIn Post publizieren — Donnerstag', start:'T150000', end:'T151500', days:'TH', color:'#E6F1FB', accent:'#185FA5', label:'Jeden Donnerstag', desc:'Post aus Playbook kopieren → LinkedIn → posten', offsetDays:3},
+    {title:'📋 Weekly Review — Was hat funktioniert?', start:'T150000', end:'T160000', days:'FR', color:'#FAEEDA', accent:'#854F0B', label:'Jeden Freitag', desc:'Review: Job · Fashion Genius · Englisch · Achtsamkeit\nEintrag im Tagebuch: carolineisabellesteiger.github.io/daily-playbook', offsetDays:4},
+  ];
+
+  const sections = [
+    {label:'Täglich (Mo–Fr)', items: ENTRIES.filter(e=>e.days==='MO,TU,WE,TH,FR')},
+    {label:'Wöchentliche Anker', items: ENTRIES.filter(e=>e.days!=='MO,TU,WE,TH,FR')},
+  ];
+
+  let html = '';
+  sections.forEach(sec => {
+    html += `<div class="section-label" style="margin:16px 0 8px">${sec.label}</div>`;
+    sec.items.forEach(e => {
+      const offset = e.offsetDays || 0;
+      const d = new Date(2026, 3, 20 + offset); // April=3
+      const ds = d.toISOString().split('T')[0].replace(/-/g,'');
+      const startISO = ds + e.start + 'Z';
+      const endISO   = ds + e.end   + 'Z';
+      const recur = 'RRULE:FREQ=WEEKLY;BYDAY=' + e.days;
+      const link = buildGCalLink(e.title, startISO, endISO, e.desc, recur);
+      const timeLabel = e.start.replace('T','').replace(/(\d{2})(\d{2})(\d{2})/,'$1:$2') + ' – ' + e.end.replace('T','').replace(/(\d{2})(\d{2})(\d{2})/,'$1:$2');
+
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:${e.color};border-radius:var(--radius);border-left:3px solid ${e.accent};margin-bottom:6px">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:${e.accent};min-width:90px">${timeLabel}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500;color:var(--text)">${e.title}</div>
+          <div style="font-size:11px;color:var(--text-muted)">${e.label}</div>
+        </div>
+        <a href="${link}" target="_blank" style="padding:5px 12px;background:${e.accent};color:white;border-radius:6px;font-size:11px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0">+ Google Cal</a>
+      </div>`;
+    });
+  });
+
+  document.getElementById('gcal-links').innerHTML = html;
+}
+
+
+let jobs = load('jobs', [
+  {company:'Fortinet', title:'Senior AE DACH', contact:'Robin (Recruiter)', date:'2026-04-01', channel:'Recruiter', status:'interview', note:'2. Interview steht aus — Manuel Eberenz'},
+  {company:'BMC Software', title:'Enterprise AE', contact:'Zenobia (Recruiter)', date:'2026-03-20', channel:'LinkedIn', status:'interview', note:'Erste Gespräche laufen'},
+]);
+
+const JOB_STATUS = {
+  beworben:{label:'Beworben',bg:'#F1EFE8',color:'#5F5E5A'},
+  interview:{label:'Interview',bg:'#E6F1FB',color:'#185FA5'},
+  angebot:{label:'Angebot',bg:'#EAF3DE',color:'#3B6D11'},
+  abgelehnt:{label:'Abgelehnt',bg:'#FCEBEB',color:'#A32D2D'},
+  pausiert:{label:'Pausiert',bg:'#F1EFE8',color:'#888'}
+};
+
+function renderJobs() {
+  const total = jobs.length;
+  document.getElementById('jkpi-total').textContent = total;
+  document.getElementById('jkpi-progress').textContent = jobs.filter(j=>j.status==='interview').length;
+  document.getElementById('jkpi-offer').textContent = jobs.filter(j=>j.status==='angebot').length;
+  document.getElementById('jkpi-rejected').textContent = jobs.filter(j=>j.status==='abgelehnt').length;
+  if(!jobs.length) { document.getElementById('job-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">Noch keine Bewerbungen.</div>'; return; }
+  let html = '';
+  jobs.forEach((j,i) => {
+    const st = JOB_STATUS[j.status]||JOB_STATUS.beworben;
+    html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:start;padding:10px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;font-size:12px;border-left:3px solid ${st.color}">
+      <span style="font-weight:500">${j.company}</span><span style="color:var(--text-muted)">${j.title}</span>
+      <span style="color:var(--text-muted)">${j.contact}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${j.date}</span>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <select onchange="updateJobStatus(${i},this.value)" style="padding:3px 6px;border:0.5px solid var(--gray-100);border-radius:6px;font-size:11px;background:${st.bg};color:${st.color}">
+          ${Object.entries(JOB_STATUS).map(([k,v])=>`<option value="${k}"${j.status===k?' selected':''}>${v.label}</option>`).join('')}
+        </select>
+        ${j.note?`<span style="font-size:11px;color:var(--text-muted)">${j.note}</span>`:''}
+      </div></div>`;
+  });
+  document.getElementById('job-list').innerHTML = html;
+}
+function showAddJob() { const f=document.getElementById('add-job-form'); f.style.display=f.style.display==='none'?'block':'none'; document.getElementById('job-date').value=new Date().toISOString().split('T')[0]; }
+function addJob() {
+  const company=document.getElementById('job-company').value.trim(); if(!company) return;
+  jobs.push({company,title:document.getElementById('job-title').value,contact:document.getElementById('job-contact').value,date:document.getElementById('job-date').value,channel:document.getElementById('job-channel').value,status:document.getElementById('job-status').value,note:document.getElementById('job-note').value});
+  save('jobs',jobs); document.getElementById('add-job-form').style.display='none'; renderJobs(); toast('Bewerbung gespeichert');
+}
+function updateJobStatus(i,val) { jobs[i].status=val; save('jobs',jobs); renderJobs(); toast('Status aktualisiert'); }
+
+// ── PILOT TRACKER ──
+let pilots = load('pilots', []);
+const PILOT_STATUS = {
+  prospect:{label:'Prospect',bg:'#F1EFE8',color:'#5F5E5A'},
+  kontaktiert:{label:'Kontaktiert',bg:'#E6F1FB',color:'#185FA5'},
+  demo:{label:'Demo-Call',bg:'#FAEEDA',color:'#854F0B'},
+  pilot:{label:'Aktiver Pilot',bg:'#f5ff80',color:'#5a7000'},
+  kunde:{label:'Kunde',bg:'#EAF3DE',color:'#3B6D11'},
+  abgelehnt:{label:'Abgelehnt',bg:'#FCEBEB',color:'#A32D2D'}
+};
+function renderPilots() {
+  document.getElementById('pkpi-total').textContent = pilots.length;
+  document.getElementById('pkpi-demo').textContent = pilots.filter(p=>p.status==='demo').length;
+  document.getElementById('pkpi-pilot').textContent = pilots.filter(p=>p.status==='pilot'||p.status==='kunde').length;
+  document.getElementById('pkpi-rev').textContent = pilots.reduce((s,p)=>s+(parseInt(p.rev)||0),0).toLocaleString('de-CH');
+  if(!pilots.length) { document.getElementById('pilot-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">Noch keine Prospects — klicke «+ Prospect hinzufügen».</div>'; return; }
+  let html = '';
+  pilots.forEach((p,i) => {
+    const st=PILOT_STATUS[p.status]||PILOT_STATUS.prospect;
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 80px 100px;gap:8px;align-items:start;padding:10px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;font-size:12px;border-left:3px solid ${st.color}">
+      <span style="font-weight:500">${p.brand}</span><span style="color:var(--text-muted)">${p.contact}</span>
+      <span style="font-size:11px;color:var(--text-muted)">${p.note}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px">${p.rev?'CHF '+parseInt(p.rev).toLocaleString('de-CH'):'—'}</span>
+      <select onchange="updatePilotStatus(${i},this.value)" style="padding:3px 6px;border:0.5px solid var(--gray-100);border-radius:6px;font-size:11px;background:${st.bg};color:${st.color}">
+        ${Object.entries(PILOT_STATUS).map(([k,v])=>`<option value="${k}"${p.status===k?' selected':''}>${v.label}</option>`).join('')}
+      </select></div>`;
+  });
+  document.getElementById('pilot-list').innerHTML = html;
+}
+function showAddPilot() { const f=document.getElementById('add-pilot-form'); f.style.display=f.style.display==='none'?'block':'none'; document.getElementById('pilot-date').value=new Date().toISOString().split('T')[0]; }
+function addPilot() {
+  const brand=document.getElementById('pilot-brand').value.trim(); if(!brand) return;
+  pilots.push({brand,contact:document.getElementById('pilot-contact').value,platform:document.getElementById('pilot-platform').value,channel:document.getElementById('pilot-channel').value,status:document.getElementById('pilot-status').value,rev:document.getElementById('pilot-rev').value,date:document.getElementById('pilot-date').value,note:document.getElementById('pilot-note').value});
+  save('pilots',pilots); document.getElementById('add-pilot-form').style.display='none'; renderPilots(); toast('Prospect gespeichert');
+}
+function updatePilotStatus(i,val) { pilots[i].status=val; save('pilots',pilots); renderPilots(); toast('Status aktualisiert'); }
+
 function copyText(text) {
   navigator.clipboard.writeText(text.replace(/\\'/g,"'")).then(() => toast('Kopiert!'));
 }
@@ -1200,6 +1466,7 @@ const now = new Date();
 const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
 document.getElementById('sidebar-date').textContent = now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
 renderToday();
+renderGCalLinks();
 updateLastSave();
 </script>
 </body>
