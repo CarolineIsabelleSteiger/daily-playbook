@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caroline Steiger — Daily Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --blue-900: #042C53;
+  --blue-800: #0C447C;
+  --blue-600: #185FA5;
+  --blue-400: #378ADD;
+  --blue-200: #85B7EB;
+  --blue-100: #B5D4F4;
+  --blue-50:  #E6F1FB;
+  --fg-lime:  #BFEF00;
+  --fg-dark:  #1a1e00;
+  --fg-mid:   #5a7000;
+  --green-600:#3B6D11;
+  --amber-600:#854F0B;
+  --gray-900: #2C2C2A;
+  --gray-600: #5F5E5A;
+  --gray-300: #B4B2A9;
+  --gray-100: #D3D1C7;
+  --gray-50:  #F1EFE8;
+  --bg:       #F8F7F4;
+  --surface:  #FFFFFF;
+  --border:   rgba(0,0,0,0.09);
+  --text:     #2C2C2A;
+  --text-muted: #73726c;
+  --radius:   10px;
+  --radius-lg: 14px;
+  --shadow:   0 1px 3px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 220px; height: 100vh;
+  background: var(--blue-900);
+  display: flex; flex-direction: column;
+  padding: 0;
+  z-index: 100;
+}
+
+.sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-brand .name {
+  font-size: 14px; font-weight: 500; color: #fff;
+  line-height: 1.3;
+}
+.sidebar-brand .sub {
+  font-size: 11px; color: rgba(255,255,255,0.45);
+  font-family: 'DM Mono', monospace;
+  margin-top: 3px;
+}
+
+.sidebar-date {
+  padding: 12px 20px;
+  font-size: 11px; color: rgba(255,255,255,0.4);
+  font-family: 'DM Mono', monospace;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.nav { flex: 1; padding: 10px 0; overflow-y: auto; }
+
+.nav-section {
+  font-size: 9px; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+  padding: 12px 20px 6px;
+  font-family: 'DM Mono', monospace;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px;
+  font-size: 13px; color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: all .12s;
+  border-left: 2px solid transparent;
+}
+.nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.nav-item.active { color: #fff; background: rgba(255,255,255,0.08); border-left-color: var(--blue-400); }
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; opacity: .5; flex-shrink: 0;
+}
+.nav-item.active .nav-dot { opacity: 1; background: var(--blue-400); }
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 11px; color: rgba(255,255,255,0.25);
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── MAIN ── */
+.main {
+  margin-left: 220px;
+  padding: 32px 36px;
+  max-width: 1100px;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.page-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.page-title { font-size: 22px; font-weight: 500; color: var(--text); }
+.page-sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+}
+
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+.metric {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.metric-label { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.metric-val { font-size: 26px; font-weight: 500; color: var(--text); }
+.metric-delta { font-size: 11px; margin-top: 4px; font-family: 'DM Mono', monospace; color: var(--blue-600); }
+
+/* ── SECTION TITLE ── */
+.section-label {
+  font-size: 10px; font-weight: 500; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 10px;
+}
+
+/* ── CALENDAR ── */
+.week-block { margin-bottom: 20px; }
+.week-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.week-badge {
+  font-size: 10px; font-weight: 500; padding: 3px 10px;
+  border-radius: 20px; background: var(--gray-50);
+  color: var(--gray-600); font-family: 'DM Mono', monospace;
+}
+.week-progress {
+  flex: 1; height: 3px; background: var(--gray-100);
+  border-radius: 2px; overflow: hidden;
+}
+.week-progress-fill { height: 100%; border-radius: 2px; background: var(--blue-400); transition: width .3s; }
+
+.post-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 8px;
+  border-left: 3px solid;
+  transition: box-shadow .12s;
+  cursor: pointer;
+}
+.post-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.post-card.done { opacity: .55; }
+.post-card.ae  { border-color: var(--blue-600); }
+.post-card.vp  { border-color: var(--amber-600); }
+.post-card.fl  { border-color: var(--green-600); }
+.post-card.fg  { border-color: var(--fg-mid); }
+
+.post-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--gray-300);
+  background: var(--bg); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.post-card.done .post-check { background: var(--blue-600); border-color: var(--blue-600); }
+.post-check-icon { font-size: 11px; color: #fff; display: none; }
+.post-card.done .post-check-icon { display: block; }
+
+.post-body { flex: 1; }
+.post-meta { display: flex; gap: 6px; margin-bottom: 5px; flex-wrap: wrap; }
+.pill {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  font-weight: 500; font-family: 'DM Mono', monospace;
+}
+.pill.ae { background: var(--blue-50); color: var(--blue-800); }
+.pill.vp { background: #FAEEDA; color: var(--amber-600); }
+.pill.fl { background: #EAF3DE; color: var(--green-600); }
+.pill.fg { background: #f5ff80; color: var(--fg-dark); }
+.day-pill { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--gray-50); color: var(--gray-600); }
+
+.post-hook { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 4px; }
+.post-cta-text { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+
+/* ── HOOKS ── */
+.hook-card {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); padding: 16px 18px;
+  margin-bottom: 12px;
+  border-top: 2px solid;
+}
+.hook-type { font-size: 10px; font-weight: 500; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 7px; }
+.hook-text { font-size: 14px; font-weight: 500; line-height: 1.5; margin-bottom: 6px; color: var(--text); }
+.hook-why { font-size: 12px; color: var(--text-muted); }
+.copy-btn {
+  margin-top: 10px; padding: 5px 12px;
+  border: 0.5px solid var(--border); border-radius: 6px;
+  background: var(--bg); font-size: 11px; font-family: 'DM Mono', monospace;
+  cursor: pointer; color: var(--text-muted); transition: all .12s;
+}
+.copy-btn:hover { background: var(--blue-50); color: var(--blue-600); border-color: var(--blue-200); }
+
+/* ── CTA CARDS ── */
+.cta-card {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.cta-target { font-size: 10px; font-weight: 500; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; }
+.cta-text { font-size: 13px; line-height: 1.5; color: var(--text); font-weight: 500; }
+.cta-action { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+
+/* ── DIARY ── */
+.diary-entry {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); padding: 16px 18px; margin-bottom: 10px;
+}
+.diary-date { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+.diary-text { font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
+.diary-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 8px; }
+
+textarea.diary-input {
+  width: 100%; border: 0.5px solid var(--gray-100); border-radius: var(--radius);
+  padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+  line-height: 1.6; background: var(--bg); color: var(--text);
+  resize: vertical; min-height: 100px;
+  transition: border .15s;
+}
+textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
+
+.tag-row { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+.tag-btn {
+  padding: 4px 12px; border-radius: 20px; font-size: 11px;
+  border: 0.5px solid var(--border); background: var(--bg);
+  cursor: pointer; font-family: 'DM Mono', monospace; transition: all .12s;
+}
+.tag-btn.selected { background: var(--blue-600); color: #fff; border-color: var(--blue-600); }
+
+.save-btn {
+  padding: 8px 20px; border-radius: var(--radius); font-size: 13px;
+  background: var(--blue-600); color: #fff; border: none;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500;
+  transition: background .12s;
+}
+.save-btn:hover { background: var(--blue-800); }
+
+/* ── ANALYTICS INPUTS ── */
+.analytics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.analytics-field { display: flex; flex-direction: column; gap: 5px; }
+.analytics-field label { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+.analytics-field input {
+  padding: 8px 10px; border: 0.5px solid var(--gray-100); border-radius: var(--radius);
+  font-family: 'DM Mono', monospace; font-size: 13px;
+  background: var(--bg); color: var(--text);
+}
+.analytics-field input:focus { outline: none; border-color: var(--blue-400); }
+
+/* ── INFLUENCER TRACKER ── */
+.inf-row {
+  display: grid; grid-template-columns: 1fr 1fr 80px 100px 80px;
+  gap: 10px; align-items: center;
+  padding: 10px 14px;
+  background: var(--surface); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 6px;
+  font-size: 12px;
+}
+.inf-header {
+  display: grid; grid-template-columns: 1fr 1fr 80px 100px 80px;
+  gap: 10px; padding: 0 14px 6px;
+  font-size: 10px; font-family: 'DM Mono', monospace;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em;
+}
+.status-badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 10px;
+  font-family: 'DM Mono', monospace; text-align: center;
+}
+.status-badge.offen { background: var(--gray-50); color: var(--gray-600); }
+.status-badge.kontaktiert { background: var(--blue-50); color: var(--blue-600); }
+.status-badge.aktiv { background: #EAF3DE; color: var(--green-600); }
+.status-badge.abgeschlossen { background: #F0FFF0; color: #166534; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--gray-900); color: #fff;
+  padding: 10px 18px; border-radius: var(--radius);
+  font-size: 12px; font-family: 'DM Mono', monospace;
+  transform: translateY(100px); transition: transform .25s;
+  z-index: 999;
+}
+.toast.show { transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { width: 60px; }
+  .sidebar-brand .name, .sidebar-brand .sub, .nav-item span, .nav-section, .sidebar-date, .sidebar-footer { display: none; }
+  .nav-item { justify-content: center; padding: 12px 0; }
+  .main { margin-left: 60px; padding: 20px; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .analytics-row { grid-template-columns: repeat(2, 1fr); }
+  .inf-row, .inf-header { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="name">Caroline Steiger</div>
+    <div class="sub">Daily Playbook</div>
+  </div>
+  <div class="sidebar-date" id="sidebar-date"></div>
+  <div class="nav">
+    <div class="nav-section">Heute</div>
+    <div class="nav-item active" onclick="nav('today')"><div class="nav-dot"></div><span>Today</span></div>
+    <div class="nav-item" onclick="nav('diary')"><div class="nav-dot"></div><span>Tagebuch</span></div>
+
+    <div class="nav-section">Content</div>
+    <div class="nav-item" onclick="nav('calendar')"><div class="nav-dot"></div><span>Kalender</span></div>
+    <div class="nav-item" onclick="nav('hooks')"><div class="nav-dot"></div><span>Hooks</span></div>
+    <div class="nav-item" onclick="nav('cta')"><div class="nav-dot"></div><span>CTAs</span></div>
+
+    <div class="nav-section">Growth</div>
+    <div class="nav-item" onclick="nav('analytics')"><div class="nav-dot"></div><span>Analytics</span></div>
+    <div class="nav-item" onclick="nav('influencer')"><div class="nav-dot"></div><span>Influencer</span></div>
+  </div>
+  <div class="sidebar-footer" id="last-save"></div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- TODAY -->
+<div class="page active" id="page-today">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Guten Morgen, Caroline.</div>
+      <div class="page-sub" id="today-date-sub"></div>
+    </div>
+    <div id="today-streak" style="font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;text-align:right"></div>
+  </div>
+
+  <div class="grid-4" id="today-kpis">
+    <div class="metric"><div class="metric-label">Posts diese Woche</div><div class="metric-val" id="kpi-posts">0/2</div></div>
+    <div class="metric"><div class="metric-label">Offene CTAs</div><div class="metric-val" id="kpi-cta">—</div></div>
+    <div class="metric"><div class="metric-label">Influencer aktiv</div><div class="metric-val" id="kpi-inf">—</div></div>
+    <div class="metric"><div class="metric-label">Tagebuch-Einträge</div><div class="metric-val" id="kpi-diary">0</div></div>
+  </div>
+
+  <div class="section-label">Heutige Posts</div>
+  <div id="today-posts"></div>
+
+  <div style="margin-top:28px">
+  <div class="section-label">Quick Note</div>
+  <div class="card">
+    <textarea class="diary-input" id="quick-note" placeholder="Gedanke, Idee, Follow-up für heute…" style="min-height:70px"></textarea>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="save-btn" onclick="saveQuickNote()">Speichern</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- DIARY -->
+<div class="page" id="page-diary">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Tagebuch</div>
+      <div class="page-sub">Learnings, Erfolge, Rückschläge — dein persönliches Logbuch</div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label">Neuer Eintrag</div>
+    <textarea class="diary-input" id="diary-text" placeholder="Was ist heute passiert? Was hat funktioniert? Was nächstes Mal anders?"></textarea>
+    <div class="tag-row" id="tag-row">
+      <button class="tag-btn" onclick="toggleTag(this,'AE/Job')">AE / Job</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Fashion Genius')">Fashion Genius</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Learning')">Learning</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Win')">Win</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Block')">Block</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Idea')">Idea</button>
+    </div>
+    <button class="save-btn" onclick="saveDiary()">Eintrag speichern</button>
+  </div>
+  <div class="section-label">Alle Einträge</div>
+  <div id="diary-list"></div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Content-Kalender</div>
+      <div class="page-sub">6-Wochen-Plan · 2× pro Woche · Di + Do</div>
+    </div>
+    <div>
+      <select onchange="filterCalendar(this.value)" style="padding:7px 12px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-family:'DM Mono',monospace;font-size:11px;background:var(--surface)">
+        <option value="all">Alle Zielgruppen</option>
+        <option value="ae">Senior AE / Job</option>
+        <option value="vp">Head / VP Sales</option>
+        <option value="fl">Freelancer</option>
+        <option value="fg">Fashion Genius</option>
+      </select>
+    </div>
+  </div>
+  <div id="calendar-container"></div>
+</div>
+
+<!-- HOOKS -->
+<div class="page" id="page-hooks">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Hook-Bibliothek</div>
+      <div class="page-sub">Bewährte Öffner — nach Zielgruppe</div>
+    </div>
+  </div>
+  <div id="hooks-container"></div>
+</div>
+
+<!-- CTAs -->
+<div class="page" id="page-cta">
+  <div class="page-header">
+    <div>
+      <div class="page-title">CTA-Bibliothek</div>
+      <div class="page-sub">Operative Call-to-Actions — für jedes Ziel</div>
+    </div>
+  </div>
+  <div class="grid-3" id="cta-container"></div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="page" id="page-analytics">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Analytics</div>
+      <div class="page-sub">Monatliche Zahlen manuell erfassen</div>
+    </div>
+    <button class="save-btn" onclick="saveAnalytics()">Speichern</button>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label" style="margin-bottom:14px">LinkedIn — Monat</div>
+    <div class="analytics-row">
+      <div class="analytics-field"><label>Impressionen</label><input id="li-imp" type="number" placeholder="z.B. 24830"></div>
+      <div class="analytics-field"><label>Erreichte Mitglieder</label><input id="li-reach" type="number" placeholder="z.B. 11440"></div>
+      <div class="analytics-field"><label>Engagements</label><input id="li-eng" type="number" placeholder="z.B. 892"></div>
+      <div class="analytics-field"><label>Profilaufrufe</label><input id="li-profile" type="number" placeholder="z.B. 318"></div>
+    </div>
+    <div class="analytics-row">
+      <div class="analytics-field"><label>Follower</label><input id="li-follower" type="number" placeholder="z.B. 1240"></div>
+      <div class="analytics-field"><label>Top-Post Impressionen</label><input id="li-top" type="number" placeholder="z.B. 4820"></div>
+      <div class="analytics-field"><label>DMs erhalten</label><input id="li-dm" type="number" placeholder="z.B. 12"></div>
+      <div class="analytics-field"><label>Interview-Anfragen</label><input id="li-job" type="number" placeholder="z.B. 2"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label" style="margin-bottom:14px">Fashion Genius — Multi-Platform</div>
+    <div class="analytics-row">
+      <div class="analytics-field"><label>TikTok Views</label><input id="tt-views" type="number" placeholder="z.B. 87400"></div>
+      <div class="analytics-field"><label>Instagram Reach</label><input id="ig-reach" type="number" placeholder="z.B. 31600"></div>
+      <div class="analytics-field"><label>Demo Calls gebucht</label><input id="fg-demos" type="number" placeholder="z.B. 5"></div>
+      <div class="analytics-field"><label>Pilot-Kunden</label><input id="fg-pilot" type="number" placeholder="z.B. 1"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label" style="margin-bottom:14px">Verlauf</div>
+    <div style="position:relative;height:240px"><canvas id="analytics-chart"></canvas></div>
+  </div>
+</div>
+
+<!-- INFLUENCER -->
+<div class="page" id="page-influencer">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Influencer Tracker</div>
+      <div class="page-sub">Fashion Genius Creator-Outreach</div>
+    </div>
+    <button class="save-btn" onclick="showAddInfluencer()">+ Creator hinzufügen</button>
+  </div>
+
+  <div id="add-inf-form" style="display:none;margin-bottom:16px">
+  <div class="card">
+    <div class="section-label">Neuer Creator</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 100px;gap:10px;margin-bottom:10px">
+      <div class="analytics-field"><label>Name / Handle</label><input id="inf-name" placeholder="@fashionista_ch"></div>
+      <div class="analytics-field"><label>Plattform</label><input id="inf-platform" placeholder="TikTok / IG / Beide"></div>
+      <div class="analytics-field"><label>Follower (k)</label><input id="inf-followers" type="number" placeholder="12"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div class="analytics-field"><label>Notiz</label><input id="inf-note" placeholder="DACH Plus Size Fashion..."></div>
+      <div class="analytics-field"><label>Status</label>
+        <select id="inf-status" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+          <option value="offen">Offen</option>
+          <option value="kontaktiert">Kontaktiert</option>
+          <option value="aktiv">Aktiv</option>
+          <option value="abgeschlossen">Abgeschlossen</option>
+        </select>
+      </div>
+    </div>
+    <button class="save-btn" onclick="addInfluencer()">Speichern</button>
+    <button onclick="document.getElementById('add-inf-form').style.display='none'" style="margin-left:10px;padding:8px 16px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;font-size:13px">Abbrechen</button>
+  </div>
+  </div>
+
+  <div class="inf-header">
+    <span>Name / Handle</span><span>Plattform</span><span>Follower</span><span>Notiz</span><span>Status</span>
+  </div>
+  <div id="inf-list"></div>
+</div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const POSTS = [
+  {week:1,day:'Di',type:'ae',pill:'Senior AE',hook:'18 Jahre DACH-Enterprise-Sales — das sind meine 3 grössten Learnings.',cta:'«Was überrascht euch am meisten?» → Kommentar-CTA'},
+  {week:1,day:'Do',type:'fg',pill:'Fashion Genius',hook:'Wir haben Virtual Try-On gebaut. Was uns die ersten 10 DACH-Brands gesagt haben.',cta:'«Kostenlose Demo buchen» → Link in Post'},
+  {week:2,day:'Di',type:'vp',pill:'Head / VP Sales',hook:'Was ein 200k+ AE täglich macht, das niemand sieht. Thread.',cta:'«Kommentiere PLAYBOOK für meinen Framework» → Lead-Magnet'},
+  {week:2,day:'Do',type:'ae',pill:'Senior AE / Job',hook:'150 % Quota. Ohne Präsident\'s Club. Warum das eine bessere Geschichte ist.',cta:'«DM für anonymisiertes Case-Study» → Recruiter-Outreach'},
+  {week:3,day:'Di',type:'fl',pill:'Freelancer',hook:'Wie ich als Ein-Frau-Business im B2B-Sales-Consulting starte — ohne Agentur, ohne Team.',cta:'«3× 30-Min Consulting-Calls frei diese Woche» → Scarcity-CTA'},
+  {week:3,day:'Do',type:'fg',pill:'Fashion Genius',hook:'Retouren um 38 % senken: unsere erste Fallstudie mit einem Schweizer Modebrand.',cta:'«20 Min Live-Demo — kostenlos» → Demo-Call'},
+  {week:4,day:'Di',type:'ae',pill:'Senior AE / Job',hook:'So bereite ich mich auf ein Enterprise-Erstgespräch vor. Meine genaue Checkliste.',cta:'«Kommentiere CHECKLIST» → DM → Recruiter-Visibility'},
+  {week:4,day:'Do',type:'vp',pill:'Head / VP Sales',hook:'Ich habe 3 VP-Sales-Angebote abgelehnt. Hier sind meine Kriterien.',cta:'«Was sind eure Kriterien?» → Diskussions-CTA → Entscheider-Sichtbarkeit'},
+  {week:5,day:'Di',type:'fg',pill:'Fashion Genius',hook:'Founder-Story: Fashion Genius aus Unterägeri. Meine grössten Fehler.',cta:'«Wer will Pilotkunde werden?» → Direkte Bewerbung via DM'},
+  {week:5,day:'Do',type:'fl',pill:'Freelancer',hook:'Warum ich aufgehört habe auf Stelleninserate zu antworten — und was ich stattdessen tue.',cta:'«Folgt mir für wöchentliche Sales-Insights» → Follower-Aufbau'},
+  {week:6,day:'Di',type:'ae',pill:'Senior AE / Job',hook:'Was mich ein DACH-Enterprise-Kunde gelehrt hat, das kein Sales-Training kann.',cta:'«Mein Kalender hat noch einen Slot» → Calendly-Link'},
+  {week:6,day:'Do',type:'fg',pill:'Fashion Genius',hook:'28-Tage-Ergebnis: Fashion Genius auf LinkedIn, TikTok und Instagram.',cta:'«Pilot-Programm: 3 Plätze frei» → Urgency-CTA'},
+];
+
+const HOOKS = [
+  {type:'ae',label:'Senior AE / Recruiter',color:'var(--blue-600)',border:'var(--blue-200)',text:'«18 Jahre DACH-Enterprise-Sales — das sind die 3 Dinge, die wirklich zählen.»',why:'Spezifität + Erfahrung = sofortige Glaubwürdigkeit'},
+  {type:'ae',label:'Senior AE / Recruiter',color:'var(--blue-600)',border:'var(--blue-200)',text:'«150 % Quota. Kein Präsident\'s Club. Hier ist warum das eine bessere Geschichte ist.»',why:'Kontrast + Neugier — zwingt zum Weiterlesen'},
+  {type:'vp',label:'Head / VP of Sales',color:'var(--amber-600)',border:'#FAC775',text:'«Was ein 200k+ AE täglich macht, das Junior-Reps nie lernen. Thread.»',why:'Status-Signal + Wissensversprechen für Entscheider'},
+  {type:'vp',label:'Head / VP of Sales',color:'var(--amber-600)',border:'#FAC775',text:'«Ich habe 3 VP-Sales-Rollen abgelehnt. Hier sind meine Kriterien — und warum sie dich auch betreffen.»',why:'Autorität + Reverse Psychology für Leadership-Audience'},
+  {type:'fl',label:'Freelancer / Consultant',color:'var(--green-600)',border:'#C0DD97',text:'«Wie ich als Ein-Frau-Business CHF 15k/Monat im B2B-Sales-Consulting verdiene — ohne Team.»',why:'Spezifische Zahl + Alleinstellungsmerkmal'},
+  {type:'fl',label:'Freelancer / Consultant',color:'var(--green-600)',border:'#C0DD97',text:'«Warum ich aufgehört habe, auf Stelleninserate zu antworten — und was ich stattdessen tue.»',why:'Bruch mit Norm + Neugier auf Methode'},
+  {type:'fg',label:'Fashion Genius / VTO',color:'var(--fg-mid)',border:'var(--fg-lime)',text:'«73 % der DACH-Fashion-Brands verlieren Kunden beim ersten Blick — Virtual Try-On löst das.»',why:'Datenpunkt + Problem + Lösung in einem Satz'},
+  {type:'fg',label:'Fashion Genius / VTO',color:'var(--fg-mid)',border:'var(--fg-lime)',text:'«Ich habe Fashion Genius aus meinem Wohnzimmer in Unterägeri gestartet. Hier sind meine grössten Fehler.»',why:'Founder-Vulnerabilität = höchstes organisches Engagement'},
+];
+
+const CTAS = [
+  {target:'Recruiter / Hiring Manager',color:'var(--blue-600)',text:'«Wenn du einen Senior AE mit DACH-Track-Record suchst — mein Kalender hat diese Woche noch einen Slot offen.»',action:'→ Link zu Calendly im Post'},
+  {target:'Direkt-Outreach (Fortinet / BMC)',color:'var(--blue-600)',text:'«Ich sende dir meine 3 grössten DACH-Deals als anonymisiertes Case-Study — DM reicht.»',action:'→ Kommentar «CASE» → DM'},
+  {target:'Head / VP of Sales Audience',color:'var(--amber-600)',text:'«Kommentiere PLAYBOOK und ich schicke dir meinen DACH-Enterprise-Sales-Framework.»',action:'→ Lead-Magnet → Relationship'},
+  {target:'Fashion Genius Pilotkunde',color:'var(--fg-mid)',text:'«Wir nehmen diese Woche 3 DACH-Fashion-Brands in unser Pilot-Programm auf. Schreib mir wenn du dabei sein willst.»',action:'→ DM / Formular / Demo-Call'},
+  {target:'Fashion Genius B2B Lead',color:'var(--fg-mid)',text:'«Wir haben für einen Shopify-Brand die Retouren um 38 % gesenkt. Zeige ich dir in 20 Minuten live — kostenlos.»',action:'→ Demo-Link in Kommentar'},
+  {target:'Freelancer-Audience',color:'var(--green-600)',text:'«Ich biete 3× 30-Min Sales-Consulting-Calls pro Monat an. Wer zuerst bucht, kriegt sie. Link in Bio.»',action:'→ Scarcity + direkter Link'},
+];
+
+// ── STATE ──
+function load(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch(e) { return fallback; } }
+function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); updateLastSave(); } catch(e) {} }
+
+let donePosts = load('done-posts', []);
+let diaryEntries = load('diary', []);
+let analyticsData = load('analytics', {});
+let influencers = load('influencers', [
+  {name:'@fashionista_ch', platform:'Instagram', followers:12, note:'DACH Plus Size', status:'offen'},
+  {name:'@stilzirkel', platform:'TikTok', followers:8, note:'Nachhaltige Mode', status:'kontaktiert'},
+  {name:'@modegeschichten', platform:'Beide', followers:22, note:'Vintage DACH', status:'aktiv'},
+]);
+let selectedTags = [];
+
+// ── NAV ──
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const items = document.querySelectorAll('.nav-item');
+  items.forEach(item => { if(item.getAttribute('onclick') && item.getAttribute('onclick').includes("'"+page+"'")) item.classList.add('active'); });
+  if(page === 'calendar') renderCalendar('all');
+  if(page === 'hooks') renderHooks();
+  if(page === 'cta') renderCTAs();
+  if(page === 'analytics') renderAnalytics();
+  if(page === 'influencer') renderInfluencers();
+  if(page === 'diary') renderDiary();
+  if(page === 'today') renderToday();
+}
+
+// ── TODAY ──
+function renderToday() {
+  const now = new Date();
+  const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  document.getElementById('today-date-sub').textContent = days[now.getDay()] + ', ' + now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+  // this-week posts
+  const todayPosts = POSTS.slice(0, 2);
+  let html = '';
+  todayPosts.forEach((p, i) => {
+    const done = donePosts.includes('post-' + i);
+    html += `<div class="post-card ${p.type}${done ? ' done' : ''}" onclick="togglePost('post-${i}', this)">
+      <div class="post-check"><span class="post-check-icon">✓</span></div>
+      <div class="post-body">
+        <div class="post-meta"><span class="pill ${p.type}">${p.pill}</span><span class="day-pill">${p.day}</span></div>
+        <div class="post-hook">${p.hook}</div>
+        <div class="post-cta-text">${p.cta}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('today-posts').innerHTML = html;
+
+  const weekDone = POSTS.slice(0,2).filter((p,i) => donePosts.includes('post-' + i)).length;
+  document.getElementById('kpi-posts').textContent = weekDone + '/2';
+  document.getElementById('kpi-diary').textContent = diaryEntries.length;
+  const activeInf = influencers.filter(i => i.status === 'aktiv' || i.status === 'kontaktiert').length;
+  document.getElementById('kpi-inf').textContent = activeInf;
+  document.getElementById('kpi-cta').textContent = '6 aktiv';
+}
+
+function togglePost(id, card) {
+  if(donePosts.includes(id)) donePosts = donePosts.filter(d => d !== id);
+  else donePosts.push(id);
+  save('done-posts', donePosts);
+  card.classList.toggle('done');
+  card.querySelector('.post-check-icon').style.display = donePosts.includes(id) ? 'block' : 'none';
+  renderToday();
+  toast('Status gespeichert');
+}
+
+function saveQuickNote() {
+  const text = document.getElementById('quick-note').value.trim();
+  if(!text) return;
+  diaryEntries.unshift({ date: new Date().toLocaleDateString('de-CH'), text, tags: ['Quick Note'] });
+  save('diary', diaryEntries);
+  document.getElementById('quick-note').value = '';
+  toast('Notiz gespeichert');
+  renderToday();
+}
+
+// ── CALENDAR ──
+function renderCalendar(filter) {
+  const posts = filter === 'all' ? POSTS : POSTS.filter(p => p.type === filter);
+  const weeks = [1,2,3,4,5,6];
+  let html = '';
+  weeks.forEach(w => {
+    const wp = posts.filter(p => p.week === w);
+    if(!wp.length) return;
+    const total = POSTS.filter(p => p.week === w).length;
+    const done = POSTS.filter((p,i) => p.week === w && donePosts.includes('post-' + POSTS.indexOf(p))).length;
+    const pct = total ? Math.round(done/total*100) : 0;
+    html += `<div class="week-block">
+      <div class="week-header">
+        <span class="week-badge">Woche ${w}</span>
+        <div class="week-progress"><div class="week-progress-fill" style="width:${pct}%"></div></div>
+        <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">${done}/${total}</span>
+      </div>`;
+    wp.forEach(p => {
+      const idx = POSTS.indexOf(p);
+      const done2 = donePosts.includes('post-' + idx);
+      html += `<div class="post-card ${p.type}${done2 ? ' done' : ''}" onclick="toggleCalPost('post-${idx}', this)">
+        <div class="post-check"><span class="post-check-icon">✓</span></div>
+        <div class="post-body">
+          <div class="post-meta"><span class="pill ${p.type}">${p.pill}</span><span class="day-pill">${p.day}</span></div>
+          <div class="post-hook">${p.hook}</div>
+          <div class="post-cta-text">${p.cta}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('calendar-container').innerHTML = html;
+}
+
+function filterCalendar(v) { renderCalendar(v); }
+
+function toggleCalPost(id, card) {
+  if(donePosts.includes(id)) donePosts = donePosts.filter(d => d !== id);
+  else donePosts.push(id);
+  save('done-posts', donePosts);
+  card.classList.toggle('done');
+  toast('Gespeichert');
+}
+
+// ── HOOKS ──
+function renderHooks() {
+  let html = '';
+  HOOKS.forEach((h, i) => {
+    html += `<div class="hook-card" style="border-color:${h.border}">
+      <div class="hook-type" style="color:${h.color}">${h.label}</div>
+      <div class="hook-text">${h.text}</div>
+      <div class="hook-why">${h.why}</div>
+      <button class="copy-btn" onclick="copyText('${h.text.replace(/'/g,"\\'")}')">Kopieren</button>
+    </div>`;
+  });
+  document.getElementById('hooks-container').innerHTML = html;
+}
+
+// ── CTAs ──
+function renderCTAs() {
+  let html = '';
+  CTAS.forEach(c => {
+    html += `<div class="cta-card">
+      <div class="cta-target" style="color:${c.color}">${c.target}</div>
+      <div class="cta-text">${c.text}</div>
+      <div class="cta-action">${c.action}</div>
+      <button class="copy-btn" onclick="copyText('${c.text.replace(/'/g,"\\'")}')">Kopieren</button>
+    </div>`;
+  });
+  document.getElementById('cta-container').innerHTML = html;
+}
+
+// ── ANALYTICS ──
+function renderAnalytics() {
+  const d = analyticsData;
+  const fields = ['li-imp','li-reach','li-eng','li-profile','li-follower','li-top','li-dm','li-job','tt-views','ig-reach','fg-demos','fg-pilot'];
+  fields.forEach(f => { const el = document.getElementById(f); if(el && d[f]) el.value = d[f]; });
+  renderChart();
+}
+
+function saveAnalytics() {
+  const fields = ['li-imp','li-reach','li-eng','li-profile','li-follower','li-top','li-dm','li-job','tt-views','ig-reach','fg-demos','fg-pilot'];
+  fields.forEach(f => { const el = document.getElementById(f); if(el) analyticsData[f] = el.value; });
+  const month = new Date().toLocaleDateString('de-CH', {month:'short', year:'numeric'});
+  if(!analyticsData.history) analyticsData.history = [];
+  analyticsData.history.push({ month, imp: analyticsData['li-imp'] || 0, reach: analyticsData['li-reach'] || 0 });
+  save('analytics', analyticsData);
+  toast('Analytics gespeichert');
+  renderChart();
+}
+
+let chartInstance = null;
+function renderChart() {
+  const d = analyticsData;
+  const history = (d.history || []).slice(-6);
+  if(history.length < 2) {
+    document.getElementById('analytics-chart').parentElement.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-muted);font-size:13px">Noch keine historischen Daten — speichere zuerst Werte.</div>';
+    return;
+  }
+  if(chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(document.getElementById('analytics-chart'), {
+    type: 'line',
+    data: {
+      labels: history.map(h => h.month),
+      datasets: [
+        { label: 'Impressionen', data: history.map(h => h.imp), borderColor: '#185FA5', backgroundColor: 'rgba(24,95,165,0.08)', tension: .3, fill: true },
+        { label: 'Reach', data: history.map(h => h.reach), borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.06)', tension: .3, fill: true },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+  });
+}
+
+// ── DIARY ──
+function toggleTag(btn, tag) {
+  btn.classList.toggle('selected');
+  if(selectedTags.includes(tag)) selectedTags = selectedTags.filter(t => t !== tag);
+  else selectedTags.push(tag);
+}
+
+function saveDiary() {
+  const text = document.getElementById('diary-text').value.trim();
+  if(!text) { toast('Bitte Text eingeben'); return; }
+  diaryEntries.unshift({ date: new Date().toLocaleDateString('de-CH'), text, tags: [...selectedTags] });
+  save('diary', diaryEntries);
+  document.getElementById('diary-text').value = '';
+  selectedTags = [];
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+  renderDiary();
+  toast('Eintrag gespeichert');
+}
+
+function renderDiary() {
+  if(!diaryEntries.length) {
+    document.getElementById('diary-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">Noch keine Einträge. Schreib deinen ersten!</div>';
+    return;
+  }
+  let html = '';
+  diaryEntries.forEach((e, i) => {
+    const tagColors = { 'Win':'#EAF3DE', 'Block':'#FCEBEB', 'Learning':'#E6F1FB', 'Idea':'#FAEEDA', 'AE/Job':'#E6F1FB', 'Fashion Genius':'#f5ff80', 'Quick Note':'#F1EFE8' };
+    const tagText = { 'Win':'#27500A', 'Block':'#A32D2D', 'Learning':'#0C447C', 'Idea':'#633806', 'AE/Job':'#0C447C', 'Fashion Genius':'#2a2a00', 'Quick Note':'#5F5E5A' };
+    const tags = (e.tags || []).map(t => `<span class="diary-tag" style="background:${tagColors[t]||'#f1f0ed'};color:${tagText[t]||'#5F5E5A'}">${t}</span>`).join(' ');
+    html += `<div class="diary-entry">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div class="diary-date">${e.date}</div>
+        <button onclick="deleteDiary(${i})" style="background:none;border:none;cursor:pointer;color:var(--gray-300);font-size:16px;line-height:1">×</button>
+      </div>
+      <div class="diary-text">${e.text}</div>
+      ${tags ? '<div style="margin-top:8px">'+tags+'</div>' : ''}
+    </div>`;
+  });
+  document.getElementById('diary-list').innerHTML = html;
+}
+
+function deleteDiary(i) {
+  if(!confirm('Eintrag löschen?')) return;
+  diaryEntries.splice(i, 1);
+  save('diary', diaryEntries);
+  renderDiary();
+}
+
+// ── INFLUENCER ──
+function renderInfluencers() {
+  if(!influencers.length) {
+    document.getElementById('inf-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px">Noch keine Creator — klicke «+ Creator hinzufügen».</div>';
+    return;
+  }
+  let html = '';
+  influencers.forEach((inf, i) => {
+    html += `<div class="inf-row">
+      <span style="font-weight:500">${inf.name}</span>
+      <span style="color:var(--text-muted)">${inf.platform}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:12px">${inf.followers}k</span>
+      <span style="color:var(--text-muted);font-size:12px">${inf.note}</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <select onchange="updateInfStatus(${i}, this.value)" style="padding:4px 6px;border:0.5px solid var(--gray-100);border-radius:6px;font-size:11px;background:var(--bg)">
+          ${['offen','kontaktiert','aktiv','abgeschlossen'].map(s => `<option value="${s}"${inf.status===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+        <button onclick="deleteInf(${i})" style="background:none;border:none;cursor:pointer;color:var(--gray-300);font-size:16px">×</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('inf-list').innerHTML = html;
+}
+
+function showAddInfluencer() {
+  const f = document.getElementById('add-inf-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function addInfluencer() {
+  const name = document.getElementById('inf-name').value.trim();
+  if(!name) return;
+  influencers.push({
+    name, platform: document.getElementById('inf-platform').value,
+    followers: parseInt(document.getElementById('inf-followers').value) || 0,
+    note: document.getElementById('inf-note').value,
+    status: document.getElementById('inf-status').value
+  });
+  save('influencers', influencers);
+  document.getElementById('add-inf-form').style.display = 'none';
+  renderInfluencers();
+  toast('Creator gespeichert');
+}
+
+function updateInfStatus(i, val) {
+  influencers[i].status = val;
+  save('influencers', influencers);
+  toast('Status aktualisiert');
+}
+
+function deleteInf(i) {
+  if(!confirm('Creator löschen?')) return;
+  influencers.splice(i, 1);
+  save('influencers', influencers);
+  renderInfluencers();
+}
+
+// ── UTILS ──
+function copyText(text) {
+  navigator.clipboard.writeText(text.replace(/\\'/g,"'")).then(() => toast('Kopiert!'));
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function updateLastSave() {
+  const el = document.getElementById('last-save');
+  if(el) el.textContent = 'Gespeichert ' + new Date().toLocaleTimeString('de-CH', {hour:'2-digit',minute:'2-digit'});
+}
+
+// ── INIT ──
+const now = new Date();
+const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+document.getElementById('sidebar-date').textContent = now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+renderToday();
+updateLastSave();
+</script>
+</body>
+</html>
