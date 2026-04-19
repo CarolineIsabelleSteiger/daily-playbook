@@ -351,6 +351,7 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   <div class="nav">
     <div class="nav-section">Heute</div>
     <div class="nav-item active" onclick="nav('today')"><div class="nav-dot"></div><span>Today</span></div>
+    <div class="nav-item" onclick="nav('monday')"><div class="nav-dot" style="background:#E24B4A"></div><span>Mo Action Plan</span></div>
     <div class="nav-item" onclick="nav('routine')"><div class="nav-dot"></div><span>Routine</span></div>
     <div class="nav-item" onclick="nav('diary')"><div class="nav-dot"></div><span>Tagebuch</span></div>
 
@@ -374,6 +375,29 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
 
 <!-- MAIN -->
 <main class="main">
+
+<!-- MONDAY ACTION PLAN -->
+<div class="page" id="page-monday">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Montag 21. April — Action Plan</div>
+      <div class="page-sub">Wochenstart · Alle offenen Items aus KW 16</div>
+    </div>
+    <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;text-align:right">
+      KW 16 Final<br>
+      <span style="font-size:18px;font-weight:500;color:var(--blue-600)">20.077</span> Impressionen
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Neue Connections</div><div class="metric-val">31</div><div class="metric-delta">diese Woche</div></div>
+    <div class="metric"><div class="metric-label">Warme Leads</div><div class="metric-val">11</div><div class="metric-delta" style="color:#A32D2D">Sales Nav läuft ab in 7 Tagen!</div></div>
+    <div class="metric"><div class="metric-label">Follower</div><div class="metric-val">1.609</div><div class="metric-delta">+15 diese Woche</div></div>
+    <div class="metric"><div class="metric-label">Posts diese Woche</div><div class="metric-val">2</div><div class="metric-delta" style="color:var(--blue-600)">Di+Do terminiert ✓</div></div>
+  </div>
+
+  <div id="monday-actions"></div>
+</div>
 
 <!-- TODAY -->
 <div class="page active" id="page-today">
@@ -597,10 +621,10 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   </div>
 
   <div class="grid-4" style="margin-bottom:20px">
-    <div class="metric"><div class="metric-label">Impressionen (1 Jahr)</div><div class="metric-val" id="ld-imp">3.602</div><div class="metric-delta" style="color:var(--text-muted)">Apr 2025 – Apr 2026</div></div>
-    <div class="metric"><div class="metric-label">Erreichte Mitglieder</div><div class="metric-val" id="ld-reach">964</div><div class="metric-delta" style="color:var(--text-muted)">1 Jahr gesamt</div></div>
-    <div class="metric"><div class="metric-label">Follower</div><div class="metric-val" id="ld-eng">1.594</div><div class="metric-delta" style="color:var(--blue-600)">Stand 14.4.2026</div></div>
-    <div class="metric"><div class="metric-label">Bester Post</div><div class="metric-val" id="ld-prof" style="font-size:16px">2.272 Imp.</div><div class="metric-delta" style="color:var(--blue-600)">Mai 2025 · 37 Interakt.</div></div>
+    <div class="metric"><div class="metric-label">Impressionen (KW 16)</div><div class="metric-val" id="ld-imp">20.077</div><div class="metric-delta" style="color:var(--blue-600)">+789% vs. KW 15</div></div>
+    <div class="metric"><div class="metric-label">Erreichte Mitglieder</div><div class="metric-val" id="ld-reach">12.401</div><div class="metric-delta" style="color:var(--blue-600)">+809% vs. KW 15</div></div>
+    <div class="metric"><div class="metric-label">Follower</div><div class="metric-val" id="ld-eng">1.609</div><div class="metric-delta" style="color:var(--blue-600)">Stand 19.4.2026</div></div>
+    <div class="metric"><div class="metric-label">Neue Connections</div><div class="metric-val" id="ld-prof">31</div><div class="metric-delta" style="color:var(--blue-600)">diese Woche</div></div>
   </div>
 
   <div class="grid-2" style="margin-bottom:20px">
@@ -659,10 +683,10 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   </div>
 
   <div class="grid-4" style="margin-bottom:16px">
-    <div class="metric"><div class="metric-label">LinkedIn Impressionen</div><div class="metric-val">943</div><div class="metric-delta" style="color:var(--text-muted)">letzte 30 Tage</div></div>
-    <div class="metric"><div class="metric-label">Individuelle Imp.</div><div class="metric-val">203</div><div class="metric-delta" style="color:var(--text-muted)">organisch</div></div>
-    <div class="metric"><div class="metric-label">Klicks</div><div class="metric-val">58</div><div class="metric-delta" style="color:var(--fg-mid)">6.1 % Klickrate</div></div>
-    <div class="metric"><div class="metric-label">Reaktionen</div><div class="metric-val">0</div><div class="metric-delta" style="color:#A32D2D">Noch kein Engagement</div></div>
+    <div class="metric"><div class="metric-label">LinkedIn Impressionen</div><div class="metric-val">131</div><div class="metric-delta" style="color:var(--text-muted)">seit 14. April</div></div>
+    <div class="metric"><div class="metric-label">Individuelle Imp.</div><div class="metric-val">56</div><div class="metric-delta" style="color:var(--fg-mid)">organisch</div></div>
+    <div class="metric"><div class="metric-label">Klicks</div><div class="metric-val">3</div><div class="metric-delta" style="color:var(--fg-mid)">organisch</div></div>
+    <div class="metric"><div class="metric-label">Reaktionen</div><div class="metric-val">1</div><div class="metric-delta" style="color:var(--fg-mid)">erste Reaktion ✓</div></div>
   </div>
 
   <div class="grid-4" style="margin-bottom:20px">
@@ -938,7 +962,8 @@ function nav(page) {
   if(page === 'hooks') renderHooks();
   if(page === 'cta') renderCTAs();
   if(page === 'analytics') renderAnalytics();
-  if(page === 'jobs') renderJobs();
+  if(page === 'monday') renderMonday();
+
   if(page === 'pilots') renderPilots();
   if(page === 'influencer') renderInfluencers();
   if(page === 'diary') renderDiary();
@@ -1364,6 +1389,52 @@ function renderGCalLinks() {
 }
 
 
+// ── MONDAY ACTION PLAN ──
+const MONDAY_ACTIONS = [
+  {time:'09:00',priority:'🔴',category:'Analytics',title:'Analytics Check + Wochenziel setzen',items:['LinkedIn Analytics exportieren (Follower + Profilaufrufe)','Fashion Genius Page Analytics exportieren','Zahlen ins Playbook unter Analytics eintragen','Wochenziel in Routine-Seite notieren'],id:'mon-analytics'},
+  {time:'09:30',priority:'🔴',category:'Sales Navigator — DRINGEND (7 Tage!)',title:'Sales Navigator Leads exportieren + sichern',items:['Alle gespeicherten Listen als CSV exportieren','Alle 11 warmen Leads ins Playbook unter FG Piloten eintragen','Notizen zu jedem Lead sichern bevor SN abläuft'],id:'mon-salesnav'},
+  {time:'10:00',priority:'🔴',category:'Fashion Genius — Pilot Outreach',title:'DMs an Top-5 Fashion Prospects senden',items:['Rüdiger Traub (BRAX) — DM: VTO Demo anbieten','Pascal Egger (MANILO) — DM: Pilot-Gespräch','Tobias Stork (Takko Fashion) — DM: VTO Demo','Christian Kettl (LOWA) — DM: VTO Demo','Franco Savastano (Holt Renfrew) — kurze DM CEO-Level'],id:'mon-fg-dms'},
+  {time:'10:30',priority:'🔴',category:'Job Search — Azul',title:'Azul Follow-up senden',items:['Maryann Kovacevic — DM: nächster Schritt Azul AE DACH Rolle','Mike Dietz — kurzes Follow-up nach Vernetzung'],id:'mon-azul'},
+  {time:'11:00',priority:'🟡',category:'LinkedIn Posts automatisch live',title:'150% Quota Post läuft automatisch',items:['Post geht um 11:00 live — nichts zu tun','Erste Reaktionen beobachten + antworten','Fashion Genius Post um 12:00 ebenfalls automatisch'],id:'mon-posts'},
+  {time:'11:30',priority:'🟡',category:'Facebook Communities',title:'E-Commerce Stammtisch Post veröffentlichen',items:['Post: Suche 3 DACH Fashion Brands für VTO Pilot — regelkonform','Shopify DACH Gruppe: prüfen ob Beitrittsanfrage angenommen'],id:'mon-facebook'},
+  {time:'13:00',priority:'🟡',category:'Netzwerk Follow-ups',title:'Kommentar-Antworten + neue Kontakte prüfen',items:['Stefan Wenzel — kurze Antwort auf seine Nachricht','Jürgen Müller (profashionals) — reagiert auf Kommentar?','Rüdiger Traub (BRAX) — reagiert auf Kommentar?','Pascal Egger (MANILO) — reagiert auf Kommentar?'],id:'mon-followups'},
+  {time:'14:00',priority:'🟢',category:'Influencer',title:'DMs an Creator senden',items:['@cat_hammill — DM nach Kommentar','@whatpeoplearewearing — DM nach Kommentar','@sa.costantini — DM nach Kommentar'],id:'mon-influencer'},
+  {time:'15:00',priority:'🟢',category:'Content',title:'Donnerstag Posts prüfen + KW 17 planen',items:['Do 23. Apr Posts terminiert prüfen','KW 17 Posts Di 28. + Do 30. vorbereiten mit Claude'],id:'mon-content'},
+];
+
+function renderMonday() {
+  const saved = load('monday-done', []);
+  let html = '';
+  MONDAY_ACTIONS.forEach(a => {
+    const isDone = saved.includes(a.id);
+    const borderColor = isDone?'var(--gray-300)':a.priority==='🔴'?'#E24B4A':a.priority==='🟡'?'#EF9F27':'#3B6D11';
+    html += `<div style="margin-bottom:12px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;opacity:${isDone?'0.5':'1'}">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-left:4px solid ${borderColor}">
+        <div style="font-size:14px">${a.priority}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);min-width:45px">${a.time}</div>
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:500;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:3px">${a.category}</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text)">${a.title}</div>
+        </div>
+        <button onclick="toggleMondayItem('${a.id}')" style="padding:5px 14px;border-radius:6px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;border:0.5px solid var(--border);background:${isDone?'#EAF3DE':'var(--bg)'};color:${isDone?'#3B6D11':'var(--text-muted)'}">${isDone?'✓ Erledigt':'Erledigen'}</button>
+      </div>
+      <div style="padding:8px 16px 12px 16px;border-top:0.5px solid var(--color-border-tertiary)">
+        ${a.items.map(i=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:3px 0;font-size:12px;color:var(--text-muted)"><span style="color:var(--blue-400);flex-shrink:0">→</span><span>${i}</span></div>`).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('monday-actions').innerHTML = html;
+}
+
+function toggleMondayItem(id) {
+  let saved = load('monday-done', []);
+  if(saved.includes(id)) saved = saved.filter(i => i !== id);
+  else saved.push(id);
+  save('monday-done', saved);
+  renderMonday();
+  toast(saved.includes(id) ? '✓ Erledigt!' : 'Zurückgesetzt');
+}
+
 let jobs = load('jobs', [
   {company:'Fortinet', title:'Senior AE DACH', contact:'Robin (Recruiter)', date:'2026-04-01', channel:'Recruiter', status:'interview', note:'2. Interview steht aus — Manuel Eberenz'},
   {company:'BMC Software', title:'Enterprise AE', contact:'Zenobia (Recruiter)', date:'2026-03-20', channel:'LinkedIn', status:'interview', note:'Erste Gespräche laufen'},
@@ -1465,6 +1536,86 @@ function updateLastSave() {
 const now = new Date();
 const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
 document.getElementById('sidebar-date').textContent = now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+// Update analytics with latest real data (19. April 2026)
+try {
+  const realData = {
+    'li-imp': 20077,
+    'li-reach': 12401,
+    'li-eng': 13,
+    'li-profile': 51,
+    'li-follower': 1609,
+    'li-top': 1231,
+    'li-dm': 5,
+    'li-job': 2,
+    'tt-views': 943,
+    'ig-reach': 0,
+    'fg-demos': 0,
+    'fg-pilot': 0,
+    history: [
+      { month: 'KW 15 (9-15 Apr)', imp: 2257, reach: 1365 },
+      { month: 'KW 16 (13-19 Apr)', imp: 20077, reach: 12401 }
+    ]
+  };
+  localStorage.setItem('analytics', JSON.stringify(realData));
+} catch(e) {}
+
+// Pre-load jobs if empty
+try {
+  const existingJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+  if(!existingJobs.length) {
+    const jobs = [
+      {company:'Fortinet', title:'Senior AE DACH', contact:'Robin (Recruiter)', date:'2026-04-01', channel:'Recruiter', status:'interview', note:'2. Interview steht aus — Manuel Eberenz'},
+      {company:'BMC Software', title:'Enterprise AE', contact:'Zenobia (Recruiter)', date:'2026-03-20', channel:'LinkedIn', status:'interview', note:'Erste Gespräche laufen'},
+      {company:'Azul', title:'Enterprise AE DACH', contact:'Mike Dietz + Maryann Kovacevic', date:'2026-04-17', channel:'LinkedIn', status:'kontaktiert', note:'Mike Dietz vernetzt 18.4. — Maryann vernetzt 15.4. — Follow-up Mo 21.4.'},
+      {company:'Parloa', title:'Enterprise AE Switzerland', contact:'Chanisara Kongsantinart', date:'2026-04-19', channel:'LinkedIn', status:'beworben', note:'Abwarten — erst Chanisara Antwort abwarten'},
+    ];
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+  }
+} catch(e) {}
+
+// Pre-load pilots if empty
+try {
+  const existingPilots = JSON.parse(localStorage.getItem('pilots') || '[]');
+  if(!existingPilots.length) {
+  const pilots = [
+      {brand:'BRAX Leineweber', contact:'Rüdiger Traub, Dir. E-Commerce', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-17', note:'Vernetzt 17.4. — DM Mo 21.4. senden'},
+      {brand:'MANILO', contact:'Pascal Egger, Founder & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-17', note:'Vernetzt + Nachricht erhalten 17.4. — DM Mo 21.4.'},
+      {brand:'Takko Fashion', contact:'Tobias Stork, Head E-Commerce & CRM', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Warmer Lead SN — angenommen 9.4. — DM Mo 21.4.'},
+      {brand:'LOWA Sportschuhe', contact:'Christian Kettl, Head E-Commerce', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Warmer Lead SN — angenommen 9.4. — DM Mo 21.4.'},
+      {brand:'Holt Renfrew', contact:'Franco Savastano, President & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-10', note:'CEO-Level Zürich — angenommen 16.4. — kurze DM Mo 21.4.'},
+      {brand:'Zebra Fashion AG', contact:'Michael Solomun, CEO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'CEO Schweiz — Bassersdorf — Top Priorität'},
+      {brand:'Zebra Fashion AG', contact:'Arefa Hasher, E-Commerce & CRM', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Direkt zuständig E-Commerce — Schweiz'},
+      {brand:'MORE & MORE', contact:'Thomas Forstpointner, Interim CDO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Interim CDO — Fashion Brand DE — VTO Angle'},
+      {brand:'KUNERT FASHION', contact:'Thomas Böhmer, Leiter E-Commerce', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Fashion Brand Österreich — direkt zuständig'},
+      {brand:'C.P. Company', contact:'Caterina Ticchio, Omnichannel/DTC', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Premium Fashion — Lugano — Omnichannel Fit'},
+      {brand:'Rich & Royal', contact:'Angela M., Technical Ops E-Commerce', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Fashion Brand DE — E-Commerce Ops'},
+      {brand:'Ospelt Gruppe', contact:'Reto Siegenthaler, CIO/CDO/CCO', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Liechtenstein — C-Level — Digital Transformation'},
+      {brand:'Ullrich', contact:'Antonio Govetosa, CMO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Mode Schweiz — CMO Level'},
+      {brand:'TEVEO', contact:'Philip Clas, CDMO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Digital Fashion — München'},
+      {brand:'Frederique Constant', contact:'Gaëlle Ranchon, Head Sales & Marketing', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Luxury Watches Schweiz — Premium Segment'},
+      {brand:'Azul', contact:'Maryann Kovacevic, Sr. Dir. Global TA', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-15', note:'Job Lead — Azul AE DACH — Follow-up Mo 21.4.'},
+    ];
+    localStorage.setItem('pilots', JSON.stringify(pilots));
+  }
+} catch(e) {}
+
+// Pre-load influencers if empty  
+try {
+  const existingInf = JSON.parse(localStorage.getItem('influencers') || '[]');
+  if(existingInf.length < 5) {
+    const influencers = [
+      {name:'@cat_hammill', platform:'Instagram', followers:12, note:'Statement Fashion — kommentiert', status:'kontaktiert'},
+      {name:'@whatpeoplearewearing', platform:'Instagram', followers:82, note:'Street Style — 82k Likes', status:'kontaktiert'},
+      {name:'@sa.costantini', platform:'Instagram', followers:40, note:'Color/Style — verifiziert', status:'kontaktiert'},
+      {name:'@thanyaw', platform:'Instagram', followers:2400, note:'DACH OOTDs — 2.4M Follower', status:'offen'},
+      {name:'@carod', platform:'Instagram', followers:4500, note:'Caroline Daur — Hamburg', status:'offen'},
+    ];
+    localStorage.setItem('influencers', JSON.stringify(influencers));
+  }
+} catch(e) {}
+
+
 renderToday();
 renderGCalLinks();
 updateLastSave();
