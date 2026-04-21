@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caroline Steiger — Daily Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+:root {
+  --blue-900: #042C53;
+  --blue-800: #0C447C;
+  --blue-600: #185FA5;
+  --blue-400: #378ADD;
+  --blue-200: #85B7EB;
+  --blue-100: #B5D4F4;
+  --blue-50:  #E6F1FB;
+  --fg-lime:  #BFEF00;
+  --fg-dark:  #1a1e00;
+  --fg-mid:   #5a7000;
+  --green-600:#3B6D11;
+  --amber-600:#854F0B;
+  --gray-900: #2C2C2A;
+  --gray-600: #5F5E5A;
+  --gray-300: #B4B2A9;
+  --gray-100: #D3D1C7;
+  --gray-50:  #F1EFE8;
+  --bg:       #F8F7F4;
+  --surface:  #FFFFFF;
+  --border:   rgba(0,0,0,0.09);
+  --text:     #2C2C2A;
+  --text-muted: #73726c;
+  --radius:   10px;
+  --radius-lg: 14px;
+  --shadow:   0 1px 3px rgba(0,0,0,0.06), 0 0 0 0.5px rgba(0,0,0,0.07);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 220px; height: 100vh;
+  background: var(--blue-900);
+  display: flex; flex-direction: column;
+  padding: 0;
+  z-index: 100;
+}
+
+.sidebar-brand {
+  padding: 24px 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.sidebar-brand .name {
+  font-size: 14px; font-weight: 500; color: #fff;
+  line-height: 1.3;
+}
+.sidebar-brand .sub {
+  font-size: 11px; color: rgba(255,255,255,0.45);
+  font-family: 'DM Mono', monospace;
+  margin-top: 3px;
+}
+
+.sidebar-date {
+  padding: 12px 20px;
+  font-size: 11px; color: rgba(255,255,255,0.4);
+  font-family: 'DM Mono', monospace;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.nav { flex: 1; padding: 10px 0; overflow-y: auto; }
+
+.nav-section {
+  font-size: 9px; font-weight: 500; letter-spacing: .1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+  padding: 12px 20px 6px;
+  font-family: 'DM Mono', monospace;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 20px;
+  font-size: 13px; color: rgba(255,255,255,0.55);
+  cursor: pointer;
+  transition: all .12s;
+  border-left: 2px solid transparent;
+}
+.nav-item:hover { color: #fff; background: rgba(255,255,255,0.06); }
+.nav-item.active { color: #fff; background: rgba(255,255,255,0.08); border-left-color: var(--blue-400); }
+.nav-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor; opacity: .5; flex-shrink: 0;
+}
+.nav-item.active .nav-dot { opacity: 1; background: var(--blue-400); }
+
+.sidebar-footer {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  font-size: 11px; color: rgba(255,255,255,0.25);
+  font-family: 'DM Mono', monospace;
+}
+
+/* ── MAIN ── */
+.main {
+  margin-left: 220px;
+  padding: 32px 36px;
+  max-width: 1100px;
+}
+
+.page { display: none; }
+.page.active { display: block; }
+
+.page-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+.page-title { font-size: 22px; font-weight: 500; color: var(--text); }
+.page-sub { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 20px 22px;
+}
+
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+
+.metric {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.metric-label { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.metric-val { font-size: 26px; font-weight: 500; color: var(--text); }
+.metric-delta { font-size: 11px; margin-top: 4px; font-family: 'DM Mono', monospace; color: var(--blue-600); }
+
+/* ── SECTION TITLE ── */
+.section-label {
+  font-size: 10px; font-weight: 500; letter-spacing: .08em;
+  text-transform: uppercase; color: var(--text-muted);
+  font-family: 'DM Mono', monospace;
+  margin-bottom: 10px;
+}
+
+/* ── CALENDAR ── */
+.week-block { margin-bottom: 20px; }
+.week-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px;
+}
+.week-badge {
+  font-size: 10px; font-weight: 500; padding: 3px 10px;
+  border-radius: 20px; background: var(--gray-50);
+  color: var(--gray-600); font-family: 'DM Mono', monospace;
+}
+.week-progress {
+  flex: 1; height: 3px; background: var(--gray-100);
+  border-radius: 2px; overflow: hidden;
+}
+.week-progress-fill { height: 100%; border-radius: 2px; background: var(--blue-400); transition: width .3s; }
+
+.post-card {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 8px;
+  border-left: 3px solid;
+  transition: box-shadow .12s;
+  cursor: pointer;
+}
+.post-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+.post-card.done { opacity: .55; }
+.post-card.ae  { border-color: var(--blue-600); }
+.post-card.vp  { border-color: var(--amber-600); }
+.post-card.fl  { border-color: var(--green-600); }
+.post-card.fg  { border-color: var(--fg-mid); }
+
+.post-check {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--gray-300);
+  background: var(--bg); flex-shrink: 0; margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.post-card.done .post-check { background: var(--blue-600); border-color: var(--blue-600); }
+.post-check-icon { font-size: 11px; color: #fff; display: none; }
+.post-card.done .post-check-icon { display: block; }
+
+.post-body { flex: 1; }
+.post-meta { display: flex; gap: 6px; margin-bottom: 5px; flex-wrap: wrap; }
+.pill {
+  font-size: 10px; padding: 2px 8px; border-radius: 10px;
+  font-weight: 500; font-family: 'DM Mono', monospace;
+}
+.pill.ae { background: var(--blue-50); color: var(--blue-800); }
+.pill.vp { background: #FAEEDA; color: var(--amber-600); }
+.pill.fl { background: #EAF3DE; color: var(--green-600); }
+.pill.fg { background: #f5ff80; color: var(--fg-dark); }
+.day-pill { font-size: 10px; padding: 2px 8px; border-radius: 10px; background: var(--gray-50); color: var(--gray-600); }
+
+.post-hook { font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 4px; }
+.post-cta-text { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+
+/* ── HOOKS ── */
+.hook-card {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); padding: 16px 18px;
+  margin-bottom: 12px;
+  border-top: 2px solid;
+}
+.hook-type { font-size: 10px; font-weight: 500; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 7px; }
+.hook-text { font-size: 14px; font-weight: 500; line-height: 1.5; margin-bottom: 6px; color: var(--text); }
+.hook-why { font-size: 12px; color: var(--text-muted); }
+.copy-btn {
+  margin-top: 10px; padding: 5px 12px;
+  border: 0.5px solid var(--border); border-radius: 6px;
+  background: var(--bg); font-size: 11px; font-family: 'DM Mono', monospace;
+  cursor: pointer; color: var(--text-muted); transition: all .12s;
+}
+.copy-btn:hover { background: var(--blue-50); color: var(--blue-600); border-color: var(--blue-200); }
+
+/* ── CTA CARDS ── */
+.cta-card {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); padding: 16px 18px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.cta-target { font-size: 10px; font-weight: 500; font-family: 'DM Mono', monospace; text-transform: uppercase; letter-spacing: .06em; }
+.cta-text { font-size: 13px; line-height: 1.5; color: var(--text); font-weight: 500; }
+.cta-action { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+
+/* ── DIARY ── */
+.diary-entry {
+  background: var(--surface); border-radius: var(--radius-lg);
+  box-shadow: var(--shadow); padding: 16px 18px; margin-bottom: 10px;
+}
+.diary-date { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; margin-bottom: 4px; }
+.diary-text { font-size: 13px; line-height: 1.6; color: var(--text); white-space: pre-wrap; }
+.diary-tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-top: 8px; }
+
+textarea.diary-input {
+  width: 100%; border: 0.5px solid var(--gray-100); border-radius: var(--radius);
+  padding: 12px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+  line-height: 1.6; background: var(--bg); color: var(--text);
+  resize: vertical; min-height: 100px;
+  transition: border .15s;
+}
+textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
+
+.tag-row { display: flex; gap: 6px; margin: 10px 0; flex-wrap: wrap; }
+.tag-btn {
+  padding: 4px 12px; border-radius: 20px; font-size: 11px;
+  border: 0.5px solid var(--border); background: var(--bg);
+  cursor: pointer; font-family: 'DM Mono', monospace; transition: all .12s;
+}
+.tag-btn.selected { background: var(--blue-600); color: #fff; border-color: var(--blue-600); }
+
+.save-btn {
+  padding: 8px 20px; border-radius: var(--radius); font-size: 13px;
+  background: var(--blue-600); color: #fff; border: none;
+  cursor: pointer; font-family: 'DM Sans', sans-serif; font-weight: 500;
+  transition: background .12s;
+}
+.save-btn:hover { background: var(--blue-800); }
+
+/* ── ANALYTICS INPUTS ── */
+.analytics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+.analytics-field { display: flex; flex-direction: column; gap: 5px; }
+.analytics-field label { font-size: 11px; color: var(--text-muted); font-family: 'DM Mono', monospace; }
+.analytics-field input {
+  padding: 8px 10px; border: 0.5px solid var(--gray-100); border-radius: var(--radius);
+  font-family: 'DM Mono', monospace; font-size: 13px;
+  background: var(--bg); color: var(--text);
+}
+.analytics-field input:focus { outline: none; border-color: var(--blue-400); }
+
+/* ── INFLUENCER TRACKER ── */
+.inf-row {
+  display: grid; grid-template-columns: 1fr 1fr 80px 100px 80px;
+  gap: 10px; align-items: center;
+  padding: 10px 14px;
+  background: var(--surface); border-radius: var(--radius);
+  box-shadow: var(--shadow); margin-bottom: 6px;
+  font-size: 12px;
+}
+.inf-header {
+  display: grid; grid-template-columns: 1fr 1fr 80px 100px 80px;
+  gap: 10px; padding: 0 14px 6px;
+  font-size: 10px; font-family: 'DM Mono', monospace;
+  color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em;
+}
+.status-badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 10px;
+  font-family: 'DM Mono', monospace; text-align: center;
+}
+.status-badge.offen { background: var(--gray-50); color: var(--gray-600); }
+.status-badge.kontaktiert { background: var(--blue-50); color: var(--blue-600); }
+.status-badge.aktiv { background: #EAF3DE; color: var(--green-600); }
+.status-badge.abgeschlossen { background: #F0FFF0; color: #166534; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--gray-900); color: #fff;
+  padding: 10px 18px; border-radius: var(--radius);
+  font-size: 12px; font-family: 'DM Mono', monospace;
+  transform: translateY(100px); transition: transform .25s;
+  z-index: 999;
+}
+.toast.show { transform: translateY(0); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { width: 60px; }
+  .sidebar-brand .name, .sidebar-brand .sub, .nav-item span, .nav-section, .sidebar-date, .sidebar-footer { display: none; }
+  .nav-item { justify-content: center; padding: 12px 0; }
+  .main { margin-left: 60px; padding: 20px; }
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .analytics-row { grid-template-columns: repeat(2, 1fr); }
+  .inf-row, .inf-header { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <div class="name">Caroline Steiger</div>
+    <div class="sub">Daily Playbook</div>
+  </div>
+  <div class="sidebar-date" id="sidebar-date"></div>
+  <div class="nav">
+    <div class="nav-section">Heute</div>
+    <div class="nav-item active" onclick="nav('today')"><div class="nav-dot"></div><span>Today</span></div>
+    <div class="nav-item" onclick="nav('monday')"><div class="nav-dot" style="background:#E24B4A"></div><span>Mo Action Plan</span></div>
+    <div class="nav-item" onclick="nav('routine')"><div class="nav-dot"></div><span>Routine</span></div>
+    <div class="nav-item" onclick="nav('diary')"><div class="nav-dot"></div><span>Tagebuch</span></div>
+
+    <div class="nav-section">Content</div>
+    <div class="nav-item" onclick="nav('calendar')"><div class="nav-dot"></div><span>Kalender</span></div>
+    <div class="nav-item" onclick="nav('hooks')"><div class="nav-dot"></div><span>Hooks</span></div>
+    <div class="nav-item" onclick="nav('cta')"><div class="nav-dot"></div><span>CTAs</span></div>
+
+    <div class="nav-section">Analytics</div>
+    <div class="nav-item" onclick="nav('li-dashboard')"><div class="nav-dot"></div><span>LinkedIn</span></div>
+    <div class="nav-item" onclick="nav('fg-dashboard')"><div class="nav-dot"></div><span>Fashion Genius</span></div>
+    <div class="nav-item" onclick="nav('analytics')"><div class="nav-dot"></div><span>Daten erfassen</span></div>
+
+    <div class="nav-section">Growth</div>
+    <div class="nav-item" onclick="nav('jobs')"><div class="nav-dot"></div><span>Bewerbungen</span></div>
+    <div class="nav-item" onclick="nav('pilots')"><div class="nav-dot"></div><span>FG Piloten</span></div>
+    <div class="nav-item" onclick="nav('influencer')"><div class="nav-dot"></div><span>Influencer</span></div>
+  </div>
+  <div class="sidebar-footer" id="last-save"></div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- MONDAY ACTION PLAN -->
+<div class="page" id="page-monday">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Montag 21. April — Action Plan</div>
+      <div class="page-sub">Wochenstart · Alle offenen Items aus KW 16</div>
+    </div>
+    <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;text-align:right">
+      KW 16 Final<br>
+      <span style="font-size:18px;font-weight:500;color:var(--blue-600)">20.077</span> Impressionen
+    </div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Neue Connections</div><div class="metric-val">31</div><div class="metric-delta">diese Woche</div></div>
+    <div class="metric"><div class="metric-label">Warme Leads</div><div class="metric-val">11</div><div class="metric-delta" style="color:#A32D2D">Sales Nav läuft ab in 7 Tagen!</div></div>
+    <div class="metric"><div class="metric-label">Follower</div><div class="metric-val">1.609</div><div class="metric-delta">+15 diese Woche</div></div>
+    <div class="metric"><div class="metric-label">Posts diese Woche</div><div class="metric-val">2</div><div class="metric-delta" style="color:var(--blue-600)">Di+Do terminiert ✓</div></div>
+  </div>
+
+  <div id="monday-actions"></div>
+</div>
+
+<!-- TODAY -->
+<div class="page active" id="page-today">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Guten Morgen, Caroline.</div>
+      <div class="page-sub" id="today-date-sub"></div>
+    </div>
+    <div id="today-streak" style="font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;text-align:right"></div>
+  </div>
+
+  <div class="grid-4" id="today-kpis">
+    <div class="metric"><div class="metric-label">Posts diese Woche</div><div class="metric-val" id="kpi-posts">0/2</div></div>
+    <div class="metric"><div class="metric-label">Offene CTAs</div><div class="metric-val" id="kpi-cta">—</div></div>
+    <div class="metric"><div class="metric-label">Influencer aktiv</div><div class="metric-val" id="kpi-inf">—</div></div>
+    <div class="metric"><div class="metric-label">Tagebuch-Einträge</div><div class="metric-val" id="kpi-diary">0</div></div>
+  </div>
+
+  <div class="section-label">Heutige Posts</div>
+  <div id="today-posts"></div>
+
+  <div style="margin-top:24px">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+    <div class="section-label" style="margin-bottom:0">Kalender-Einträge</div>
+    <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">1 Klick → Google Calendar öffnet sich vorausgefüllt → Speichern</div>
+  </div>
+  <div id="calendar-widget">
+    <div id="gcal-links"></div>
+  </div>
+  </div>
+
+  <div style="margin-top:28px">
+  <div class="section-label">Quick Note</div>
+  <div class="card">
+    <textarea class="diary-input" id="quick-note" placeholder="Gedanke, Idee, Follow-up für heute…" style="min-height:70px"></textarea>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="save-btn" onclick="saveQuickNote()">Speichern</button>
+    </div>
+  </div>
+  </div>
+</div>
+
+<!-- DIARY -->
+<div class="page" id="page-diary">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Tagebuch</div>
+      <div class="page-sub">Learnings, Erfolge, Rückschläge — dein persönliches Logbuch</div>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label">Neuer Eintrag</div>
+    <textarea class="diary-input" id="diary-text" placeholder="Was ist heute passiert? Was hat funktioniert? Was nächstes Mal anders?"></textarea>
+    <div class="tag-row" id="tag-row">
+      <button class="tag-btn" onclick="toggleTag(this,'AE/Job')">AE / Job</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Fashion Genius')">Fashion Genius</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Learning')">Learning</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Win')">Win</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Block')">Block</button>
+      <button class="tag-btn" onclick="toggleTag(this,'Idea')">Idea</button>
+    </div>
+    <button class="save-btn" onclick="saveDiary()">Eintrag speichern</button>
+  </div>
+  <div class="section-label">Alle Einträge</div>
+  <div id="diary-list"></div>
+</div>
+
+<!-- CALENDAR -->
+<div class="page" id="page-calendar">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Content-Kalender</div>
+      <div class="page-sub">6-Wochen-Plan · 2× pro Woche · Di + Do</div>
+    </div>
+    <div>
+      <select onchange="filterCalendar(this.value)" style="padding:7px 12px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-family:'DM Mono',monospace;font-size:11px;background:var(--surface)">
+        <option value="all">Alle Zielgruppen</option>
+        <option value="ae">Senior AE / Job</option>
+        <option value="vp">Head / VP Sales</option>
+        <option value="fl">Freelancer</option>
+        <option value="fg">Fashion Genius</option>
+      </select>
+    </div>
+  </div>
+  <div id="calendar-container"></div>
+</div>
+
+<!-- HOOKS -->
+<div class="page" id="page-hooks">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Hook-Bibliothek</div>
+      <div class="page-sub">Bewährte Öffner — nach Zielgruppe</div>
+    </div>
+  </div>
+  <div id="hooks-container"></div>
+</div>
+
+<!-- CTAs -->
+<div class="page" id="page-cta">
+  <div class="page-header">
+    <div>
+      <div class="page-title">CTA-Bibliothek</div>
+      <div class="page-sub">Operative Call-to-Actions — für jedes Ziel</div>
+    </div>
+  </div>
+  <div class="grid-3" id="cta-container"></div>
+</div>
+
+<!-- ANALYTICS -->
+<div class="page" id="page-analytics">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Analytics</div>
+      <div class="page-sub">Monatliche Zahlen manuell erfassen</div>
+    </div>
+    <button class="save-btn" onclick="saveAnalytics()">Speichern</button>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label" style="margin-bottom:14px">LinkedIn — Monat</div>
+    <div class="analytics-row">
+      <div class="analytics-field"><label>Impressionen</label><input id="li-imp" type="number" placeholder="z.B. 24830"></div>
+      <div class="analytics-field"><label>Erreichte Mitglieder</label><input id="li-reach" type="number" placeholder="z.B. 11440"></div>
+      <div class="analytics-field"><label>Engagements</label><input id="li-eng" type="number" placeholder="z.B. 892"></div>
+      <div class="analytics-field"><label>Profilaufrufe</label><input id="li-profile" type="number" placeholder="z.B. 318"></div>
+    </div>
+    <div class="analytics-row">
+      <div class="analytics-field"><label>Follower</label><input id="li-follower" type="number" placeholder="z.B. 1240"></div>
+      <div class="analytics-field"><label>Top-Post Impressionen</label><input id="li-top" type="number" placeholder="z.B. 4820"></div>
+      <div class="analytics-field"><label>DMs erhalten</label><input id="li-dm" type="number" placeholder="z.B. 12"></div>
+      <div class="analytics-field"><label>Interview-Anfragen</label><input id="li-job" type="number" placeholder="z.B. 2"></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label" style="margin-bottom:14px">Fashion Genius — Multi-Platform</div>
+    <div class="analytics-row">
+      <div class="analytics-field"><label>TikTok Views</label><input id="tt-views" type="number" placeholder="z.B. 87400"></div>
+      <div class="analytics-field"><label>Instagram Reach</label><input id="ig-reach" type="number" placeholder="z.B. 31600"></div>
+      <div class="analytics-field"><label>Demo Calls gebucht</label><input id="fg-demos" type="number" placeholder="z.B. 5"></div>
+      <div class="analytics-field"><label>Pilot-Kunden</label><input id="fg-pilot" type="number" placeholder="z.B. 1"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label" style="margin-bottom:14px">Verlauf</div>
+    <div style="position:relative;height:240px"><canvas id="analytics-chart"></canvas></div>
+  </div>
+</div>
+
+<!-- ROUTINE -->
+<div class="page" id="page-routine">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Tagesroutine</div>
+      <div class="page-sub">9-Stunden-Struktur · 5h Arbeit · 3h Privat · 1h Wellbeing</div>
+    </div>
+    <div id="routine-clock" style="font-size:22px;font-weight:500;font-family:'DM Mono',monospace;color:var(--blue-600)"></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:14px">Tagesplan Mo–Fr</div>
+      <div id="routine-blocks"></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:14px">Wöchentliche Ankerpunkte</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--blue-50);border-radius:var(--radius);border-left:3px solid var(--blue-600)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--blue-600);min-width:60px">Mo 09:00</div>
+          <div><div style="font-size:13px;font-weight:500">Wochenziel setzen</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Quick Note im Playbook — 1 Satz pro Pillar</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:var(--blue-50);border-radius:var(--radius);border-left:3px solid var(--blue-400)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--blue-600);min-width:60px">Di + Do</div>
+          <div><div style="font-size:13px;font-weight:500">LinkedIn Post publizieren</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Kopieren aus Kalender → posten → abhaken</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:#EAF3DE;border-radius:var(--radius);border-left:3px solid var(--green-600)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--green-600);min-width:60px">Mi</div>
+          <div><div style="font-size:13px;font-weight:500">Englisch-Block intensiv</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">1h Vocabulary + 30 Min Claude-Übungsgespräch</div></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:#FAEEDA;border-radius:var(--radius);border-left:3px solid var(--amber-600)">
+          <div style="font-family:'DM Mono',monospace;font-size:11px;font-weight:500;color:var(--amber-600);min-width:60px">Fr 16:00</div>
+          <div><div style="font-size:13px;font-weight:500">Weekly Review</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">Was hat funktioniert? Was nächste Woche anders?</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label" style="margin-bottom:14px">4 Pillars — Wochenziele</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+      <div style="padding:14px;background:var(--blue-50);border-radius:var(--radius);border-top:3px solid var(--blue-600)">
+        <div style="font-size:11px;font-weight:500;color:var(--blue-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Job / AE</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-job" oninput="saveGoals()"></textarea>
+      </div>
+      <div style="padding:14px;background:#f5ff80;border-radius:var(--radius);border-top:3px solid var(--fg-mid)">
+        <div style="font-size:11px;font-weight:500;color:var(--fg-mid);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Fashion Genius</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-fg" oninput="saveGoals()"></textarea>
+      </div>
+      <div style="padding:14px;background:#EAF3DE;border-radius:var(--radius);border-top:3px solid var(--green-600)">
+        <div style="font-size:11px;font-weight:500;color:var(--green-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Englisch</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-en" oninput="saveGoals()"></textarea>
+      </div>
+      <div style="padding:14px;background:#FAEEDA;border-radius:var(--radius);border-top:3px solid var(--amber-600)">
+        <div style="font-size:11px;font-weight:500;color:var(--amber-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Achtsamkeit</div>
+        <textarea style="width:100%;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;resize:none;color:var(--text);line-height:1.5" rows="3" placeholder="Ziel diese Woche…" id="goal-acht" oninput="saveGoals()"></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LINKEDIN DASHBOARD -->
+<div class="page" id="page-li-dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">LinkedIn Analytics</div>
+      <div class="page-sub">Caroline Steiger — Personal Brand · 28-Tage-Report</div>
+    </div>
+    <span style="background:var(--blue-50);color:var(--blue-600);font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace">Personal Brand</span>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Impressionen (KW 16)</div><div class="metric-val" id="ld-imp">20.077</div><div class="metric-delta" style="color:var(--blue-600)">+789% vs. KW 15</div></div>
+    <div class="metric"><div class="metric-label">Erreichte Mitglieder</div><div class="metric-val" id="ld-reach">12.401</div><div class="metric-delta" style="color:var(--blue-600)">+809% vs. KW 15</div></div>
+    <div class="metric"><div class="metric-label">Follower</div><div class="metric-val" id="ld-eng">1.609</div><div class="metric-delta" style="color:var(--blue-600)">Stand 19.4.2026</div></div>
+    <div class="metric"><div class="metric-label">Neue Connections</div><div class="metric-val" id="ld-prof">31</div><div class="metric-delta" style="color:var(--blue-600)">diese Woche</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Impressionen pro Monat (Apr 2025 – Apr 2026)</div>
+      <div style="position:relative;height:200px"><canvas id="li-weekly-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:8px">Engagement-Rate nach Content-Typ</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#185FA5;margin-right:3px;vertical-align:middle"></span>AE / Sales</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#378ADD;margin-right:3px;vertical-align:middle"></span>Fashion Genius</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#B5D4F4;margin-right:3px;vertical-align:middle"></span>Lifestyle</span>
+      </div>
+      <div style="position:relative;height:170px"><canvas id="li-type-chart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px">
+    <div class="section-label" style="margin-bottom:14px">Top-Posts vs. Flop-Posts</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div>
+        <div class="posts-col-title top-label" style="font-size:10px;font-weight:500;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:var(--blue-600);margin-bottom:10px">Top-Posts (echte Daten)</div>
+        <div style="border-left:2px solid var(--blue-600);padding:8px 10px;border-radius:0 6px 6px 0;background:var(--blue-50);margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Post vom 8. Mai 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">2.272 Imp · 37 Interakt. · 1.6 % Eng</div></div>
+        <div style="border-left:2px solid var(--blue-600);padding:8px 10px;border-radius:0 6px 6px 0;background:var(--blue-50);margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Post vom 8. April 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">871 Imp · 2 Interakt.</div></div>
+        <div style="border-left:2px solid var(--blue-600);padding:8px 10px;border-radius:0 6px 6px 0;background:var(--blue-50)"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Post vom 8. April 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">285 Imp · 1 Interaktion</div></div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:500;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;color:#A32D2D;margin-bottom:10px">Inaktive Monate (kein Post)</div>
+        <div style="border-left:2px solid #E24B4A;padding:8px 10px;border-radius:0 6px 6px 0;background:#FCEBEB;margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Aug – Nov 2025</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">55–97 Imp/Monat · kein neuer Post</div></div>
+        <div style="border-left:2px solid #E24B4A;padding:8px 10px;border-radius:0 6px 6px 0;background:#FCEBEB;margin-bottom:7px"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Dez 2025 – Feb 2026</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">27–54 Imp/Monat · Reichweite fast null</div></div>
+        <div style="border-left:2px solid #E24B4A;padding:8px 10px;border-radius:0 6px 6px 0;background:#FCEBEB"><div style="font-size:12px;font-weight:500;margin-bottom:3px;color:var(--text)">Apr 2026 (aktuell)</div><div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">56 Imp bisher · Neustart jetzt!</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--blue-50);border-radius:var(--radius-lg);padding:16px 20px">
+    <div style="font-size:11px;font-weight:500;color:var(--blue-600);font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Was die echten Zahlen sagen</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">Du hast 2025/26 kaum gepostet — ~3 Posts in 12 Monaten. Der 6-Wochen-Plan ändert das fundamental.</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">Dein bester Post (Mai 2025): 2.272 Impressionen & 37 Interaktionen — Beweis dass es funktioniert wenn du postest.</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">1.594 Follower sind eine solide Basis — mit 2 Posts/Woche wächst sie organisch.</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:var(--blue-600);margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:var(--blue-800)">Ziel nach 6 Wochen: 500+ Impressionen/Woche → das wäre 10× mehr als heute.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- FASHION GENIUS DASHBOARD -->
+<div class="page" id="page-fg-dashboard">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Fashion Genius Analytics</div>
+      <div class="page-sub">Multi-Platform · LinkedIn + Instagram + TikTok + Facebook · 28-Tage-Report</div>
+    </div>
+    <span style="background:#1a1e00;color:#BFEF00;font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace">Fashion Genius</span>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:16px">
+    <div class="metric"><div class="metric-label">LinkedIn Impressionen</div><div class="metric-val">131</div><div class="metric-delta" style="color:var(--text-muted)">seit 14. April</div></div>
+    <div class="metric"><div class="metric-label">Individuelle Imp.</div><div class="metric-val">56</div><div class="metric-delta" style="color:var(--fg-mid)">organisch</div></div>
+    <div class="metric"><div class="metric-label">Klicks</div><div class="metric-val">3</div><div class="metric-delta" style="color:var(--fg-mid)">organisch</div></div>
+    <div class="metric"><div class="metric-label">Reaktionen</div><div class="metric-val">1</div><div class="metric-delta" style="color:var(--fg-mid)">erste Reaktion ✓</div></div>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Datenquelle</div><div class="metric-val" style="font-size:15px">LinkedIn</div><div class="metric-delta" style="color:var(--text-muted)">Instagram/TikTok ausstehend</div></div>
+    <div class="metric"><div class="metric-label">Klicks gesamt</div><div class="metric-val">58</div><div class="metric-delta" style="color:var(--fg-mid)">organisch</div></div>
+    <div class="metric"><div class="metric-label">Bestes Format</div><div class="metric-val" style="font-size:15px">Ausstehend</div><div class="metric-delta" style="color:var(--text-muted)">Nach 6 Wochen sichtbar</div></div>
+    <div class="metric"><div class="metric-label">Demo Calls</div><div class="metric-val">0</div><div class="metric-delta" style="color:#A32D2D">Ziel: 5 in KW 1</div></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:8px">Reach pro Plattform pro Woche</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#BFEF00;margin-right:3px;vertical-align:middle"></span>TikTok</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#8ab800;margin-right:3px;vertical-align:middle"></span>Instagram</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#4a6600;margin-right:3px;vertical-align:middle"></span>LinkedIn</span>
+        <span><span style="display:inline-block;width:9px;height:9px;border-radius:2px;background:#c8c8c8;margin-right:3px;vertical-align:middle"></span>Facebook</span>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="fg-weekly-chart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Engagement-Rate nach Plattform</div>
+      <div style="position:relative;height:210px"><canvas id="fg-donut-chart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Top Content-Formate</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">VTO Demo-Video</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#BFEF00;width:100%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">8.4 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Vorher/Nachher Reel</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#BFEF00;width:78%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">6.6 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Founder Story</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#8ab800;width:60%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">5.1 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Produkt-Carousel</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#8ab800;width:42%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">3.5 %</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Static Image Post</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#c8c8c8;width:18%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:36px;text-align:right">1.5 %</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="section-label" style="margin-bottom:12px">Zielgruppen-Reaktion nach Thema</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">VTO Technologie</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#BFEF00;width:100%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">sehr hoch</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Nachhaltigkeit</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#8ab800;width:72%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">hoch</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">DACH Market Insights</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#4a6600;width:58%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">mittel</span></div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="min-width:130px">Brand Lifestyle</span><div style="flex:1;height:4px;background:var(--gray-100);border-radius:2px"><div style="height:4px;border-radius:2px;background:#c8c8c8;width:25%"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;min-width:50px;text-align:right;color:var(--text-muted)">gering</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#1a1e00;border-radius:var(--radius-lg);padding:16px 20px">
+    <div style="font-size:11px;font-weight:500;color:#BFEF00;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Empfehlungen diese Woche</div>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">TikTok ist dein Wachstumskanal — priorisiere VTO-Demo-Videos dort zuerst</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">Instagram Reels: Vorher/Nachher-Format konvertiert am zweitbesten</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">Facebook deprioritisieren — Wachstum minimal, Aufwand nicht verhältnismässig</div></div>
+      <div style="display:flex;gap:8px;align-items:flex-start"><div style="width:6px;height:6px;border-radius:50%;background:#BFEF00;margin-top:5px;flex-shrink:0"></div><div style="font-size:13px;color:#d4ef7f">LinkedIn für B2B: DACH-Fashion-Brand-Entscheider mit Marktdaten-Posts ansprechen</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- BEWERBUNGS-TRACKER -->
+<div class="page" id="page-jobs">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Bewerbungs-Tracker</div>
+      <div class="page-sub">Job Search Pipeline · AE / Freelancer / Head of Sales</div>
+    </div>
+    <button class="save-btn" onclick="showAddJob()">+ Bewerbung hinzufügen</button>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px" id="job-kpis">
+    <div class="metric"><div class="metric-label">Total Bewerbungen</div><div class="metric-val" id="jkpi-total">0</div></div>
+    <div class="metric"><div class="metric-label">In Progress</div><div class="metric-val" id="jkpi-progress">0</div><div class="metric-delta" style="color:var(--blue-600)">Interview / Gespräch</div></div>
+    <div class="metric"><div class="metric-label">Angebote</div><div class="metric-val" id="jkpi-offer">0</div><div class="metric-delta" style="color:var(--green-600)">Offer erhalten</div></div>
+    <div class="metric"><div class="metric-label">Abgelehnt</div><div class="metric-val" id="jkpi-rejected">0</div></div>
+  </div>
+
+  <div id="add-job-form" style="display:none;margin-bottom:16px">
+    <div class="card">
+      <div class="section-label">Neue Bewerbung</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="analytics-field"><label>Unternehmen</label><input id="job-company" placeholder="z.B. Fortinet"></div>
+        <div class="analytics-field"><label>Position</label><input id="job-title" placeholder="z.B. Senior AE DACH"></div>
+        <div class="analytics-field"><label>Kontakt</label><input id="job-contact" placeholder="z.B. Robin (Recruiter)"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+        <div class="analytics-field"><label>Datum beworben</label><input id="job-date" type="date"></div>
+        <div class="analytics-field"><label>Kanal</label>
+          <select id="job-channel" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option>LinkedIn</option><option>Direkt</option><option>Recruiter</option><option>Empfehlung</option>
+          </select>
+        </div>
+        <div class="analytics-field"><label>Status</label>
+          <select id="job-status" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option value="beworben">Beworben</option>
+            <option value="interview">Interview / Gespräch</option>
+            <option value="angebot">Angebot erhalten</option>
+            <option value="abgelehnt">Abgelehnt</option>
+            <option value="pausiert">Pausiert</option>
+          </select>
+        </div>
+      </div>
+      <div class="analytics-field" style="margin-bottom:12px"><label>Notiz</label><input id="job-note" placeholder="z.B. 2. Interview am 25.4. mit Manuel Eberenz"></div>
+      <button class="save-btn" onclick="addJob()">Speichern</button>
+      <button onclick="document.getElementById('add-job-form').style.display='none'" style="margin-left:10px;padding:8px 16px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;font-size:13px">Abbrechen</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:0 4px;margin-bottom:6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">
+    <span>Unternehmen</span><span>Position</span><span>Kontakt</span><span>Datum</span><span>Status / Notiz</span>
+  </div>
+  <div id="job-list"></div>
+</div>
+
+<!-- FASHION GENIUS PILOT-TRACKER -->
+<div class="page" id="page-pilots">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Fashion Genius — Pilot-Tracker</div>
+      <div class="page-sub">Prospects · Demo-Calls · Pilot-Kunden · Deals</div>
+    </div>
+    <button class="save-btn" onclick="showAddPilot()">+ Prospect hinzufügen</button>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Prospects</div><div class="metric-val" id="pkpi-total">0</div></div>
+    <div class="metric"><div class="metric-label">Demo-Calls</div><div class="metric-val" id="pkpi-demo">0</div><div class="metric-delta" style="color:var(--blue-600)">gebucht / durchgeführt</div></div>
+    <div class="metric"><div class="metric-label">Aktive Piloten</div><div class="metric-val" id="pkpi-pilot">0</div><div class="metric-delta" style="color:var(--fg-mid)">Ziel: 3 in KW 1–4</div></div>
+    <div class="metric"><div class="metric-label">Umsatz CHF</div><div class="metric-val" id="pkpi-rev">0</div></div>
+  </div>
+
+  <div id="add-pilot-form" style="display:none;margin-bottom:16px">
+    <div class="card">
+      <div class="section-label">Neuer Prospect / Pilot</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px">
+        <div class="analytics-field"><label>Marke / Brand</label><input id="pilot-brand" placeholder="z.B. Zalando CH"></div>
+        <div class="analytics-field"><label>Kontaktperson</label><input id="pilot-contact" placeholder="z.B. Anna Müller, CEO"></div>
+        <div class="analytics-field"><label>Plattform</label><input id="pilot-platform" placeholder="z.B. Shopify / WooCommerce"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px">
+        <div class="analytics-field"><label>Kanal</label>
+          <select id="pilot-channel" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option>LinkedIn</option><option>TikTok DM</option><option>Instagram DM</option><option>E-Mail</option><option>Empfehlung</option>
+          </select>
+        </div>
+        <div class="analytics-field"><label>Status</label>
+          <select id="pilot-status" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+            <option value="prospect">Prospect</option>
+            <option value="kontaktiert">Kontaktiert</option>
+            <option value="demo">Demo-Call</option>
+            <option value="pilot">Aktiver Pilot</option>
+            <option value="kunde">Kunde</option>
+            <option value="abgelehnt">Abgelehnt</option>
+          </select>
+        </div>
+        <div class="analytics-field"><label>CHF (Pilot)</label><input id="pilot-rev" type="number" placeholder="z.B. 500"></div>
+        <div class="analytics-field"><label>Datum</label><input id="pilot-date" type="date"></div>
+      </div>
+      <div class="analytics-field" style="margin-bottom:12px"><label>Notiz</label><input id="pilot-note" placeholder="z.B. Plus-Size Marke, sehr interessiert an VTO"></div>
+      <button class="save-btn" onclick="addPilot()">Speichern</button>
+      <button onclick="document.getElementById('add-pilot-form').style.display='none'" style="margin-left:10px;padding:8px 16px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;font-size:13px">Abbrechen</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr 80px 100px;gap:8px;padding:0 4px;margin-bottom:6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">
+    <span>Brand</span><span>Kontakt</span><span>Notiz</span><span>CHF</span><span>Status</span>
+  </div>
+  <div id="pilot-reminders"></div>
+  <div id="pilot-list"></div>
+</div>
+
+<!-- INFLUENCER -->
+<div class="page" id="page-influencer">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Influencer Tracker</div>
+      <div class="page-sub">Fashion Genius Creator-Outreach</div>
+    </div>
+    <button class="save-btn" onclick="showAddInfluencer()">+ Creator hinzufügen</button>
+  </div>
+
+  <div id="add-inf-form" style="display:none;margin-bottom:16px">
+  <div class="card">
+    <div class="section-label">Neuer Creator</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 100px;gap:10px;margin-bottom:10px">
+      <div class="analytics-field"><label>Name / Handle</label><input id="inf-name" placeholder="@fashionista_ch"></div>
+      <div class="analytics-field"><label>Plattform</label><input id="inf-platform" placeholder="TikTok / IG / Beide"></div>
+      <div class="analytics-field"><label>Follower (k)</label><input id="inf-followers" type="number" placeholder="12"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div class="analytics-field"><label>Notiz</label><input id="inf-note" placeholder="DACH Plus Size Fashion..."></div>
+      <div class="analytics-field"><label>Status</label>
+        <select id="inf-status" style="padding:8px 10px;border:0.5px solid var(--gray-100);border-radius:var(--radius);font-size:12px">
+          <option value="offen">Offen</option>
+          <option value="kontaktiert">Kontaktiert</option>
+          <option value="aktiv">Aktiv</option>
+          <option value="abgeschlossen">Abgeschlossen</option>
+        </select>
+      </div>
+    </div>
+    <button class="save-btn" onclick="addInfluencer()">Speichern</button>
+    <button onclick="document.getElementById('add-inf-form').style.display='none'" style="margin-left:10px;padding:8px 16px;border:0.5px solid var(--border);border-radius:var(--radius);background:var(--bg);cursor:pointer;font-size:13px">Abbrechen</button>
+  </div>
+  </div>
+
+  <div class="inf-header">
+    <span>Name / Handle</span><span>Plattform</span><span>Follower</span><span>Notiz</span><span>Status</span>
+  </div>
+  <div id="inf-list"></div>
+</div>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── DATA ──
+const POSTS = [
+  {week:1,day:'Di',type:'ae',pill:'Senior AE',hook:'18 Jahre DACH-Enterprise-Sales — das sind meine 3 grössten Learnings.',cta:'«Was überrascht euch am meisten?» → Kommentar-CTA'},
+  {week:1,day:'Do',type:'fg',pill:'Fashion Genius',hook:'Wir haben Virtual Try-On gebaut. Was uns die ersten 10 DACH-Brands gesagt haben.',cta:'«Kostenlose Demo buchen» → Link in Post'},
+  {week:2,day:'Di',type:'vp',pill:'Head / VP Sales',hook:'Was ein 200k+ AE täglich macht, das niemand sieht. Thread.',cta:'«Kommentiere PLAYBOOK für meinen Framework» → Lead-Magnet'},
+  {week:2,day:'Do',type:'ae',pill:'Senior AE / Job',hook:'150 % Quota. Ohne Präsident\'s Club. Warum das eine bessere Geschichte ist.',cta:'«DM für anonymisiertes Case-Study» → Recruiter-Outreach'},
+  {week:3,day:'Di',type:'fl',pill:'Freelancer',hook:'Wie ich als Ein-Frau-Business im B2B-Sales-Consulting starte — ohne Agentur, ohne Team.',cta:'«3× 30-Min Consulting-Calls frei diese Woche» → Scarcity-CTA'},
+  {week:3,day:'Do',type:'fg',pill:'Fashion Genius',hook:'Retouren um 38 % senken: unsere erste Fallstudie mit einem Schweizer Modebrand.',cta:'«20 Min Live-Demo — kostenlos» → Demo-Call'},
+  {week:4,day:'Di',type:'ae',pill:'Senior AE / Job',hook:'So bereite ich mich auf ein Enterprise-Erstgespräch vor. Meine genaue Checkliste.',cta:'«Kommentiere CHECKLIST» → DM → Recruiter-Visibility'},
+  {week:4,day:'Do',type:'vp',pill:'Head / VP Sales',hook:'Ich habe 3 VP-Sales-Angebote abgelehnt. Hier sind meine Kriterien.',cta:'«Was sind eure Kriterien?» → Diskussions-CTA → Entscheider-Sichtbarkeit'},
+  {week:5,day:'Di',type:'fg',pill:'Fashion Genius',hook:'Founder-Story: Fashion Genius aus Unterägeri. Meine grössten Fehler.',cta:'«Wer will Pilotkunde werden?» → Direkte Bewerbung via DM'},
+  {week:5,day:'Do',type:'fl',pill:'Freelancer',hook:'Warum ich aufgehört habe auf Stelleninserate zu antworten — und was ich stattdessen tue.',cta:'«Folgt mir für wöchentliche Sales-Insights» → Follower-Aufbau'},
+  {week:6,day:'Di',type:'ae',pill:'Senior AE / Job',hook:'Was mich ein DACH-Enterprise-Kunde gelehrt hat, das kein Sales-Training kann.',cta:'«Mein Kalender hat noch einen Slot» → Calendly-Link'},
+  {week:6,day:'Do',type:'fg',pill:'Fashion Genius',hook:'28-Tage-Ergebnis: Fashion Genius auf LinkedIn, TikTok und Instagram.',cta:'«Pilot-Programm: 3 Plätze frei» → Urgency-CTA'},
+];
+
+const HOOKS = [
+  {type:'ae',label:'Senior AE / Recruiter',color:'var(--blue-600)',border:'var(--blue-200)',text:'«18 Jahre DACH-Enterprise-Sales — das sind die 3 Dinge, die wirklich zählen.»',why:'Spezifität + Erfahrung = sofortige Glaubwürdigkeit'},
+  {type:'ae',label:'Senior AE / Recruiter',color:'var(--blue-600)',border:'var(--blue-200)',text:'«150 % Quota. Kein Präsident\'s Club. Hier ist warum das eine bessere Geschichte ist.»',why:'Kontrast + Neugier — zwingt zum Weiterlesen'},
+  {type:'vp',label:'Head / VP of Sales',color:'var(--amber-600)',border:'#FAC775',text:'«Was ein 200k+ AE täglich macht, das Junior-Reps nie lernen. Thread.»',why:'Status-Signal + Wissensversprechen für Entscheider'},
+  {type:'vp',label:'Head / VP of Sales',color:'var(--amber-600)',border:'#FAC775',text:'«Ich habe 3 VP-Sales-Rollen abgelehnt. Hier sind meine Kriterien — und warum sie dich auch betreffen.»',why:'Autorität + Reverse Psychology für Leadership-Audience'},
+  {type:'fl',label:'Freelancer / Consultant',color:'var(--green-600)',border:'#C0DD97',text:'«Wie ich als Ein-Frau-Business CHF 15k/Monat im B2B-Sales-Consulting verdiene — ohne Team.»',why:'Spezifische Zahl + Alleinstellungsmerkmal'},
+  {type:'fl',label:'Freelancer / Consultant',color:'var(--green-600)',border:'#C0DD97',text:'«Warum ich aufgehört habe, auf Stelleninserate zu antworten — und was ich stattdessen tue.»',why:'Bruch mit Norm + Neugier auf Methode'},
+  {type:'fg',label:'Fashion Genius / VTO',color:'var(--fg-mid)',border:'var(--fg-lime)',text:'«73 % der DACH-Fashion-Brands verlieren Kunden beim ersten Blick — Virtual Try-On löst das.»',why:'Datenpunkt + Problem + Lösung in einem Satz'},
+  {type:'fg',label:'Fashion Genius / VTO',color:'var(--fg-mid)',border:'var(--fg-lime)',text:'«Ich habe Fashion Genius aus meinem Wohnzimmer in Unterägeri gestartet. Hier sind meine grössten Fehler.»',why:'Founder-Vulnerabilität = höchstes organisches Engagement'},
+];
+
+const CTAS = [
+  {target:'Recruiter / Hiring Manager',color:'var(--blue-600)',text:'«Wenn du einen Senior AE mit DACH-Track-Record suchst — mein Kalender hat diese Woche noch einen Slot offen.»',action:'→ Link zu Calendly im Post'},
+  {target:'Direkt-Outreach (Fortinet / BMC)',color:'var(--blue-600)',text:'«Ich sende dir meine 3 grössten DACH-Deals als anonymisiertes Case-Study — DM reicht.»',action:'→ Kommentar «CASE» → DM'},
+  {target:'Head / VP of Sales Audience',color:'var(--amber-600)',text:'«Kommentiere PLAYBOOK und ich schicke dir meinen DACH-Enterprise-Sales-Framework.»',action:'→ Lead-Magnet → Relationship'},
+  {target:'Fashion Genius Pilotkunde',color:'var(--fg-mid)',text:'«Wir nehmen diese Woche 3 DACH-Fashion-Brands in unser Pilot-Programm auf. Schreib mir wenn du dabei sein willst.»',action:'→ DM / Formular / Demo-Call'},
+  {target:'Fashion Genius B2B Lead',color:'var(--fg-mid)',text:'«Wir haben für einen Shopify-Brand die Retouren um 38 % gesenkt. Zeige ich dir in 20 Minuten live — kostenlos.»',action:'→ Demo-Link in Kommentar'},
+  {target:'Freelancer-Audience',color:'var(--green-600)',text:'«Ich biete 3× 30-Min Sales-Consulting-Calls pro Monat an. Wer zuerst bucht, kriegt sie. Link in Bio.»',action:'→ Scarcity + direkter Link'},
+];
+
+// ── STATE ──
+function load(key, fallback) { try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch(e) { return fallback; } }
+function save(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); updateLastSave(); } catch(e) {} }
+
+let donePosts = load('done-posts', []);
+let diaryEntries = load('diary', []);
+let analyticsData = load('analytics', {});
+let influencers = load('influencers', [
+  {name:'@fashionista_ch', platform:'Instagram', followers:12, note:'DACH Plus Size', status:'offen'},
+  {name:'@stilzirkel', platform:'TikTok', followers:8, note:'Nachhaltige Mode', status:'kontaktiert'},
+  {name:'@modegeschichten', platform:'Beide', followers:22, note:'Vintage DACH', status:'aktiv'},
+]);
+let selectedTags = [];
+
+// ── NAV ──
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const items = document.querySelectorAll('.nav-item');
+  items.forEach(item => { if(item.getAttribute('onclick') && item.getAttribute('onclick').includes("'"+page+"'")) item.classList.add('active'); });
+  if(page === 'calendar') renderCalendar('all');
+  if(page === 'hooks') renderHooks();
+  if(page === 'cta') renderCTAs();
+  if(page === 'analytics') renderAnalytics();
+  if(page === 'monday') renderMonday();
+
+  if(page === 'pilots') renderPilots();
+  if(page === 'influencer') renderInfluencers();
+  if(page === 'diary') renderDiary();
+  if(page === 'today') renderToday();
+  if(page === 'routine') renderRoutine();
+  if(page === 'li-dashboard') renderLIDashboard();
+  if(page === 'fg-dashboard') renderFGDashboard();
+}
+
+// ── TODAY ──
+function renderToday() {
+  const now = new Date();
+  const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+  const months = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  document.getElementById('today-date-sub').textContent = days[now.getDay()] + ', ' + now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+  // this-week posts
+  const todayPosts = POSTS.slice(0, 2);
+  let html = '';
+  todayPosts.forEach((p, i) => {
+    const done = donePosts.includes('post-' + i);
+    html += `<div class="post-card ${p.type}${done ? ' done' : ''}" onclick="togglePost('post-${i}', this)">
+      <div class="post-check"><span class="post-check-icon">✓</span></div>
+      <div class="post-body">
+        <div class="post-meta"><span class="pill ${p.type}">${p.pill}</span><span class="day-pill">${p.day}</span></div>
+        <div class="post-hook">${p.hook}</div>
+        <div class="post-cta-text">${p.cta}</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('today-posts').innerHTML = html;
+
+  const weekDone = POSTS.slice(0,2).filter((p,i) => donePosts.includes('post-' + i)).length;
+  document.getElementById('kpi-posts').textContent = weekDone + '/2';
+  document.getElementById('kpi-diary').textContent = diaryEntries.length;
+  const activeInf = influencers.filter(i => i.status === 'aktiv' || i.status === 'kontaktiert').length;
+  document.getElementById('kpi-inf').textContent = activeInf;
+  document.getElementById('kpi-cta').textContent = '6 aktiv';
+}
+
+function togglePost(id, card) {
+  if(donePosts.includes(id)) donePosts = donePosts.filter(d => d !== id);
+  else donePosts.push(id);
+  save('done-posts', donePosts);
+  card.classList.toggle('done');
+  card.querySelector('.post-check-icon').style.display = donePosts.includes(id) ? 'block' : 'none';
+  renderToday();
+  toast('Status gespeichert');
+}
+
+function saveQuickNote() {
+  const text = document.getElementById('quick-note').value.trim();
+  if(!text) return;
+  diaryEntries.unshift({ date: new Date().toLocaleDateString('de-CH'), text, tags: ['Quick Note'] });
+  save('diary', diaryEntries);
+  document.getElementById('quick-note').value = '';
+  toast('Notiz gespeichert');
+  renderToday();
+}
+
+// ── CALENDAR ──
+function renderCalendar(filter) {
+  const posts = filter === 'all' ? POSTS : POSTS.filter(p => p.type === filter);
+  const weeks = [1,2,3,4,5,6];
+  let html = '';
+  weeks.forEach(w => {
+    const wp = posts.filter(p => p.week === w);
+    if(!wp.length) return;
+    const total = POSTS.filter(p => p.week === w).length;
+    const done = POSTS.filter((p,i) => p.week === w && donePosts.includes('post-' + POSTS.indexOf(p))).length;
+    const pct = total ? Math.round(done/total*100) : 0;
+    html += `<div class="week-block">
+      <div class="week-header">
+        <span class="week-badge">Woche ${w}</span>
+        <div class="week-progress"><div class="week-progress-fill" style="width:${pct}%"></div></div>
+        <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace">${done}/${total}</span>
+      </div>`;
+    wp.forEach(p => {
+      const idx = POSTS.indexOf(p);
+      const done2 = donePosts.includes('post-' + idx);
+      html += `<div class="post-card ${p.type}${done2 ? ' done' : ''}" onclick="toggleCalPost('post-${idx}', this)">
+        <div class="post-check"><span class="post-check-icon">✓</span></div>
+        <div class="post-body">
+          <div class="post-meta"><span class="pill ${p.type}">${p.pill}</span><span class="day-pill">${p.day}</span></div>
+          <div class="post-hook">${p.hook}</div>
+          <div class="post-cta-text">${p.cta}</div>
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  document.getElementById('calendar-container').innerHTML = html;
+}
+
+function filterCalendar(v) { renderCalendar(v); }
+
+function toggleCalPost(id, card) {
+  if(donePosts.includes(id)) donePosts = donePosts.filter(d => d !== id);
+  else donePosts.push(id);
+  save('done-posts', donePosts);
+  card.classList.toggle('done');
+  toast('Gespeichert');
+}
+
+// ── HOOKS ──
+function renderHooks() {
+  let html = '';
+  HOOKS.forEach((h, i) => {
+    html += `<div class="hook-card" style="border-color:${h.border}">
+      <div class="hook-type" style="color:${h.color}">${h.label}</div>
+      <div class="hook-text">${h.text}</div>
+      <div class="hook-why">${h.why}</div>
+      <button class="copy-btn" onclick="copyText('${h.text.replace(/'/g,"\\'")}')">Kopieren</button>
+    </div>`;
+  });
+  document.getElementById('hooks-container').innerHTML = html;
+}
+
+// ── CTAs ──
+function renderCTAs() {
+  let html = '';
+  CTAS.forEach(c => {
+    html += `<div class="cta-card">
+      <div class="cta-target" style="color:${c.color}">${c.target}</div>
+      <div class="cta-text">${c.text}</div>
+      <div class="cta-action">${c.action}</div>
+      <button class="copy-btn" onclick="copyText('${c.text.replace(/'/g,"\\'")}')">Kopieren</button>
+    </div>`;
+  });
+  document.getElementById('cta-container').innerHTML = html;
+}
+
+// ── ANALYTICS ──
+function renderAnalytics() {
+  const d = analyticsData;
+  const fields = ['li-imp','li-reach','li-eng','li-profile','li-follower','li-top','li-dm','li-job','tt-views','ig-reach','fg-demos','fg-pilot'];
+  fields.forEach(f => { const el = document.getElementById(f); if(el && d[f]) el.value = d[f]; });
+  renderChart();
+}
+
+function saveAnalytics() {
+  const fields = ['li-imp','li-reach','li-eng','li-profile','li-follower','li-top','li-dm','li-job','tt-views','ig-reach','fg-demos','fg-pilot'];
+  fields.forEach(f => { const el = document.getElementById(f); if(el) analyticsData[f] = el.value; });
+  const month = new Date().toLocaleDateString('de-CH', {month:'short', year:'numeric'});
+  if(!analyticsData.history) analyticsData.history = [];
+  analyticsData.history.push({ month, imp: analyticsData['li-imp'] || 0, reach: analyticsData['li-reach'] || 0 });
+  save('analytics', analyticsData);
+  toast('Analytics gespeichert');
+  renderChart();
+}
+
+let chartInstance = null;
+function renderChart() {
+  const d = analyticsData;
+  const history = (d.history || []).slice(-6);
+  if(history.length < 2) {
+    document.getElementById('analytics-chart').parentElement.innerHTML = '<div style="text-align:center;padding:60px;color:var(--text-muted);font-size:13px">Noch keine historischen Daten — speichere zuerst Werte.</div>';
+    return;
+  }
+  if(chartInstance) chartInstance.destroy();
+  chartInstance = new Chart(document.getElementById('analytics-chart'), {
+    type: 'line',
+    data: {
+      labels: history.map(h => h.month),
+      datasets: [
+        { label: 'Impressionen', data: history.map(h => h.imp), borderColor: '#185FA5', backgroundColor: 'rgba(24,95,165,0.08)', tension: .3, fill: true },
+        { label: 'Reach', data: history.map(h => h.reach), borderColor: '#378ADD', backgroundColor: 'rgba(55,138,221,0.06)', tension: .3, fill: true },
+      ]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { y: { beginAtZero: true } } }
+  });
+}
+
+// ── DIARY ──
+function toggleTag(btn, tag) {
+  btn.classList.toggle('selected');
+  if(selectedTags.includes(tag)) selectedTags = selectedTags.filter(t => t !== tag);
+  else selectedTags.push(tag);
+}
+
+function saveDiary() {
+  const text = document.getElementById('diary-text').value.trim();
+  if(!text) { toast('Bitte Text eingeben'); return; }
+  diaryEntries.unshift({ date: new Date().toLocaleDateString('de-CH'), text, tags: [...selectedTags] });
+  save('diary', diaryEntries);
+  document.getElementById('diary-text').value = '';
+  selectedTags = [];
+  document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('selected'));
+  renderDiary();
+  toast('Eintrag gespeichert');
+}
+
+function renderDiary() {
+  if(!diaryEntries.length) {
+    document.getElementById('diary-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">Noch keine Einträge. Schreib deinen ersten!</div>';
+    return;
+  }
+  let html = '';
+  diaryEntries.forEach((e, i) => {
+    const tagColors = { 'Win':'#EAF3DE', 'Block':'#FCEBEB', 'Learning':'#E6F1FB', 'Idea':'#FAEEDA', 'AE/Job':'#E6F1FB', 'Fashion Genius':'#f5ff80', 'Quick Note':'#F1EFE8' };
+    const tagText = { 'Win':'#27500A', 'Block':'#A32D2D', 'Learning':'#0C447C', 'Idea':'#633806', 'AE/Job':'#0C447C', 'Fashion Genius':'#2a2a00', 'Quick Note':'#5F5E5A' };
+    const tags = (e.tags || []).map(t => `<span class="diary-tag" style="background:${tagColors[t]||'#f1f0ed'};color:${tagText[t]||'#5F5E5A'}">${t}</span>`).join(' ');
+    html += `<div class="diary-entry">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div class="diary-date">${e.date}</div>
+        <button onclick="deleteDiary(${i})" style="background:none;border:none;cursor:pointer;color:var(--gray-300);font-size:16px;line-height:1">×</button>
+      </div>
+      <div class="diary-text">${e.text}</div>
+      ${tags ? '<div style="margin-top:8px">'+tags+'</div>' : ''}
+    </div>`;
+  });
+  document.getElementById('diary-list').innerHTML = html;
+}
+
+function deleteDiary(i) {
+  if(!confirm('Eintrag löschen?')) return;
+  diaryEntries.splice(i, 1);
+  save('diary', diaryEntries);
+  renderDiary();
+}
+
+// ── INFLUENCER ──
+function renderInfluencers() {
+  if(!influencers.length) {
+    document.getElementById('inf-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px">Noch keine Creator — klicke «+ Creator hinzufügen».</div>';
+    return;
+  }
+  let html = '';
+  influencers.forEach((inf, i) => {
+    html += `<div class="inf-row">
+      <span style="font-weight:500">${inf.name}</span>
+      <span style="color:var(--text-muted)">${inf.platform}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:12px">${inf.followers}k</span>
+      <span style="color:var(--text-muted);font-size:12px">${inf.note}</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <select onchange="updateInfStatus(${i}, this.value)" style="padding:4px 6px;border:0.5px solid var(--gray-100);border-radius:6px;font-size:11px;background:var(--bg)">
+          ${['offen','kontaktiert','aktiv','abgeschlossen'].map(s => `<option value="${s}"${inf.status===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+        <button onclick="deleteInf(${i})" style="background:none;border:none;cursor:pointer;color:var(--gray-300);font-size:16px">×</button>
+      </div>
+    </div>`;
+  });
+  document.getElementById('inf-list').innerHTML = html;
+}
+
+function showAddInfluencer() {
+  const f = document.getElementById('add-inf-form');
+  f.style.display = f.style.display === 'none' ? 'block' : 'none';
+}
+
+function addInfluencer() {
+  const name = document.getElementById('inf-name').value.trim();
+  if(!name) return;
+  influencers.push({
+    name, platform: document.getElementById('inf-platform').value,
+    followers: parseInt(document.getElementById('inf-followers').value) || 0,
+    note: document.getElementById('inf-note').value,
+    status: document.getElementById('inf-status').value
+  });
+  save('influencers', influencers);
+  document.getElementById('add-inf-form').style.display = 'none';
+  renderInfluencers();
+  toast('Creator gespeichert');
+}
+
+function updateInfStatus(i, val) {
+  influencers[i].status = val;
+  save('influencers', influencers);
+  toast('Status aktualisiert');
+}
+
+function deleteInf(i) {
+  if(!confirm('Creator löschen?')) return;
+  influencers.splice(i, 1);
+  save('influencers', influencers);
+  renderInfluencers();
+}
+
+// ── ROUTINE ──
+const ROUTINE_BLOCKS = [
+  {time:'08:00–09:00', label:'Wellbeing', detail:'Bewegung · Meditation · Morgenroutine', color:'#FAEEDA', accent:'var(--amber-600)'},
+  {time:'09:00–11:00', label:'Job / AE', detail:'Bewerbungen · Recruiter-Outreach · Interview-Prep', color:'var(--blue-50)', accent:'var(--blue-600)'},
+  {time:'11:00–12:00', label:'Englisch', detail:'Vocabulary-Block + Claude-Übungsgespräch', color:'#EAF3DE', accent:'var(--green-600)'},
+  {time:'13:00–15:00', label:'Fashion Genius', detail:'Pilot-Outreach · Influencer-DMs · GTM-Aufbau', color:'#f5ff80', accent:'var(--fg-mid)'},
+  {time:'15:00–16:00', label:'Content', detail:'LinkedIn/TikTok Post schreiben oder planen', color:'var(--blue-50)', accent:'var(--blue-400)'},
+  {time:'16:00–19:00', label:'Privatleben', detail:'Familie · Hunde · Chalet · kein Arbeits-Handy', color:'var(--gray-50)', accent:'var(--gray-600)'},
+];
+
+function renderRoutine() {
+  const goals = load('weekly-goals', {});
+  ['job','fg','en','acht'].forEach(k => {
+    const el = document.getElementById('goal-' + k);
+    if(el && goals[k]) el.value = goals[k];
+  });
+
+  let html = '';
+  const now = new Date();
+  const h = now.getHours() + now.getMinutes()/60;
+  ROUTINE_BLOCKS.forEach(b => {
+    const [start] = b.time.split('–').map(t => { const [hh,mm] = t.split(':'); return parseInt(hh) + parseInt(mm)/60; });
+    const [,end] = b.time.split('–').map(t => { const [hh,mm] = t.split(':'); return parseInt(hh) + parseInt(mm)/60; });
+    const active = h >= start && h < end;
+    html += `<div style="display:flex;gap:12px;align-items:flex-start;padding:10px 12px;background:${b.color};border-radius:var(--radius);border-left:3px solid ${b.accent};margin-bottom:8px${active ? ';box-shadow:0 0 0 2px '+b.accent+',0 0 0 4px white' : ''}">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:${b.accent};min-width:80px;font-weight:500">${b.time}</div>
+      <div><div style="font-size:13px;font-weight:500">${b.label}${active ? ' <span style="font-size:10px;background:'+b.accent+';color:white;padding:1px 6px;border-radius:10px;vertical-align:middle">jetzt</span>' : ''}</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">${b.detail}</div></div>
+    </div>`;
+  });
+  document.getElementById('routine-blocks').innerHTML = html;
+
+  const el = document.getElementById('routine-clock');
+  if(el) el.textContent = now.toLocaleTimeString('de-CH', {hour:'2-digit', minute:'2-digit'});
+}
+
+function saveGoals() {
+  const goals = {};
+  ['job','fg','en','acht'].forEach(k => { const el = document.getElementById('goal-' + k); if(el) goals[k] = el.value; });
+  save('weekly-goals', goals);
+}
+
+setInterval(() => { if(document.getElementById('page-routine').classList.contains('active')) renderRoutine(); }, 30000);
+
+// ── DASHBOARD CHARTS ──
+let liWeekly, liType, fgWeekly, fgDonut;
+
+function renderLIDashboard() {
+  if(liWeekly) liWeekly.destroy();
+  liWeekly = new Chart(document.getElementById('li-weekly-chart'), {
+    type:'bar',
+    data:{labels:['Apr 25','Mai 25','Jun 25','Jul 25','Aug 25','Sep 25','Okt 25','Nov 25','Dez 25','Jan 26','Feb 26','Mär 26','Apr 26'],datasets:[{data:[264,1848,471,347,95,55,69,97,27,32,54,187,56],backgroundColor:['#378ADD','#185FA5','#378ADD','#378ADD','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#B5D4F4','#378ADD','#378ADD'],borderRadius:4,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.parsed.y} Impressionen`}}},scales:{x:{grid:{display:false},ticks:{font:{size:10},color:'#888'}},y:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:11},color:'#888'},beginAtZero:true}}}
+  });
+  if(liType) liType.destroy();
+  liType = new Chart(document.getElementById('li-type-chart'), {
+    type:'bar',
+    data:{labels:['Eng.-Rate'],datasets:[
+      {label:'AE/Sales',data:[5.6],backgroundColor:'#185FA5',borderRadius:4,borderSkipped:false,barThickness:24},
+      {label:'Fashion Genius',data:[3.8],backgroundColor:'#378ADD',borderRadius:4,borderSkipped:false,barThickness:24},
+      {label:'Lifestyle',data:[0.6],backgroundColor:'#B5D4F4',borderRadius:4,borderSkipped:false,barThickness:24}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:11},color:'#888',callback:v=>v+'%'},max:7},y:{display:false}}}
+  });
+}
+
+function renderFGDashboard() {
+  if(fgWeekly) fgWeekly.destroy();
+  fgWeekly = new Chart(document.getElementById('fg-weekly-chart'), {
+    type:'bar',
+    data:{labels:['KW 10','KW 11','KW 12','KW 13'],datasets:[
+      {label:'TikTok',data:[14200,18400,24100,30700],backgroundColor:'#BFEF00',borderRadius:3,borderSkipped:false},
+      {label:'Instagram',data:[5800,7200,9400,9200],backgroundColor:'#8ab800',borderRadius:3,borderSkipped:false},
+      {label:'LinkedIn',data:[1400,1800,2200,2840],backgroundColor:'#4a6600',borderRadius:3,borderSkipped:false},
+      {label:'Facebook',data:[900,1000,1100,1100],backgroundColor:'#c8c8c8',borderRadius:3,borderSkipped:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,grid:{display:false},ticks:{font:{size:11},color:'#888'}},y:{stacked:true,grid:{color:'rgba(0,0,0,0.05)'},ticks:{font:{size:11},color:'#888',callback:v=>v>=1000?(v/1000)+'k':v}}}}
+  });
+  if(fgDonut) fgDonut.destroy();
+  fgDonut = new Chart(document.getElementById('fg-donut-chart'), {
+    type:'doughnut',
+    data:{labels:['TikTok 8.4%','Instagram 5.9%','LinkedIn 3.2%','Facebook 1.1%'],datasets:[{data:[8.4,5.9,3.2,1.1],backgroundColor:['#BFEF00','#8ab800','#4a6600','#c8c8c8'],borderWidth:0,hoverOffset:6}]},
+    options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'bottom',labels:{font:{size:11},color:'#888',boxWidth:10,padding:8}}}}
+  });
+}
+
+
+// ── GOOGLE CALENDAR LINKS ──
+function buildGCalLink(title, startISO, endISO, desc, recur) {
+  const fmt = d => d.replace(/[-:]/g,'').replace('.000Z','Z');
+  const params = new URLSearchParams({
+    action: 'TEMPLATE',
+    text: title,
+    dates: fmt(startISO) + '/' + fmt(endISO),
+    details: desc || '',
+    recur: recur || ''
+  });
+  return 'https://calendar.google.com/calendar/render?' + params.toString();
+}
+
+function renderGCalLinks() {
+  const BASE = '20260420'; // Monday 20 April 2026
+  const ENTRIES = [
+    {title:'🌅 Wellbeing — Bewegung & Morgenroutine', start:'T080000', end:'T090000', days:'MO,TU,WE,TH,FR', color:'#FAEEDA', accent:'#854F0B', label:'Mo–Fr täglich', desc:'Bewegung / Meditation / Morgenroutine\nPlaybook: carolineisabellesteiger.github.io/daily-playbook'},
+    {title:'💼 Job / AE — Bewerbungen & Recruiter-Outreach', start:'T090000', end:'T110000', days:'MO,TU,WE,TH,FR', color:'#E6F1FB', accent:'#185FA5', label:'Mo–Fr täglich', desc:'Bewerbungen · Recruiter-Outreach · Interview-Prep\nFortinet (Robin) + BMC (Zenobia)'},
+    {title:'🇬🇧 Englisch — Business Fluency', start:'T110000', end:'T120000', days:'MO,TU,WE,TH,FR', color:'#EAF3DE', accent:'#3B6D11', label:'Mo–Fr täglich', desc:'Vocabulary-Block + Claude-Übungsgespräch'},
+    {title:'🍽 Mittagspause', start:'T120000', end:'T130000', days:'MO,TU,WE,TH,FR', color:'#F1EFE8', accent:'#888', label:'Mo–Fr täglich', desc:'Keine Arbeit — Energie tanken'},
+    {title:'✨ Fashion Genius — GTM & Outreach', start:'T130000', end:'T150000', days:'MO,TU,WE,TH,FR', color:'#f5ff80', accent:'#5a7000', label:'Mo–Fr täglich', desc:'Pilot-Outreach · Influencer-DMs · GTM-Aufbau'},
+    {title:'📝 Content — Post schreiben & planen', start:'T150000', end:'T160000', days:'MO,TU,WE,TH,FR', color:'#E6F1FB', accent:'#378ADD', label:'Mo–Fr täglich', desc:'LinkedIn/TikTok Post schreiben oder planen'},
+    {title:'📊 Analytics Check — LinkedIn & Fashion Genius', start:'T090000', end:'T093000', days:'MO', color:'#E6F1FB', accent:'#185FA5', label:'Jeden Montag', desc:'LinkedIn Analytics prüfen · Wochenziel setzen\nPlaybook: carolineisabellesteiger.github.io/daily-playbook', offsetDays:0},
+    {title:'🚀 LinkedIn Post publizieren — Dienstag', start:'T150000', end:'T151500', days:'TU', color:'#E6F1FB', accent:'#185FA5', label:'Jeden Dienstag', desc:'Post aus Playbook kopieren → LinkedIn → posten', offsetDays:1},
+    {title:'🚀 LinkedIn Post publizieren — Donnerstag', start:'T150000', end:'T151500', days:'TH', color:'#E6F1FB', accent:'#185FA5', label:'Jeden Donnerstag', desc:'Post aus Playbook kopieren → LinkedIn → posten', offsetDays:3},
+    {title:'📋 Weekly Review — Was hat funktioniert?', start:'T150000', end:'T160000', days:'FR', color:'#FAEEDA', accent:'#854F0B', label:'Jeden Freitag', desc:'Review: Job · Fashion Genius · Englisch · Achtsamkeit\nEintrag im Tagebuch: carolineisabellesteiger.github.io/daily-playbook', offsetDays:4},
+  ];
+
+  const sections = [
+    {label:'Täglich (Mo–Fr)', items: ENTRIES.filter(e=>e.days==='MO,TU,WE,TH,FR')},
+    {label:'Wöchentliche Anker', items: ENTRIES.filter(e=>e.days!=='MO,TU,WE,TH,FR')},
+  ];
+
+  let html = '';
+  sections.forEach(sec => {
+    html += `<div class="section-label" style="margin:16px 0 8px">${sec.label}</div>`;
+    sec.items.forEach(e => {
+      const offset = e.offsetDays || 0;
+      const d = new Date(2026, 3, 20 + offset); // April=3
+      const ds = d.toISOString().split('T')[0].replace(/-/g,'');
+      const startISO = ds + e.start + 'Z';
+      const endISO   = ds + e.end   + 'Z';
+      const recur = 'RRULE:FREQ=WEEKLY;BYDAY=' + e.days;
+      const link = buildGCalLink(e.title, startISO, endISO, e.desc, recur);
+      const timeLabel = e.start.replace('T','').replace(/(\d{2})(\d{2})(\d{2})/,'$1:$2') + ' – ' + e.end.replace('T','').replace(/(\d{2})(\d{2})(\d{2})/,'$1:$2');
+
+      html += `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:${e.color};border-radius:var(--radius);border-left:3px solid ${e.accent};margin-bottom:6px">
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:${e.accent};min-width:90px">${timeLabel}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500;color:var(--text)">${e.title}</div>
+          <div style="font-size:11px;color:var(--text-muted)">${e.label}</div>
+        </div>
+        <a href="${link}" target="_blank" style="padding:5px 12px;background:${e.accent};color:white;border-radius:6px;font-size:11px;font-weight:500;text-decoration:none;white-space:nowrap;flex-shrink:0">+ Google Cal</a>
+      </div>`;
+    });
+  });
+
+  document.getElementById('gcal-links').innerHTML = html;
+}
+
+
+// ── MONDAY ACTION PLAN ──
+const MONDAY_ACTIONS = [
+  {time:'09:00',priority:'🔴',category:'Analytics',title:'Analytics Check + Wochenziel setzen',items:['LinkedIn Analytics exportieren (Follower + Profilaufrufe)','Fashion Genius Page Analytics exportieren','Zahlen ins Playbook unter Analytics eintragen','Wochenziel in Routine-Seite notieren'],id:'mon-analytics'},
+  {time:'09:30',priority:'🔴',category:'Sales Navigator — DRINGEND (7 Tage!)',title:'Sales Navigator Leads exportieren + sichern',items:['Alle gespeicherten Listen als CSV exportieren','Alle 11 warmen Leads ins Playbook unter FG Piloten eintragen','Notizen zu jedem Lead sichern bevor SN abläuft'],id:'mon-salesnav'},
+  {time:'10:00',priority:'🔴',category:'Fashion Genius — Pilot Outreach',title:'DMs an Top-5 Fashion Prospects senden',items:['Rüdiger Traub (BRAX) — DM: VTO Demo anbieten','Pascal Egger (MANILO) — DM: Pilot-Gespräch','Tobias Stork (Takko Fashion) — DM: VTO Demo','Christian Kettl (LOWA) — DM: VTO Demo','Franco Savastano (Holt Renfrew) — kurze DM CEO-Level'],id:'mon-fg-dms'},
+  {time:'10:30',priority:'🔴',category:'Job Search — Azul',title:'Azul Follow-up senden',items:['Maryann Kovacevic — DM: nächster Schritt Azul AE DACH Rolle','Mike Dietz — kurzes Follow-up nach Vernetzung'],id:'mon-azul'},
+  {time:'11:00',priority:'🟡',category:'LinkedIn Posts automatisch live',title:'150% Quota Post läuft automatisch',items:['Post geht um 11:00 live — nichts zu tun','Erste Reaktionen beobachten + antworten','Fashion Genius Post um 12:00 ebenfalls automatisch'],id:'mon-posts'},
+  {time:'11:30',priority:'🟡',category:'Facebook Communities',title:'E-Commerce Stammtisch Post veröffentlichen',items:['Post: Suche 3 DACH Fashion Brands für VTO Pilot — regelkonform','Shopify DACH Gruppe: prüfen ob Beitrittsanfrage angenommen'],id:'mon-facebook'},
+  {time:'13:00',priority:'🟡',category:'Netzwerk Follow-ups',title:'Kommentar-Antworten + neue Kontakte prüfen',items:['Stefan Wenzel — kurze Antwort auf seine Nachricht','Jürgen Müller (profashionals) — reagiert auf Kommentar?','Rüdiger Traub (BRAX) — reagiert auf Kommentar?','Pascal Egger (MANILO) — reagiert auf Kommentar?'],id:'mon-followups'},
+  {time:'14:00',priority:'🟢',category:'Influencer',title:'DMs an Creator senden',items:['@cat_hammill — DM nach Kommentar','@whatpeoplearewearing — DM nach Kommentar','@sa.costantini — DM nach Kommentar'],id:'mon-influencer'},
+  {time:'15:00',priority:'🟢',category:'Content',title:'Donnerstag Posts prüfen + KW 17 planen',items:['Do 23. Apr Posts terminiert prüfen','KW 17 Posts Di 28. + Do 30. vorbereiten mit Claude'],id:'mon-content'},
+];
+
+function renderMonday() {
+  const saved = load('monday-done', []);
+  let html = '';
+  MONDAY_ACTIONS.forEach(a => {
+    const isDone = saved.includes(a.id);
+    const borderColor = isDone?'var(--gray-300)':a.priority==='🔴'?'#E24B4A':a.priority==='🟡'?'#EF9F27':'#3B6D11';
+    html += `<div style="margin-bottom:12px;background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;opacity:${isDone?'0.5':'1'}">
+      <div style="display:flex;align-items:center;gap:12px;padding:14px 16px;border-left:4px solid ${borderColor}">
+        <div style="font-size:14px">${a.priority}</div>
+        <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted);min-width:45px">${a.time}</div>
+        <div style="flex:1">
+          <div style="font-size:10px;font-weight:500;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.05em;color:var(--text-muted);margin-bottom:3px">${a.category}</div>
+          <div style="font-size:13px;font-weight:500;color:var(--text)">${a.title}</div>
+        </div>
+        <button onclick="toggleMondayItem('${a.id}')" style="padding:5px 14px;border-radius:6px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;border:0.5px solid var(--border);background:${isDone?'#EAF3DE':'var(--bg)'};color:${isDone?'#3B6D11':'var(--text-muted)'}">${isDone?'✓ Erledigt':'Erledigen'}</button>
+      </div>
+      <div style="padding:8px 16px 12px 16px;border-top:0.5px solid var(--color-border-tertiary)">
+        ${a.items.map(i=>`<div style="display:flex;gap:8px;align-items:flex-start;padding:3px 0;font-size:12px;color:var(--text-muted)"><span style="color:var(--blue-400);flex-shrink:0">→</span><span>${i}</span></div>`).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('monday-actions').innerHTML = html;
+}
+
+function toggleMondayItem(id) {
+  let saved = load('monday-done', []);
+  if(saved.includes(id)) saved = saved.filter(i => i !== id);
+  else saved.push(id);
+  save('monday-done', saved);
+  renderMonday();
+  toast(saved.includes(id) ? '✓ Erledigt!' : 'Zurückgesetzt');
+}
+
+let jobs = load('jobs', [
+  {company:'Fortinet', title:'Senior AE DACH', contact:'Robin (Recruiter)', date:'2026-04-01', channel:'Recruiter', status:'interview', note:'2. Interview steht aus — Manuel Eberenz'},
+  {company:'BMC Software', title:'Enterprise AE', contact:'Zenobia (Recruiter)', date:'2026-03-20', channel:'LinkedIn', status:'interview', note:'Erste Gespräche laufen'},
+]);
+
+const JOB_STATUS = {
+  beworben:{label:'Beworben',bg:'#F1EFE8',color:'#5F5E5A'},
+  interview:{label:'Interview',bg:'#E6F1FB',color:'#185FA5'},
+  angebot:{label:'Angebot',bg:'#EAF3DE',color:'#3B6D11'},
+  abgelehnt:{label:'Abgelehnt',bg:'#FCEBEB',color:'#A32D2D'},
+  pausiert:{label:'Pausiert',bg:'#F1EFE8',color:'#888'}
+};
+
+function renderJobs() {
+  const total = jobs.length;
+  document.getElementById('jkpi-total').textContent = total;
+  document.getElementById('jkpi-progress').textContent = jobs.filter(j=>j.status==='interview').length;
+  document.getElementById('jkpi-offer').textContent = jobs.filter(j=>j.status==='angebot').length;
+  document.getElementById('jkpi-rejected').textContent = jobs.filter(j=>j.status==='abgelehnt').length;
+  if(!jobs.length) { document.getElementById('job-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">Noch keine Bewerbungen.</div>'; return; }
+  let html = '';
+  jobs.forEach((j,i) => {
+    const st = JOB_STATUS[j.status]||JOB_STATUS.beworben;
+    html += `<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;align-items:start;padding:10px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;font-size:12px;border-left:3px solid ${st.color}">
+      <span style="font-weight:500">${j.company}</span><span style="color:var(--text-muted)">${j.title}</span>
+      <span style="color:var(--text-muted)">${j.contact}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${j.date}</span>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <select onchange="updateJobStatus(${i},this.value)" style="padding:3px 6px;border:0.5px solid var(--gray-100);border-radius:6px;font-size:11px;background:${st.bg};color:${st.color}">
+          ${Object.entries(JOB_STATUS).map(([k,v])=>`<option value="${k}"${j.status===k?' selected':''}>${v.label}</option>`).join('')}
+        </select>
+        ${j.note?`<span style="font-size:11px;color:var(--text-muted)">${j.note}</span>`:''}
+      </div></div>`;
+  });
+  document.getElementById('job-list').innerHTML = html;
+}
+function showAddJob() { const f=document.getElementById('add-job-form'); f.style.display=f.style.display==='none'?'block':'none'; document.getElementById('job-date').value=new Date().toISOString().split('T')[0]; }
+function addJob() {
+  const company=document.getElementById('job-company').value.trim(); if(!company) return;
+  jobs.push({company,title:document.getElementById('job-title').value,contact:document.getElementById('job-contact').value,date:document.getElementById('job-date').value,channel:document.getElementById('job-channel').value,status:document.getElementById('job-status').value,note:document.getElementById('job-note').value});
+  save('jobs',jobs); document.getElementById('add-job-form').style.display='none'; renderJobs(); toast('Bewerbung gespeichert');
+}
+function updateJobStatus(i,val) { jobs[i].status=val; save('jobs',jobs); renderJobs(); toast('Status aktualisiert'); }
+
+// ── PILOT TRACKER ──
+let pilots = load('pilots', []);
+const PILOT_STATUS = {
+  prospect:{label:'Prospect',bg:'#F1EFE8',color:'#5F5E5A'},
+  kontaktiert:{label:'Kontaktiert',bg:'#E6F1FB',color:'#185FA5'},
+  demo:{label:'Demo-Call',bg:'#FAEEDA',color:'#854F0B'},
+  pilot:{label:'Aktiver Pilot',bg:'#f5ff80',color:'#5a7000'},
+  kunde:{label:'Kunde',bg:'#EAF3DE',color:'#3B6D11'},
+  abgelehnt:{label:'Abgelehnt',bg:'#FCEBEB',color:'#A32D2D'}
+};
+function renderPilots() {
+  document.getElementById('pkpi-total').textContent = pilots.length;
+  document.getElementById('pkpi-demo').textContent = pilots.filter(p=>p.status==='demo').length;
+  document.getElementById('pkpi-pilot').textContent = pilots.filter(p=>p.status==='pilot'||p.status==='kunde').length;
+  document.getElementById('pkpi-rev').textContent = pilots.reduce((s,p)=>s+(parseInt(p.rev)||0),0).toLocaleString('de-CH');
+
+  // Follow-up reminders — kontaktiert > 5 Tage ohne Antwort
+  const today = new Date();
+  const followups = pilots.filter(p => {
+    if(p.status !== 'kontaktiert') return false;
+    const sent = new Date(p.date);
+    const diff = Math.floor((today - sent) / (1000*60*60*24));
+    return diff >= 5;
+  });
+
+  const reminderEl = document.getElementById('pilot-reminders');
+  if(reminderEl) {
+    if(followups.length) {
+      reminderEl.innerHTML = `<div style="background:#FFF8E6;border:1px solid #EF9F27;border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:500;font-family:'DM Mono',monospace;color:#EF9F27;text-transform:uppercase;margin-bottom:8px">⏰ Follow-up fällig — ${followups.length} Prospect${followups.length>1?'s':''} ohne Antwort</div>
+        ${followups.map(p => {
+          const days = Math.floor((today - new Date(p.date)) / (1000*60*60*24));
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid #F5DFA0;font-size:12px">
+            <span><strong>${p.brand}</strong> — ${p.contact}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:#A0622A">${days} Tage — Follow-up senden!</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    } else {
+      reminderEl.innerHTML = '';
+    }
+  }
+
+  if(!pilots.length) { document.getElementById('pilot-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">Noch keine Prospects — klicke «+ Prospect hinzufügen».</div>'; return; }
+  let html = '';
+  pilots.forEach((p,i) => {
+    const st=PILOT_STATUS[p.status]||PILOT_STATUS.prospect;
+    const sent = new Date(p.date);
+    const daysSince = Math.floor((today - sent) / (1000*60*60*24));
+    const isOverdue = p.status === 'kontaktiert' && daysSince >= 5;
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 80px 100px;gap:8px;align-items:start;padding:10px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;font-size:12px;border-left:3px solid ${isOverdue?'#EF9F27':st.color}">
+      <span style="font-weight:500">${p.brand}${isOverdue?` <span style="font-size:10px;color:#EF9F27;font-family:'DM Mono',monospace">⏰ ${daysSince}d</span>`:''}</span>
+      <span style="color:var(--text-muted)">${p.contact}</span>
+      <span style="font-size:11px;color:var(--text-muted)">${p.note}</span>
+      <span style="font-family:'DM Mono',monospace;font-size:11px">${p.rev?'CHF '+parseInt(p.rev).toLocaleString('de-CH'):'—'}</span>
+      <select onchange="updatePilotStatus(${i},this.value)" style="padding:3px 6px;border:0.5px solid var(--gray-100);border-radius:6px;font-size:11px;background:${st.bg};color:${st.color}">
+        ${Object.entries(PILOT_STATUS).map(([k,v])=>`<option value="${k}"${p.status===k?' selected':''}>${v.label}</option>`).join('')}
+      </select></div>`;
+  });
+  document.getElementById('pilot-list').innerHTML = html;
+}
+function showAddPilot() { const f=document.getElementById('add-pilot-form'); f.style.display=f.style.display==='none'?'block':'none'; document.getElementById('pilot-date').value=new Date().toISOString().split('T')[0]; }
+function addPilot() {
+  const brand=document.getElementById('pilot-brand').value.trim(); if(!brand) return;
+  pilots.push({brand,contact:document.getElementById('pilot-contact').value,platform:document.getElementById('pilot-platform').value,channel:document.getElementById('pilot-channel').value,status:document.getElementById('pilot-status').value,rev:document.getElementById('pilot-rev').value,date:document.getElementById('pilot-date').value,note:document.getElementById('pilot-note').value});
+  save('pilots',pilots); document.getElementById('add-pilot-form').style.display='none'; renderPilots(); toast('Prospect gespeichert');
+}
+function updatePilotStatus(i,val) { pilots[i].status=val; save('pilots',pilots); renderPilots(); toast('Status aktualisiert'); }
+
+function copyText(text) {
+  navigator.clipboard.writeText(text.replace(/\\'/g,"'")).then(() => toast('Kopiert!'));
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function updateLastSave() {
+  const el = document.getElementById('last-save');
+  if(el) el.textContent = 'Gespeichert ' + new Date().toLocaleTimeString('de-CH', {hour:'2-digit',minute:'2-digit'});
+}
+
+// ── INIT ──
+const now = new Date();
+const months = ['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
+document.getElementById('sidebar-date').textContent = now.getDate() + '. ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+// Update analytics with latest real data (19. April 2026)
+try {
+  const realData = {
+    'li-imp': 20077,
+    'li-reach': 12401,
+    'li-eng': 13,
+    'li-profile': 51,
+    'li-follower': 1609,
+    'li-top': 1231,
+    'li-dm': 5,
+    'li-job': 2,
+    'tt-views': 943,
+    'ig-reach': 0,
+    'fg-demos': 0,
+    'fg-pilot': 0,
+    history: [
+      { month: 'KW 15 (9-15 Apr)', imp: 2257, reach: 1365 },
+      { month: 'KW 16 (13-19 Apr)', imp: 20077, reach: 12401 }
+    ]
+  };
+  localStorage.setItem('analytics', JSON.stringify(realData));
+} catch(e) {}
+
+// Pre-load jobs if empty
+try {
+  const existingJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
+  if(!existingJobs.length) {
+    const jobs = [
+      {company:'Fortinet', title:'Senior AE DACH', contact:'Robin (Recruiter)', date:'2026-04-01', channel:'Recruiter', status:'interview', note:'2. Interview steht aus — Manuel Eberenz'},
+      {company:'BMC Software', title:'Enterprise AE', contact:'Zenobia (Recruiter)', date:'2026-03-20', channel:'LinkedIn', status:'interview', note:'Erste Gespräche laufen'},
+      {company:'Azul', title:'Enterprise AE DACH', contact:'Mike Dietz + Maryann Kovacevic', date:'2026-04-17', channel:'LinkedIn', status:'kontaktiert', note:'Mike Dietz vernetzt 18.4. — Maryann vernetzt 15.4. — Follow-up Mo 21.4.'},
+      {company:'Parloa', title:'Enterprise AE Switzerland', contact:'Chanisara Kongsantinart', date:'2026-04-19', channel:'LinkedIn', status:'beworben', note:'Abwarten — erst Chanisara Antwort abwarten'},
+    ];
+    localStorage.setItem('jobs', JSON.stringify(jobs));
+  }
+} catch(e) {}
+
+// Pre-load pilots if empty
+try {
+  const existingPilots = JSON.parse(localStorage.getItem('pilots') || '[]');
+  if(!existingPilots.length) {
+  const pilots = [
+      {brand:'BRAX Leineweber', contact:'Rüdiger Traub, Dir. E-Commerce', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-17', note:'DM gesendet 20.4. — Antwort ausstehend'},
+      {brand:'MANILO', contact:'Pascal Egger, Founder & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-17', note:'DM gesendet 20.4. — Shortlist Pilot erwähnt — Antwort ausstehend'},
+      {brand:'Takko Fashion', contact:'Tobias Stork, Head E-Commerce & CRM', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'DM gesendet 20.4. — Antwort ausstehend'},
+      {brand:'LOWA Sportschuhe', contact:'Christian Kettl, Head E-Commerce', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Warmer Lead SN — DM noch ausstehend'},
+      {brand:'Holt Renfrew', contact:'Franco Savastano, President & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-10', note:'CEO-Level Zürich — DM noch ausstehend'},
+      {brand:'BMS Sailing Wear', contact:'Mikko Schröder, Managing Director', platform:'', channel:'LinkedIn', status:'warm', rev:'', date:'2026-03-01', note:'Letztes Jahr Kontakt — AI Assist abgelehnt aber VTO Interesse signalisiert — jetzt DM mit VTO Pitch!'},
+      {brand:'Zalando (ex)', contact:'Surbhi Marwah, Head of Product', platform:'', channel:'LinkedIn', status:'prospect', rev:'', date:'2026-04-20', note:'7 Jahre Zalando verlassen Apr 2026 — Product & Data — VTO/Fashion Tech Expertise — connecten!'},
+      {brand:'Hugo Boss', contact:'Thomas George, Global E-Commerce Process Mgmt', platform:'', channel:'LinkedIn', status:'prospect', rev:'', date:'2026-04-20', note:'Hugo Boss Global E-Commerce — top Fashion Brand — connecten + DM'},
+      {brand:'C&A', contact:'Peder Apelgren, Head of Ecommerce', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-20', note:'InMail gesendet 20.4. — Betreff: Virtual Try-On for C&A — 15 minutes?'},
+      {brand:'C&A', contact:'Ulrike Otto, Head of Digital Product & Experimentation', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-20', note:'InMail gesendet 20.4. — 15 Jahre C&A — Digital CX Fokus'},
+      {brand:'Mapp Digital', contact:'Maurizio (Mapp.com)', platform:'', channel:'LinkedIn/Referral', status:'warm', rev:'', date:'2026-01-01', note:'Vernetzt über Bekannten aus Morcote — Jan Call geführt — DM 20.4: VTO Prototype fertig — 15min?'},
+      {brand:'Zebra Fashion AG', contact:'Michael Solomun, CEO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'CEO Schweiz — Bassersdorf — Top Priorität'},
+      {brand:'Zebra Fashion AG', contact:'Arefa Hasher, E-Commerce & CRM', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Direkt zuständig E-Commerce — Schweiz'},
+      {brand:'MORE & MORE', contact:'Thomas Forstpointner, Interim CDO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Interim CDO — Fashion Brand DE — VTO Angle'},
+      {brand:'KUNERT FASHION', contact:'Thomas Böhmer, Leiter E-Commerce', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Fashion Brand Österreich — direkt zuständig'},
+      {brand:'C.P. Company', contact:'Caterina Ticchio, Omnichannel/DTC', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Premium Fashion — Lugano — Omnichannel Fit'},
+      {brand:'Rich & Royal', contact:'Angela M., Technical Ops E-Commerce', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Fashion Brand DE — E-Commerce Ops'},
+      {brand:'Ospelt Gruppe', contact:'Reto Siegenthaler, CIO/CDO/CCO', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Liechtenstein — C-Level — Digital Transformation'},
+      {brand:'Ullrich', contact:'Antonio Govetosa, CMO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Mode Schweiz — CMO Level'},
+      {brand:'TEVEO', contact:'Philip Clas, CDMO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Digital Fashion — München'},
+      {brand:'Frederique Constant', contact:'Gaëlle Ranchon, Head Sales & Marketing', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Luxury Watches Schweiz — Premium Segment'},
+      {brand:'Azul', contact:'Maryann Kovacevic, Sr. Dir. Global TA', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-15', note:'Job Lead — Azul AE DACH — Follow-up Mo 21.4.'},
+    ];
+    localStorage.setItem('pilots', JSON.stringify(pilots));
+  }
+} catch(e) {}
+
+// Pre-load influencers if empty  
+try {
+  const existingInf = JSON.parse(localStorage.getItem('influencers') || '[]');
+  if(existingInf.length < 5) {
+    const influencers = [
+      {name:'@cat_hammill', platform:'Instagram', followers:12, note:'Statement Fashion — kommentiert', status:'kontaktiert'},
+      {name:'@whatpeoplearewearing', platform:'Instagram', followers:82, note:'Street Style — 82k Likes', status:'kontaktiert'},
+      {name:'@sa.costantini', platform:'Instagram', followers:40, note:'Color/Style — verifiziert', status:'kontaktiert'},
+      {name:'@thanyaw', platform:'Instagram', followers:2400, note:'DACH OOTDs — 2.4M Follower', status:'offen'},
+      {name:'@carod', platform:'Instagram', followers:4500, note:'Caroline Daur — Hamburg', status:'offen'},
+    ];
+    localStorage.setItem('influencers', JSON.stringify(influencers));
+  }
+} catch(e) {}
+
+
+renderToday();
+renderGCalLinks();
+updateLastSave();
+</script>
+</body>
+</html>
