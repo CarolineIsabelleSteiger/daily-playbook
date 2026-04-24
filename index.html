@@ -937,8 +937,8 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   <div class="grid-4" style="margin-bottom:20px">
     <div class="metric"><div class="metric-label">Direktkontakte akzeptiert</div><div class="metric-val">36</div><div class="metric-delta" style="color:var(--blue-600)">1st degree · Apr 2026</div></div>
     <div class="metric"><div class="metric-label">Nachrichten gesendet</div><div class="metric-val">6</div><div class="metric-delta" style="color:var(--blue-600)">inkl. Traub, Egger, Wenzel</div></div>
-    <div class="metric"><div class="metric-label">Empfohlene Leads</div><div class="metric-val">87</div><div class="metric-delta" style="color:var(--text-muted)">2./3. Grad · noch nicht kontaktiert</div></div>
-    <div class="metric"><div class="metric-label">Fashion-relevante Leads</div><div class="metric-val">12</div><div class="metric-delta" style="color:var(--fg-mid)">E-Com / Fashion / Retail</div></div>
+    <div class="metric"><div class="metric-label">Empfohlene Leads</div><div class="metric-val">107</div><div class="metric-delta" style="color:var(--text-muted)">2./3. Grad · noch nicht kontaktiert</div></div>
+    <div class="metric"><div class="metric-label">Fashion-relevante Leads</div><div class="metric-val">19</div><div class="metric-delta" style="color:var(--fg-mid)">E-Com / Fashion / Retail</div></div>
   </div>
 
   <div class="leads-filter-row" id="li-leads-filters">
@@ -1880,6 +1880,28 @@ const LI_LEADS = [
   {name:'Jean-Thomas Célette', title:'CEO', company:'Coresystems AG', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
   {name:'Remo Noser', title:'Chief Executive Officer', company:'Noser Engineering AG', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
   {name:'Cristian Mudure', title:'CEO & Founder', company:'Stackfield', region:'München, DE', degree:2, action:'keine', date:'12.4.2026', tags:['ceo'], priority:'low'},
+
+  // ── Gespeicherte Leads (7. April 2026) ──
+  {name:'Angela M.', title:'Technical Operations Specialist E-Commerce', company:'Rich & Royal – Peter Stupp Design Mode GmbH', region:'Stuttgart, DE', degree:3, action:'keine', date:'7.4.2026', tags:['fashion','ecom'], priority:'mid'},
+  {name:'Arefa Hasher', title:'E-Commerce & CRM Specialist', company:'Zebra Fashion AG', region:'Schweiz', degree:2, action:'keine', date:'7.4.2026', tags:['fashion','ecom','ch'], priority:'high'},
+  {name:'Antonio Govetosa', title:'CMO / Chief Marketing Officer – Mitglied der Geschäftsleitung', company:'Ullrich', region:'Schweiz', degree:2, action:'keine', date:'7.4.2026', tags:['fashion','ch'], priority:'high'},
+  {name:'Michael Solomun', title:'CEO', company:'Zebra Fashion AG', region:'Bassersdorf, CH', degree:2, action:'keine', date:'7.4.2026', tags:['fashion','ecom','ch','ceo'], priority:'high'},
+  {name:'Selina Späni', title:'Head of Marketing & Business Development | Executive Management Team', company:'DOBI-INTER AG', region:'Richterswil, CH', degree:2, action:'keine', date:'7.4.2026', tags:['fashion','ch'], priority:'high'},
+  {name:'Philip Lange', title:'Head of E-Commerce International', company:'Degussa Group Deutschland', region:'Frankfurt, DE', degree:2, action:'keine', date:'7.4.2026', tags:['ecom'], priority:'mid'},
+  {name:'Thomas Mader', title:'Operations Director / COO', company:'APCOA Deutschland GmbH', region:'München, DE', degree:2, action:'keine', date:'7.4.2026', tags:[], priority:'low'},
+  {name:'Denise Heinz', title:'Head of Brand & Product Cosmetic Actives', company:'RAHN-Group', region:'München, DE', degree:3, action:'keine', date:'7.4.2026', tags:[], priority:'low'},
+  {name:'Cihan Duezguen', title:'CEO & Co-Founder', company:'Green Banana Group', region:'Frankfurt, DE', degree:2, action:'keine', date:'7.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Christiaan Vrey', title:'Retail Experte', company:'Lucky Bike.de GmbH', region:'Hüfingen, DE', degree:2, action:'keine', date:'7.4.2026', tags:['ecom'], priority:'mid'},
+  {name:'Stephan von Criegern', title:'Lead E-Commerce', company:'TVS EBike Company AG', region:'München, DE', degree:2, action:'keine', date:'7.4.2026', tags:['ecom'], priority:'mid'},
+  {name:'Dr. Klaus Hildebrand', title:'Leitung Marketing und Vertrieb', company:'Schulthess Juristische Medien AG', region:'Zürich, CH', degree:2, action:'keine', date:'7.4.2026', tags:['ch'], priority:'low'},
+  {name:'Tobias Quelle', title:'Chief Information Officer', company:'Brack.Alltron', region:'Zürich, CH', degree:2, action:'keine', date:'7.4.2026', tags:['ch','ecom'], priority:'mid'},
+  {name:'Lars Jurischka', title:'Miembro', company:'RSMpreneurs Alumni Network', region:'Hamburg, DE', degree:2, action:'keine', date:'7.4.2026', tags:[], priority:'low'},
+  {name:'Dr. Frank Müller', title:'Managing Director', company:'Chronopeak', region:'Dresden, DE', degree:2, action:'keine', date:'7.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Philip Clas', title:'Chief Digital & Marketing Officer (CDMO)', company:'TEVEO', region:'München, DE', degree:2, action:'keine', date:'7.4.2026', tags:['fashion','ecom'], priority:'high'},
+  {name:'Melissa Weston', title:'CMO', company:'Cyberr®', region:'Berlin, DE', degree:3, action:'keine', date:'7.4.2026', tags:[], priority:'low'},
+  {name:'Ester Grau', title:'Head of Brand Management & Content', company:'Ex Libris AG', region:'Zürich, CH', degree:2, action:'keine', date:'7.4.2026', tags:['ch'], priority:'low'},
+  {name:'Christoph Frechen', title:'Industry Expert for Retail & Consumer Services', company:'>>venture>> Startup Competition', region:'Schweiz', degree:2, action:'keine', date:'7.4.2026', tags:['fashion','ch'], priority:'high'},
+  {name:'Gaëlle Ranchon', title:'Head of Sales & Marketing Operations – Global Citizen Affiliates', company:'Frederique Constant', region:'Schweiz', degree:3, action:'keine', date:'7.4.2026', tags:['fashion','ch'], priority:'high'},
 ];
 
 function renderLILeads(filter) {
