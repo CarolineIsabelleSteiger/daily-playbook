@@ -1523,29 +1523,37 @@ function toggleMondayItem(id) {
 
 // ── EMAIL OUTREACH DATA ──
 const EMAIL_OUTREACH = [
-  {brand:'Asphaltgold', contact:'Larissa Dien, Head of Digital Experience', email:'larissa.dien@asphaltgold.com', sent:'2026-04-09', status:'geantwortet', note:'«Klingt spannend» — ANTWORT JETZT SENDEN: Demo-Link + Calendly!', priority:'hot'},
-  {brand:'Brandstudio', contact:'contact@brandstudio', email:'contact', sent:'2026-04-12', status:'geantwortet', note:'Hat geantwortet Apr 12 — Follow-up prüfen', priority:'hot'},
-  {brand:'Engelhorn', contact:'Felix Sinkender', email:'f.engelhorn@engelhorn.de', sent:'2026-04-10', status:'opens', note:'3 Mails — 2x geöffnet — KEIN Reply → LinkedIn DM oder Telefon!', priority:'warm'},
-  {brand:'Globus', contact:'Michael Klöe', email:'michaelkloe', sent:'2026-04-09', status:'gesendet', note:'Zalando-Vergleich Mail gesendet', priority:'warm'},
-  {brand:'Jades24', contact:'Kiliana + Christian', email:'kiliana_sei / christian.o', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte angeschrieben', priority:'warm'},
-  {brand:'Solebox', contact:'Aljoscha', email:'aljoscha.ko', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'warm'},
-  {brand:'Lena Hoschek', contact:'Lena', email:'lena', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'warm'},
-  {brand:'Kickz', contact:'Denis Horvat', email:'denis.horvat', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
-  {brand:'Kapten & Son', contact:'Fabian', email:'fabian.deve', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
-  {brand:'Globetrotter', contact:'Andreas', email:'andreas.bar', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
-  {brand:'Filling Pieces', contact:'Guillaume + Boris', email:'guillaume / boris', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
-  {brand:'BSTN', contact:'Christian + Roberto', email:'christian / roberto.auf', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
-  {brand:'Bergfreunde', contact:'Felix + Christian', email:'felix / christian', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
-  {brand:'Armedangels', contact:'Christina K. + Martin', email:'christina.k / martin.hoef', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
-  {brand:'afew-store', contact:'Robin + Marco', email:'marco.robin', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
-  {brand:'43einhalb', contact:'Mischa', email:'caroline.st', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
-  {brand:'Drykorn', contact:'Marco Götz', email:'marco.goetz', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
+  // ── HOT — Antwort erhalten ──
+  {brand:'Asphaltgold', contact:'Larissa Dien — Head of Digital Experience', email:'larissa.dien@asphaltgold.com', sent:'2026-04-09', status:'geantwortet', note:'«Klingt spannend» ✅ — Follow-up 21.4. via LI. Demo-Link + Calendly senden! | Score 10 · P1 · Shopify · Sneaker', priority:'hot'},
+  {brand:'Brandstudio', contact:'contact@brandstudiolifestyle.com', email:'contact@brandstudiolifestyle.com', sent:'2026-04-12', status:'geantwortet', note:'Hat geantwortet 12.4. — Follow-up prüfen', priority:'hot'},
+  // ── WARM — Opens / P1 Score 10 ──
+  {brand:'Engelhorn', contact:'Fabian Engelhorn — Geschäftsführer', email:'f.engelhorn@engelhorn.de', sent:'2026-04-13', status:'opens', note:'3 Mails (13.4 + 14.4) — 2× geöffnet — KEIN Reply → LinkedIn DM / Telefon! | Florian Engelhorn: florian.engelhorn@engelhorn.de | Score 8 · P2 · Shopware · Premium Multibrand', priority:'warm'},
+  {brand:'Solebox', contact:'Aljoscha Kondratiew — CEO', email:'aljoscha.kondratiew@solebox.com', sent:'2026-04-09', status:'gesendet', note:'Follow-up 9.4. gesendet. Backup: annika.bueser@solebox.com (PR). Henrichus Loeffen: henricus.loeffen@solebox.com (März kontaktiert) | Score 10 · P1 · Shopify · Sneaker', priority:'warm'},
+  {brand:'43einhalb', contact:'Oliver Baumgart — Co-Founder & CEO', email:'oliver@43einhalb.de', sent:'2026-04-09', status:'gesendet', note:'K5 Future Retail Speaker – E-Com-affin. Auch: mischa@43einhalb.de (Co-Founder). Alt-Emails: oliver.baumgart@ / mischa.baumgart@ | Score 10 · P1 · Shopify · Sneaker', priority:'warm'},
+  {brand:'Afew Store', contact:'Marco Biergen — CEO & Co-Founder', email:'marco@afew-store.com', sent:'2026-04-09', status:'gesendet', note:'Familienunternehmen Düsseldorf. Auch: robin@afew-store.com (Robin Fritze). Schnelle Entscheide. | Score 10 · P1 · Shopify · Sneaker', priority:'warm'},
+  {brand:'BSTN', contact:'Roberto Aufiero — Co-Founder & CEO', email:'roberto.aufiero@bstn.com', sent:'2026-04-09', status:'gesendet', note:'10 Jahre BSTN. Nike+Stone Island+Patta = perfekter FG Use Case. Auch: christian@bstn.com (Christian Boszczyk CMO) | Score 10 · P1 · Shopware · Sneaker', priority:'warm'},
+  {brand:'Kickz', contact:'Denis Horvat — Co-CEO', email:'denis.horvat@kickz.com', sent:'2026-04-09', status:'gesendet', note:'Denis = Tech-Innovator (FitFinder, FitAnalytics). FG ist nächster Layer. Auch: christian.grosse@kickz.com (Gründer) | Score 9 · P1 · Shopware · Sneaker', priority:'warm'},
+  {brand:'Globus', contact:'Michael Kloetzli', email:'michaelkloetzli@gmail.com', sent:'2026-04-09', status:'gesendet', note:'Zalando-Vergleich Mail gesendet. Auch: franco.savastano@globus.ch (CEO) | Score: Warm', priority:'warm'},
+  {brand:'Jades24', contact:'Kiliana Seidensticker + Christian Oelkers', email:'kiliana_seidensticker@jades24.com / christian.oelkers@jades24.com', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte angeschrieben. christian.oelkers = CEO | P4 · Accept-All', priority:'warm'},
+  // ── NORMAL — P2 Follow-up gesendet ──
+  {brand:'Armedangels', contact:'Martin Höfeler — CEO & Co-Founder', email:'martin.hoefeler@armedangels.de', sent:'2026-04-09', status:'gesendet', note:'Nachhaltigkeits-CEO, Patagonia-Vision. KI+Outfit+Nachhaltigkeit = starker Pitch. Auch: christina.kempers@armedangels.de (Head Marketing) | Score 8 · P2 · Shopify · Sustainable', priority:'normal'},
+  {brand:'Filling Pieces', contact:'Guillaume Philibert — Founder & CEO', email:'guillaume@fillingpieces.com', sent:'2026-04-09', status:'gesendet', note:'Premium Sneaker + Apparel NL/DE. Outfit-Kontext sehr hoch. Auch: boris@fillingpieces.com | Score 8 · P2 · Shopify · DTC Designer', priority:'normal'},
+  {brand:'Drykorn', contact:'Marco Goetz — CEO', email:'marco.goetz@drykorn.com', sent:'2026-04-09', status:'gesendet', note:'Korbinian Scherer (Head Marketing) = Podcast-Gast New Commerce, sehr digital-affin. Alt: m.goetz@drykorn.com / k.scherer@drykorn.com | Score 8 · P2 · Shopify · DTC Designer', priority:'normal'},
+  {brand:'Kapten & Son', contact:'Fabian de Venter — Co-Founder & COO', email:'fabian.deventer@kapten-son.com', sent:'2026-04-09', status:'gesendet', note:'Magic Mirror im Store – tech-affin. Johannes Theobald (CEO): johannes.theobald@kapten-son.com (März kontaktiert) | Score 8 · P2 · Shopify · Accessories', priority:'normal'},
+  {brand:'Lena Hoschek', contact:'Lena Hoschek — Founder & Designer', email:'lena@lenahoschek.com', sent:'2026-04-09', status:'gesendet', note:'Wien, Shopify, Nische aber tech-affin. Direktkontakt zur Gründerin. | Score 8 · P2 · Shopify · DTC Designer', priority:'normal'},
+  {brand:'Snocks', contact:'Johannes Kliesch — Co-Founder & CEO', email:'johannes@snocks.com', sent:'2026-03-09', status:'gesendet', note:'Forbes 30u30, 160k LinkedIn, Podcast-Host. Tech-offen. ⚠ Nur Socken – geringes VTO-Potential. | Score 8 · P2 · Shopify · DTC Basics', priority:'normal'},
+  {brand:'Bergfreunde', contact:'Christian Schneider — CEO', email:'christian@bergfreunde.de', sent:'2026-04-09', status:'gesendet', note:'Magento, Outdoor Multibrand DACH. Integrationsaufwand höher. Auch: felix@bergfreunde.de (Head E-Com) | Score 5 · P3 · Magento · Sport & Outdoor', priority:'normal'},
+  {brand:'Globetrotter', contact:'Andreas Bartmann — CEO', email:'andreas.bartmann@globetrotter.de', sent:'2026-04-09', status:'gesendet', note:'Magento, Outdoor Multibrand. Integrationsaufwand höher. Alt: andreas@globetrotter.de | Score 5 · P3 · Magento · Sport & Outdoor', priority:'normal'},
+  {brand:'Really Wild', contact:'Nadja Swarovski — Owner / Creative Director', email:'nadja@reallywildclothing.com', sent:'2026-03-09', status:'gesendet', note:'Rupert koordiniert Termin. Alt: nadja.swarovski@reallywildclothing.com | P4', priority:'normal'},
+  // ── DAGORA (neu) ──
+  {brand:'Dagora', contact:'Carlo Terreni — President & Board Member / Daniele Panato', email:'carlo@dagora.ch / michele.crespi@dagora.ch', sent:'2026-04-23', status:'gesendet', note:'Fashion Genius Technology Lab Mail 23.4. Carlo + Michele angeschrieben. Daniele Panato = weiterer Dagora-Kontakt (DM 23.4.). Carlo = LI Direktkontakt (vernetzt 24.4.). LifeStyle Innovation Hub Lugano.', priority:'normal'},
 ];
 
 const EMAIL_STATUS_CONFIG = {
   'geantwortet': {color:'#3B6D11', bg:'#EAF3DE', label:'✅ Geantwortet'},
   'opens': {color:'#EF9F27', bg:'#FFF8E6', label:'👁 Opens — kein Reply'},
   'gesendet': {color:'var(--blue-600)', bg:'var(--blue-50)', label:'📤 Gesendet'},
+  'prospecting': {color:'var(--gray-600)', bg:'var(--gray-50)', label:'🔍 Prospecting'},
 };
 
 function renderEmailOutreach() {
@@ -1789,13 +1797,44 @@ try {
 // Pre-load influencers if empty  
 try {
   const existingInf = JSON.parse(localStorage.getItem('influencers') || '[]');
-  if(existingInf.length < 5) {
+  if(!existingInf.length) {
     const influencers = [
-      {name:'@cat_hammill', platform:'Instagram', followers:12, note:'Statement Fashion — kommentiert', status:'kontaktiert'},
-      {name:'@whatpeoplearewearing', platform:'Instagram', followers:82, note:'Street Style — 82k Likes', status:'kontaktiert'},
-      {name:'@sa.costantini', platform:'Instagram', followers:40, note:'Color/Style — verifiziert', status:'kontaktiert'},
-      {name:'@thanyaw', platform:'Instagram', followers:2400, note:'DACH OOTDs — 2.4M Follower', status:'offen'},
-      {name:'@carod', platform:'Instagram', followers:4500, note:'Caroline Daur — Hamburg', status:'offen'},
+      {name:'Haley Robinson', handle:'@haley__robinson', platform:'Instagram', followers:916.7, er:10.71, engagements:4200, note:'Macro-Creator · 916k Followers · ER 10.71%', status:'offen'},
+      {name:'Rouby Smily', handle:'@roubysmily', platform:'Instagram', followers:225.1, er:2.88, engagements:4200, note:'Macro-Creator · 225k Followers · ER 2.88%', status:'offen'},
+      {name:'Ebru Caglayan', handle:'@ebrucgln_', platform:'Instagram', followers:207.4, er:5.65, engagements:72, note:'Macro-Creator · 207k Followers · ER 5.65%', status:'offen'},
+      {name:'Dmoda', handle:'@dmodaio', platform:'Instagram', followers:158.1, er:8.28, engagements:555, note:'Macro-Creator · 158k Followers · ER 8.28%', status:'offen'},
+      {name:'Darcie', handle:'@djodarcie', platform:'Instagram', followers:113.6, er:13.17, engagements:1000, note:'Mid-Macro · 113k · ER 13.17% – Top Engagement!', status:'offen'},
+      {name:'Gi.esqui', handle:'@gi.esqui', platform:'Instagram', followers:91.6, er:5.36, engagements:1200, note:'Mid-Macro · 91k · ER 5.36%', status:'offen'},
+      {name:'Manonkutner', handle:'@manonkutner', platform:'Instagram', followers:84.8, er:4.59, engagements:6400, note:'Mid-Macro · 84k · ER 4.59% · Styliste', status:'offen'},
+      {name:'Alejandra Gisele', handle:'@alestylist__', platform:'Instagram', followers:80, er:5.67, engagements:266, note:'Mid-Macro · 80k · ER 5.67%', status:'offen'},
+      {name:'Secrets', handle:'@secrets__rs0', platform:'Instagram', followers:79.5, er:0, engagements:0, note:'Mid-Macro · 79k · ER 0% – prüfen', status:'offen'},
+      {name:'Kaela Gordon', handle:'@kaelagordon', platform:'Instagram', followers:73.9, er:4.72, engagements:585, note:'Mid-Macro · 73k · ER 4.72%', status:'offen'},
+      {name:'Clotheslovers', handle:'@clotheslovers_', platform:'Instagram', followers:67.5, er:3.34, engagements:193, note:'Mid · 67k · ER 3.34%', status:'offen'},
+      {name:'Annsophie Maria', handle:'@annsophiemaria', platform:'Instagram', followers:62.7, er:2.23, engagements:5200, note:'Mid · 62k · ER 2.23%', status:'offen'},
+      {name:'Ashling Hanriot', handle:'@ashling.hanriot', platform:'Instagram', followers:44.1, er:7.15, engagements:207, note:'Mid · 44k · ER 7.15%', status:'offen'},
+      {name:'Alvin Belmonts', handle:'@alvinbelmonts', platform:'Instagram', followers:47.5, er:5.45, engagements:285, note:'Mid · 47k · ER 5.45%', status:'offen'},
+      {name:'Averysdaily', handle:'@averysdaily', platform:'Instagram', followers:34.8, er:7.78, engagements:98, note:'Mid · 34k · ER 7.78% · Email: averysdaily617@gmail.com', status:'offen'},
+      {name:'Wornbymandy', handle:'@wornbymandy', platform:'Instagram', followers:37.2, er:2.44, engagements:289, note:'Mid · 37k · ER 2.44%', status:'offen'},
+      {name:'Monikh', handle:'@monikh__', platform:'Instagram', followers:30.6, er:6.62, engagements:440, note:'Mid · 30k · ER 6.62%', status:'offen'},
+      {name:'Luna Di Michele', handle:'@luna_dimichele', platform:'Instagram', followers:28.4, er:4.58, engagements:1400, note:'Micro · 28k · ER 4.58%', status:'offen'},
+      {name:'Tamo', handle:'@tamo_shop', platform:'Instagram', followers:23.1, er:0, engagements:1000, note:'Micro · 23k · ER 0% – prüfen', status:'offen'},
+      {name:'Zeynab', handle:'@z.eynabbbb', platform:'Instagram', followers:22.7, er:13.06, engagements:974, note:'Micro · 22k · ER 13.06% – Top Engagement!', status:'offen'},
+      {name:'Vanessa', handle:'@vanessaaabrn', platform:'Instagram', followers:22.3, er:11.23, engagements:2600, note:'Micro · 22k · ER 11.23% – Top Engagement!', status:'offen'},
+      {name:'Cecilia Mary Rose', handle:'@cecilia.mary.rose', platform:'Instagram', followers:20.9, er:14.44, engagements:401, note:'Micro · 20k · ER 14.44% – Highest ER!', status:'offen'},
+      {name:'Julianne Mb', handle:'@imma21632', platform:'Instagram', followers:17.7, er:8.76, engagements:115, note:'Micro · 17k · ER 8.76%', status:'offen'},
+      {name:'Darja DD', handle:'@darjadelju', platform:'Instagram', followers:14.2, er:7.46, engagements:930, note:'Micro · 14k · ER 7.46%', status:'offen'},
+      {name:'Edna', handle:'@howdyedna', platform:'Instagram', followers:13.1, er:15.72, engagements:109, note:'Micro · 13k · ER 15.72% – Highest ER!', status:'offen'},
+      {name:'Nour Affifi', handle:'@nour_affifi', platform:'Instagram', followers:11.9, er:0, engagements:640, note:'Micro · 11k · ER 0% – prüfen', status:'offen'},
+      {name:'Emily Beatriz', handle:'@emilybeax', platform:'Instagram', followers:11.9, er:0, engagements:185, note:'Micro · 11k · ER 0% – prüfen', status:'offen'},
+      {name:'Olivia Pienaar', handle:'@olivia_pienaar', platform:'Instagram', followers:10.6, er:6.76, engagements:393, note:'Micro · 10k · ER 6.76%', status:'offen'},
+      {name:'Iris Elise', handle:'@iriselisevanrhoon', platform:'Instagram', followers:9, er:4.44, engagements:260, note:'Micro · 9k · ER 4.44%', status:'offen'},
+      {name:'Eli Medrano', handle:'@elisamedranoo', platform:'Instagram', followers:8.7, er:3.73, engagements:56200, note:'Micro · 8k · ER 3.73%', status:'offen'},
+      {name:'Sarah Holtkamp', handle:'@sarah.holtkamp', platform:'Instagram', followers:8, er:3.60, engagements:409, note:'Micro · 8k · ER 3.60%', status:'offen'},
+      {name:'Kate Button', handle:'@burning.buttons', platform:'Instagram', followers:7.2, er:13.03, engagements:959, note:'Micro · 7k · ER 13.03% – Top Engagement!', status:'offen'},
+      {name:'Liv', handle:'@olivianoviellii', platform:'Instagram', followers:6.5, er:4.81, engagements:349, note:'Micro · 6k · ER 4.81%', status:'offen'},
+      {name:'9to9woman', handle:'@9to9woman4', platform:'Instagram', followers:5.7, er:4.59, engagements:235, note:'Micro · 5k · ER 4.59%', status:'offen'},
+      {name:'Bd.bondii', handle:'@bd.bondii', platform:'Instagram', followers:81.3, er:0, engagements:202, note:'Mid · 81k · ER 0% – prüfen', status:'offen'},
+      {name:'Ellaglamour', handle:'@ellaglamour2021', platform:'Instagram', followers:0, er:0, engagements:0, note:'Keine Daten verfügbar', status:'offen'},
     ];
     localStorage.setItem('influencers', JSON.stringify(influencers));
   }
