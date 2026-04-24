@@ -314,6 +314,24 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
 .status-badge.aktiv { background: #EAF3DE; color: var(--green-600); }
 .status-badge.abgeschlossen { background: #F0FFF0; color: #166534; }
 
+/* ── LI LEADS TABLE ── */
+.leads-table { width:100%; border-collapse:collapse; font-size:12px; }
+.leads-table th { font-size:9px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); font-family:'DM Mono',monospace; padding:0 12px 8px; text-align:left; border-bottom:1px solid var(--border); }
+.leads-table td { padding:9px 12px; border-bottom:1px solid rgba(0,0,0,0.04); vertical-align:middle; }
+.leads-table tr:hover td { background:var(--blue-50); }
+.degree-badge { font-size:10px; padding:2px 8px; border-radius:10px; font-family:'DM Mono',monospace; font-weight:500; }
+.degree-1 { background:#dbeafe; color:#1d4ed8; }
+.degree-2 { background:var(--gray-50); color:var(--gray-600); }
+.degree-3 { background:#fef3c7; color:#92400e; }
+.action-badge { font-size:10px; padding:2px 8px; border-radius:10px; font-family:'DM Mono',monospace; }
+.action-akzeptiert { background:#dcfce7; color:#166534; }
+.action-nachricht { background:#dbeafe; color:#1d4ed8; }
+.action-keine { background:var(--gray-50); color:var(--gray-600); }
+.leads-filter-row { display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.leads-filter-btn { padding:5px 14px; border-radius:20px; font-size:11px; border:0.5px solid var(--border); background:var(--bg); cursor:pointer; font-family:'DM Mono',monospace; transition:all .12s; }
+.leads-filter-btn.active { background:var(--blue-600); color:#fff; border-color:var(--blue-600); }
+.li-section-title { font-size:10px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--text-muted); font-family:'DM Mono',monospace; padding:14px 12px 8px; background:var(--gray-50); border-radius:var(--radius) var(--radius) 0 0; border-bottom:1px solid var(--border); }
+
 /* ── TOAST ── */
 .toast {
   position: fixed; bottom: 24px; right: 24px;
@@ -369,6 +387,7 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
     <div class="nav-item" onclick="nav('jobs')"><div class="nav-dot"></div><span>Bewerbungen</span></div>
     <div class="nav-item" onclick="nav('pilots')"><div class="nav-dot"></div><span>FG Piloten</span></div>
     <div class="nav-item" onclick="nav('influencer')"><div class="nav-dot"></div><span>Influencer</span></div>
+    <div class="nav-item" onclick="nav('li-leads')"><div class="nav-dot" style="background:#0a66c2"></div><span>LI Outreach Leads</span></div>
   </div>
   <div class="sidebar-footer" id="last-save"></div>
 </nav>
@@ -380,8 +399,8 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
 <div class="page" id="page-monday">
   <div class="page-header">
     <div>
-      <div class="page-title">Montag 21. April — Action Plan</div>
-      <div class="page-sub">Wochenstart · Alle offenen Items aus KW 16</div>
+      <div class="page-title">Dienstag 21. April — Action Plan</div>
+      <div class="page-sub">Halbzeit-Check · Was erledigt / was offen</div>
     </div>
     <div style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;text-align:right">
       KW 16 Final<br>
@@ -853,6 +872,15 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr 80px 100px;gap:8px;padding:0 4px;margin-bottom:6px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em">
     <span>Brand</span><span>Kontakt</span><span>Notiz</span><span>CHF</span><span>Status</span>
   </div>
+  <div id="pilot-reminders"></div>
+
+  <!-- EMAIL OUTREACH TRACKER -->
+  <div style="margin-bottom:16px">
+    <div class="section-label" style="margin-bottom:12px">📧 Email Outreach Pipeline — caroline@fashiongenius.ai</div>
+    <div id="email-outreach-list"></div>
+  </div>
+
+  <div class="section-label" style="margin-bottom:12px">💼 LinkedIn / Sales Navigator Pipeline</div>
   <div id="pilot-list"></div>
 </div>
 
@@ -894,6 +922,62 @@ textarea.diary-input:focus { outline: none; border-color: var(--blue-400); }
     <span>Name / Handle</span><span>Plattform</span><span>Follower</span><span>Notiz</span><span>Status</span>
   </div>
   <div id="inf-list"></div>
+</div>
+
+<!-- LI OUTREACH LEADS -->
+<div class="page" id="page-li-leads">
+  <div class="page-header">
+    <div>
+      <div class="page-title">LinkedIn Outreach Leads</div>
+      <div class="page-sub">Sales Navigator Export · Stand 24. April 2026 · vor Deaktivierung gesichert</div>
+    </div>
+    <span style="background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;font-family:'DM Mono',monospace">Sales Nav gesichert ✓</span>
+  </div>
+
+  <div class="grid-4" style="margin-bottom:20px">
+    <div class="metric"><div class="metric-label">Direktkontakte akzeptiert</div><div class="metric-val">36</div><div class="metric-delta" style="color:var(--blue-600)">1st degree · Apr 2026</div></div>
+    <div class="metric"><div class="metric-label">Nachrichten gesendet</div><div class="metric-val">6</div><div class="metric-delta" style="color:var(--blue-600)">inkl. Traub, Egger, Wenzel</div></div>
+    <div class="metric"><div class="metric-label">Empfohlene Leads</div><div class="metric-val">87</div><div class="metric-delta" style="color:var(--text-muted)">2./3. Grad · noch nicht kontaktiert</div></div>
+    <div class="metric"><div class="metric-label">Fashion-relevante Leads</div><div class="metric-val">12</div><div class="metric-delta" style="color:var(--fg-mid)">E-Com / Fashion / Retail</div></div>
+  </div>
+
+  <div class="leads-filter-row" id="li-leads-filters">
+    <button class="leads-filter-btn active" onclick="filterLeads('all',this)">Alle</button>
+    <button class="leads-filter-btn" onclick="filterLeads('1',this)">1st Degree</button>
+    <button class="leads-filter-btn" onclick="filterLeads('2',this)">2nd Degree</button>
+    <button class="leads-filter-btn" onclick="filterLeads('fashion',this)">Fashion / E-Com</button>
+    <button class="leads-filter-btn" onclick="filterLeads('ch',this)">Schweiz</button>
+    <button class="leads-filter-btn" onclick="filterLeads('msg',this)">Nachricht gesendet</button>
+    <button class="leads-filter-btn" onclick="filterLeads('ceo',this)">CEO / Founder</button>
+  </div>
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <div class="li-section-title">📌 Direkte Kontakte — Kontaktanfrage akzeptiert</div>
+    <table class="leads-table" id="li-leads-table-1">
+      <thead><tr>
+        <th>Name</th><th>Titel</th><th>Company</th><th>Region</th><th>Grad</th><th>Status</th><th>Datum</th><th>Priorität</th>
+      </tr></thead>
+      <tbody id="li-leads-body-1"></tbody>
+    </table>
+    <div class="li-section-title" style="border-radius:0;margin-top:4px">🔍 Empfohlene Leads — 2./3. Grad (noch nicht kontaktiert)</div>
+    <table class="leads-table" id="li-leads-table-2">
+      <thead><tr>
+        <th>Name</th><th>Titel</th><th>Company</th><th>Region</th><th>Grad</th><th>Status</th><th>Datum</th><th>Priorität</th>
+      </tr></thead>
+      <tbody id="li-leads-body-2"></tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:20px;background:#fef9c3;border-radius:var(--radius-lg);padding:16px 20px;border-left:3px solid #ca8a04">
+    <div style="font-size:11px;font-weight:500;color:#854d0e;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">⚠ Next Steps nach Sales Nav Ablauf</div>
+    <div style="display:flex;flex-direction:column;gap:6px;font-size:13px;color:#78350f">
+      <div>1. Rüdiger Traub (Brax), Pascal Egger (MANILO), Stefan Wenzel — Follow-up Nachrichten planen</div>
+      <div>2. Sérgio Pereira (Asphaltgold) — bereits positiv reagiert → Demo-Call anbieten</div>
+      <div>3. Thomas Forstpointner (MORE &amp; MORE) — Interim CDO → Fashion Genius Demo relevant</div>
+      <div>4. Empfohlene Leads (Tian Su / Zalando VP, Dennis Schröder / SNIPES CEO) → via HubSpot weiterverfolgen</div>
+      <div>5. Alle Leads in HubSpot importieren vor Ablauf</div>
+    </div>
+  </div>
 </div>
 
 </main>
@@ -964,13 +1048,14 @@ function nav(page) {
   if(page === 'analytics') renderAnalytics();
   if(page === 'monday') renderMonday();
 
-  if(page === 'pilots') renderPilots();
+  if(page === 'pilots') { renderPilots(); renderEmailOutreach(); }
   if(page === 'influencer') renderInfluencers();
   if(page === 'diary') renderDiary();
   if(page === 'today') renderToday();
   if(page === 'routine') renderRoutine();
   if(page === 'li-dashboard') renderLIDashboard();
   if(page === 'fg-dashboard') renderFGDashboard();
+  if(page === 'li-leads') renderLILeads('all');
 }
 
 // ── TODAY ──
@@ -1391,15 +1476,16 @@ function renderGCalLinks() {
 
 // ── MONDAY ACTION PLAN ──
 const MONDAY_ACTIONS = [
-  {time:'09:00',priority:'🔴',category:'Analytics',title:'Analytics Check + Wochenziel setzen',items:['LinkedIn Analytics exportieren (Follower + Profilaufrufe)','Fashion Genius Page Analytics exportieren','Zahlen ins Playbook unter Analytics eintragen','Wochenziel in Routine-Seite notieren'],id:'mon-analytics'},
-  {time:'09:30',priority:'🔴',category:'Sales Navigator — DRINGEND (7 Tage!)',title:'Sales Navigator Leads exportieren + sichern',items:['Alle gespeicherten Listen als CSV exportieren','Alle 11 warmen Leads ins Playbook unter FG Piloten eintragen','Notizen zu jedem Lead sichern bevor SN abläuft'],id:'mon-salesnav'},
-  {time:'10:00',priority:'🔴',category:'Fashion Genius — Pilot Outreach',title:'DMs an Top-5 Fashion Prospects senden',items:['Rüdiger Traub (BRAX) — DM: VTO Demo anbieten','Pascal Egger (MANILO) — DM: Pilot-Gespräch','Tobias Stork (Takko Fashion) — DM: VTO Demo','Christian Kettl (LOWA) — DM: VTO Demo','Franco Savastano (Holt Renfrew) — kurze DM CEO-Level'],id:'mon-fg-dms'},
-  {time:'10:30',priority:'🔴',category:'Job Search — Azul',title:'Azul Follow-up senden',items:['Maryann Kovacevic — DM: nächster Schritt Azul AE DACH Rolle','Mike Dietz — kurzes Follow-up nach Vernetzung'],id:'mon-azul'},
-  {time:'11:00',priority:'🟡',category:'LinkedIn Posts automatisch live',title:'150% Quota Post läuft automatisch',items:['Post geht um 11:00 live — nichts zu tun','Erste Reaktionen beobachten + antworten','Fashion Genius Post um 12:00 ebenfalls automatisch'],id:'mon-posts'},
-  {time:'11:30',priority:'🟡',category:'Facebook Communities',title:'E-Commerce Stammtisch Post veröffentlichen',items:['Post: Suche 3 DACH Fashion Brands für VTO Pilot — regelkonform','Shopify DACH Gruppe: prüfen ob Beitrittsanfrage angenommen'],id:'mon-facebook'},
-  {time:'13:00',priority:'🟡',category:'Netzwerk Follow-ups',title:'Kommentar-Antworten + neue Kontakte prüfen',items:['Stefan Wenzel — kurze Antwort auf seine Nachricht','Jürgen Müller (profashionals) — reagiert auf Kommentar?','Rüdiger Traub (BRAX) — reagiert auf Kommentar?','Pascal Egger (MANILO) — reagiert auf Kommentar?'],id:'mon-followups'},
-  {time:'14:00',priority:'🟢',category:'Influencer',title:'DMs an Creator senden',items:['@cat_hammill — DM nach Kommentar','@whatpeoplearewearing — DM nach Kommentar','@sa.costantini — DM nach Kommentar'],id:'mon-influencer'},
-  {time:'15:00',priority:'🟢',category:'Content',title:'Donnerstag Posts prüfen + KW 17 planen',items:['Do 23. Apr Posts terminiert prüfen','KW 17 Posts Di 28. + Do 30. vorbereiten mit Claude'],id:'mon-content'},
+  {time:'09:00',priority:'✅',category:'Analytics',title:'Analytics Check + Wochenziel setzen',items:['LinkedIn Analytics exportiert ✅','Fashion Genius Page Analytics exportiert ✅','Zahlen ins Playbook eingetragen ✅','KW 16 Final: 20.077 Imp / 12.401 Reach / 1.609 Follower ✅'],id:'mon-analytics'},
+  {time:'09:30',priority:'✅',category:'Sales Navigator — ERLEDIGT',title:'Sales Navigator Leads exportiert + gesichert',items:['CSV Export erledigt ✅','Alle Leads ins Playbook eingetragen ✅','C&A InMails gesendet: Peder Apelgren + Ulrike Otto ✅'],id:'mon-salesnav'},
+  {time:'10:00',priority:'✅',category:'Fashion Genius — Pilot Outreach',title:'DMs gesendet ✅',items:['Rüdiger Traub (BRAX) ✅','Pascal Egger (MANILO) ✅','Tobias Stork (Takko) ✅','Christian Kettl (LOWA) — noch ausstehend ⏳','Franco Savastano (Holt Renfrew) — noch ausstehend ⏳'],id:'mon-fg-dms'},
+  {time:'10:30',priority:'✅',category:'Job Search — Azul',title:'Azul Follow-ups gesendet ✅',items:['Maryann Kovacevic ✅','Mike Dietz ✅'],id:'mon-azul'},
+  {time:'11:00',priority:'✅',category:'LinkedIn Posts live',title:'Posts laufen automatisch',items:['Orchestration Post 11:00 live ✅','Fashion Genius Post 12:00 live ✅','Reaktionen beobachten + antworten ⏳'],id:'mon-posts'},
+  {time:'11:30',priority:'🔴',category:'Facebook Communities',title:'E-Commerce Stammtisch Post veröffentlichen',items:['Post: Suche 3 DACH Fashion Brands für VTO Pilot — regelkonform formuliert','Shopify DACH Gruppe: prüfen ob Beitrittsanfrage angenommen'],id:'mon-facebook'},
+  {time:'13:00',priority:'🔴',category:'Netzwerk Follow-ups + neue Kontakte',title:'Kommentar-Antworten + DMs prüfen',items:['Stefan Wenzel — DM senden ⏳','Franco Savastano — DM senden ⏳','Christian Kettl (LOWA) — DM senden ⏳','Jürgen Müller — auf Kommentar reagiert?','Malte Karstan — Connection angenommen?','Maísa Benatti (AIUTA CEO) — connecten ⏳','Michael Guzzetta — connecten ⏳','Surbhi Marwah (ex-Zalando) — connecten ⏳'],id:'mon-followups'},
+  {time:'14:00',priority:'🟡',category:'Influencer',title:'DMs an Creator senden',items:['@cat_hammill — DM nach Kommentar','@whatpeoplearewearing — DM nach Kommentar','@sa.costantini — DM nach Kommentar'],id:'mon-influencer'},
+  {time:'15:00',priority:'🟡',category:'Content + GitHub',title:'Posts prüfen + Playbook auf GitHub pushen',items:['Do 23. Apr Posts terminiert prüfen ✅','KW 17 Posts terminiert ✅','index.html auf GitHub pushen — DRINGEND!'],id:'mon-content'},
+  {time:'Bonus',priority:'🟢',category:'Neue Aktionen heute',title:'Zusätzlich erledigt heute ✅',items:['Maurizio (Mapp) DM gesendet ✅','Zara VTO Post kommentiert ✅','Bjorn Bergstrom (Creator AI) kommentiert — Konkurrent identifiziert ✅','C&A Entscheider recherchiert + InMails gesendet ✅'],id:'mon-bonus'},
 ];
 
 function renderMonday() {
@@ -1433,6 +1519,70 @@ function toggleMondayItem(id) {
   save('monday-done', saved);
   renderMonday();
   toast(saved.includes(id) ? '✓ Erledigt!' : 'Zurückgesetzt');
+}
+
+// ── EMAIL OUTREACH DATA ──
+const EMAIL_OUTREACH = [
+  {brand:'Asphaltgold', contact:'Larissa Dien, Head of Digital Experience', email:'larissa.dien@asphaltgold.com', sent:'2026-04-09', status:'geantwortet', note:'«Klingt spannend» — ANTWORT JETZT SENDEN: Demo-Link + Calendly!', priority:'hot'},
+  {brand:'Brandstudio', contact:'contact@brandstudio', email:'contact', sent:'2026-04-12', status:'geantwortet', note:'Hat geantwortet Apr 12 — Follow-up prüfen', priority:'hot'},
+  {brand:'Engelhorn', contact:'Felix Sinkender', email:'f.engelhorn@engelhorn.de', sent:'2026-04-10', status:'opens', note:'3 Mails — 2x geöffnet — KEIN Reply → LinkedIn DM oder Telefon!', priority:'warm'},
+  {brand:'Globus', contact:'Michael Klöe', email:'michaelkloe', sent:'2026-04-09', status:'gesendet', note:'Zalando-Vergleich Mail gesendet', priority:'warm'},
+  {brand:'Jades24', contact:'Kiliana + Christian', email:'kiliana_sei / christian.o', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte angeschrieben', priority:'warm'},
+  {brand:'Solebox', contact:'Aljoscha', email:'aljoscha.ko', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'warm'},
+  {brand:'Lena Hoschek', contact:'Lena', email:'lena', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'warm'},
+  {brand:'Kickz', contact:'Denis Horvat', email:'denis.horvat', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
+  {brand:'Kapten & Son', contact:'Fabian', email:'fabian.deve', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
+  {brand:'Globetrotter', contact:'Andreas', email:'andreas.bar', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
+  {brand:'Filling Pieces', contact:'Guillaume + Boris', email:'guillaume / boris', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
+  {brand:'BSTN', contact:'Christian + Roberto', email:'christian / roberto.auf', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
+  {brand:'Bergfreunde', contact:'Felix + Christian', email:'felix / christian', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
+  {brand:'Armedangels', contact:'Christina K. + Martin', email:'christina.k / martin.hoef', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
+  {brand:'afew-store', contact:'Robin + Marco', email:'marco.robin', sent:'2026-04-09', status:'gesendet', note:'2 Kontakte', priority:'normal'},
+  {brand:'43einhalb', contact:'Mischa', email:'caroline.st', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
+  {brand:'Drykorn', contact:'Marco Götz', email:'marco.goetz', sent:'2026-04-09', status:'gesendet', note:'Follow-up gesendet', priority:'normal'},
+];
+
+const EMAIL_STATUS_CONFIG = {
+  'geantwortet': {color:'#3B6D11', bg:'#EAF3DE', label:'✅ Geantwortet'},
+  'opens': {color:'#EF9F27', bg:'#FFF8E6', label:'👁 Opens — kein Reply'},
+  'gesendet': {color:'var(--blue-600)', bg:'var(--blue-50)', label:'📤 Gesendet'},
+};
+
+function renderEmailOutreach() {
+  if(!document.getElementById('email-outreach-list')) return;
+  const today = new Date();
+  const hot = EMAIL_OUTREACH.filter(e => e.priority === 'hot');
+  const warm = EMAIL_OUTREACH.filter(e => e.priority === 'warm');
+  const normal = EMAIL_OUTREACH.filter(e => e.priority === 'normal');
+  const replied = EMAIL_OUTREACH.filter(e => e.status === 'geantwortet').length;
+  const opens = EMAIL_OUTREACH.filter(e => e.status === 'opens').length;
+
+  let html = `<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px">
+    <div class="metric"><div class="metric-label">Total gesendet</div><div class="metric-val">${EMAIL_OUTREACH.length}</div></div>
+    <div class="metric"><div class="metric-label">Geantwortet</div><div class="metric-val" style="color:#3B6D11">${replied}</div></div>
+    <div class="metric"><div class="metric-label">Opens kein Reply</div><div class="metric-val" style="color:#EF9F27">${opens}</div></div>
+    <div class="metric"><div class="metric-label">Reply Rate</div><div class="metric-val">${Math.round(replied/EMAIL_OUTREACH.length*100)}%</div></div>
+  </div>`;
+
+  const renderGroup = (items, title, borderColor) => {
+    if(!items.length) return '';
+    let g = `<div style="font-size:10px;font-weight:500;font-family:'DM Mono',monospace;text-transform:uppercase;color:${borderColor};margin:10px 0 5px;letter-spacing:.05em">${title}</div>`;
+    items.forEach(e => {
+      const st = EMAIL_STATUS_CONFIG[e.status] || EMAIL_STATUS_CONFIG.gesendet;
+      g += `<div style="display:grid;grid-template-columns:130px 1fr 1fr 130px;gap:8px;align-items:center;padding:8px 12px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:4px;font-size:12px;border-left:3px solid ${borderColor}">
+        <span style="font-weight:500">${e.brand}</span>
+        <span style="color:var(--text-muted);font-size:11px">${e.contact}</span>
+        <span style="font-size:11px;color:var(--text-muted)">${e.note}</span>
+        <span style="padding:3px 8px;border-radius:6px;font-size:10px;font-family:'DM Mono',monospace;background:${st.bg};color:${st.color};text-align:center">${st.label}</span>
+      </div>`;
+    });
+    return g;
+  };
+
+  html += renderGroup(hot, '🔥 Aktiv — Antwort erhalten', '#E24B4A');
+  html += renderGroup(warm, '👁 Warm — Opens / Aktive Brands', '#EF9F27');
+  html += renderGroup(normal, '📤 Gesendet — Keine Aktivität', 'var(--gray-300)');
+  document.getElementById('email-outreach-list').innerHTML = html;
 }
 
 let jobs = load('jobs', [
@@ -1494,12 +1644,44 @@ function renderPilots() {
   document.getElementById('pkpi-demo').textContent = pilots.filter(p=>p.status==='demo').length;
   document.getElementById('pkpi-pilot').textContent = pilots.filter(p=>p.status==='pilot'||p.status==='kunde').length;
   document.getElementById('pkpi-rev').textContent = pilots.reduce((s,p)=>s+(parseInt(p.rev)||0),0).toLocaleString('de-CH');
+
+  // Follow-up reminders — kontaktiert > 5 Tage ohne Antwort
+  const today = new Date();
+  const followups = pilots.filter(p => {
+    if(p.status !== 'kontaktiert') return false;
+    const sent = new Date(p.date);
+    const diff = Math.floor((today - sent) / (1000*60*60*24));
+    return diff >= 5;
+  });
+
+  const reminderEl = document.getElementById('pilot-reminders');
+  if(reminderEl) {
+    if(followups.length) {
+      reminderEl.innerHTML = `<div style="background:#FFF8E6;border:1px solid #EF9F27;border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:500;font-family:'DM Mono',monospace;color:#EF9F27;text-transform:uppercase;margin-bottom:8px">⏰ Follow-up fällig — ${followups.length} Prospect${followups.length>1?'s':''} ohne Antwort</div>
+        ${followups.map(p => {
+          const days = Math.floor((today - new Date(p.date)) / (1000*60*60*24));
+          return `<div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:0.5px solid #F5DFA0;font-size:12px">
+            <span><strong>${p.brand}</strong> — ${p.contact}</span>
+            <span style="font-family:'DM Mono',monospace;font-size:11px;color:#A0622A">${days} Tage — Follow-up senden!</span>
+          </div>`;
+        }).join('')}
+      </div>`;
+    } else {
+      reminderEl.innerHTML = '';
+    }
+  }
+
   if(!pilots.length) { document.getElementById('pilot-list').innerHTML = '<div style="color:var(--text-muted);font-size:13px;padding:20px 0">Noch keine Prospects — klicke «+ Prospect hinzufügen».</div>'; return; }
   let html = '';
   pilots.forEach((p,i) => {
     const st=PILOT_STATUS[p.status]||PILOT_STATUS.prospect;
-    html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 80px 100px;gap:8px;align-items:start;padding:10px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;font-size:12px;border-left:3px solid ${st.color}">
-      <span style="font-weight:500">${p.brand}</span><span style="color:var(--text-muted)">${p.contact}</span>
+    const sent = new Date(p.date);
+    const daysSince = Math.floor((today - sent) / (1000*60*60*24));
+    const isOverdue = p.status === 'kontaktiert' && daysSince >= 5;
+    html += `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 80px 100px;gap:8px;align-items:start;padding:10px 14px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:6px;font-size:12px;border-left:3px solid ${isOverdue?'#EF9F27':st.color}">
+      <span style="font-weight:500">${p.brand}${isOverdue?` <span style="font-size:10px;color:#EF9F27;font-family:'DM Mono',monospace">⏰ ${daysSince}d</span>`:''}</span>
+      <span style="color:var(--text-muted)">${p.contact}</span>
       <span style="font-size:11px;color:var(--text-muted)">${p.note}</span>
       <span style="font-family:'DM Mono',monospace;font-size:11px">${p.rev?'CHF '+parseInt(p.rev).toLocaleString('de-CH'):'—'}</span>
       <select onchange="updatePilotStatus(${i},this.value)" style="padding:3px 6px;border:0.5px solid var(--gray-100);border-radius:6px;font-size:11px;background:${st.bg};color:${st.color}">
@@ -1565,10 +1747,12 @@ try {
   const existingJobs = JSON.parse(localStorage.getItem('jobs') || '[]');
   if(!existingJobs.length) {
     const jobs = [
-      {company:'Fortinet', title:'Senior AE DACH', contact:'Robin (Recruiter)', date:'2026-04-01', channel:'Recruiter', status:'interview', note:'2. Interview steht aus — Manuel Eberenz'},
-      {company:'BMC Software', title:'Enterprise AE', contact:'Zenobia (Recruiter)', date:'2026-03-20', channel:'LinkedIn', status:'interview', note:'Erste Gespräche laufen'},
-      {company:'Azul', title:'Enterprise AE DACH', contact:'Mike Dietz + Maryann Kovacevic', date:'2026-04-17', channel:'LinkedIn', status:'kontaktiert', note:'Mike Dietz vernetzt 18.4. — Maryann vernetzt 15.4. — Follow-up Mo 21.4.'},
-      {company:'Parloa', title:'Enterprise AE Switzerland', contact:'Chanisara Kongsantinart', date:'2026-04-19', channel:'LinkedIn', status:'beworben', note:'Abwarten — erst Chanisara Antwort abwarten'},
+      {company:'Fortinet', title:'Senior AE DACH', contact:'Robin Krems (Recruiter)', date:'2026-04-01', channel:'Recruiter', status:'interview', note:'2. Interview steht aus — Manuel Eberenz. Follow-up 22.4. gesendet.'},
+      {company:'BMC Software', title:'Enterprise AE', contact:'Zenobia Westra (Recruiter)', date:'2026-03-20', channel:'LinkedIn', status:'interview', note:'Quartal Abschlüsse — Geduld gebeten. Follow-up 22.4. gesendet.'},
+      {company:'Azul', title:'Enterprise AE DACH — Azul Prime', contact:'Mike Dietz, Global Talent Director', date:'2026-04-15', channel:'LinkedIn', status:'beworben', note:'Ex-Citrix warme Verbindung. DM 20.4. gesendet.'},
+      {company:'Azul', title:'Enterprise AE DACH — Azul Prime', contact:'Maryann Kovacevic, Head Global TA', date:'2026-04-15', channel:'LinkedIn', status:'beworben', note:'DM 20.4. gesendet. Antwort ausstehend.'},
+      {company:'Parloa', title:'Enterprise AE Switzerland', contact:'Chanisara Kongsantinart', date:'2026-04-15', channel:'LinkedIn', status:'beworben', note:'Antwort ausstehend.'},
+      {company:'Cloudflare', title:'Commercial AE German speaking', contact:'Daniel Kravtschenko, Global Sales Leader', date:'2026-04-16', channel:'LinkedIn', status:'beworben', note:'Verlinkt — er gibt Recruiting Bescheid.'},
     ];
     localStorage.setItem('jobs', JSON.stringify(jobs));
   }
@@ -1579,22 +1763,24 @@ try {
   const existingPilots = JSON.parse(localStorage.getItem('pilots') || '[]');
   if(!existingPilots.length) {
   const pilots = [
-      {brand:'BRAX Leineweber', contact:'Rüdiger Traub, Dir. E-Commerce', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-17', note:'Vernetzt 17.4. — DM Mo 21.4. senden'},
-      {brand:'MANILO', contact:'Pascal Egger, Founder & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-17', note:'Vernetzt + Nachricht erhalten 17.4. — DM Mo 21.4.'},
-      {brand:'Takko Fashion', contact:'Tobias Stork, Head E-Commerce & CRM', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Warmer Lead SN — angenommen 9.4. — DM Mo 21.4.'},
-      {brand:'LOWA Sportschuhe', contact:'Christian Kettl, Head E-Commerce', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Warmer Lead SN — angenommen 9.4. — DM Mo 21.4.'},
-      {brand:'Holt Renfrew', contact:'Franco Savastano, President & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-10', note:'CEO-Level Zürich — angenommen 16.4. — kurze DM Mo 21.4.'},
-      {brand:'Zebra Fashion AG', contact:'Michael Solomun, CEO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'CEO Schweiz — Bassersdorf — Top Priorität'},
-      {brand:'Zebra Fashion AG', contact:'Arefa Hasher, E-Commerce & CRM', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Direkt zuständig E-Commerce — Schweiz'},
-      {brand:'MORE & MORE', contact:'Thomas Forstpointner, Interim CDO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Interim CDO — Fashion Brand DE — VTO Angle'},
-      {brand:'KUNERT FASHION', contact:'Thomas Böhmer, Leiter E-Commerce', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Fashion Brand Österreich — direkt zuständig'},
-      {brand:'C.P. Company', contact:'Caterina Ticchio, Omnichannel/DTC', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Premium Fashion — Lugano — Omnichannel Fit'},
-      {brand:'Rich & Royal', contact:'Angela M., Technical Ops E-Commerce', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Fashion Brand DE — E-Commerce Ops'},
-      {brand:'Ospelt Gruppe', contact:'Reto Siegenthaler, CIO/CDO/CCO', platform:'', channel:'Sales Navigator', status:'kontaktiert', rev:'', date:'2026-04-09', note:'Liechtenstein — C-Level — Digital Transformation'},
-      {brand:'Ullrich', contact:'Antonio Govetosa, CMO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Mode Schweiz — CMO Level'},
-      {brand:'TEVEO', contact:'Philip Clas, CDMO', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Digital Fashion — München'},
-      {brand:'Frederique Constant', contact:'Gaëlle Ranchon, Head Sales & Marketing', platform:'', channel:'Sales Navigator', status:'prospect', rev:'', date:'2026-04-07', note:'Luxury Watches Schweiz — Premium Segment'},
-      {brand:'Azul', contact:'Maryann Kovacevic, Sr. Dir. Global TA', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-15', note:'Job Lead — Azul AE DACH — Follow-up Mo 21.4.'},
+      {brand:'Asphaltgold', contact:'Larissa Dien, Head of Digital Experience', platform:'Shopify', channel:'Email', status:'warm', rev:'', date:'2026-04-09', note:'✅ Hat geantwortet 13.4. Demo-Link gesendet. Follow-up 22.4. gesendet. larissa.dien@asphaltgold.com'},
+      {brand:'C.P. Company', contact:'Caterina Ticchio, VP Global', platform:'', channel:'LinkedIn', status:'warm', rev:'', date:'2026-04-21', note:'✅ Hat geantwortet! Kaffee Lugano. Tel: +41799626178. Weiterleitung an Head of Digital ausstehend.'},
+      {brand:'BRAX Leineweber', contact:'Rüdiger Traub, Dir. E-Commerce', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'DM 21.4. gesendet.'},
+      {brand:'MANILO', contact:'Pascal Egger, Founder & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'DM 21.4. — Shortlist Pilot erwähnt.'},
+      {brand:'Takko Fashion', contact:'Tobias Stork, Head E-Commerce & CRM', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'DM 21.4. gesendet.'},
+      {brand:'MORE & MORE', contact:'Thomas Forstpointner, Interim CDO', platform:'Shopware 6', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'InMail 21.4. — Shopware 6 Headless Angle.'},
+      {brand:'MORE & MORE', contact:'Stephan Kadlec, Head of IT', platform:'Shopware 6', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'InMail 21.4. — Technischer Angle.'},
+      {brand:'C&A', contact:'Peder Apelgren, Head of Ecommerce', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'InMail 21.4. — Ex-IKEA background.'},
+      {brand:'C&A', contact:'Ulrike Otto, Head Digital Product & Experimentation', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'InMail 21.4. — 15 Jahre C&A, Digital CX.'},
+      {brand:'KUNERT FASHION', contact:'Thomas Böhmer, Leiter E-Commerce AT', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'InMail 21.4.'},
+      {brand:'Philipp Plein', contact:'Olga Burfan, Head Global E-Commerce', platform:'', channel:'LinkedIn', status:'vernetzt', rev:'', date:'2026-04-21', note:'Vernetzt 21.4. Lugano Nachbarin! Kaffee DM ausstehend.'},
+      {brand:'ZARA CH/AT', contact:'Thomas Romano, Head of E-Commerce', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'Seit Feb 2025 vernetzt! DM 21.4. — 7 Mio VTO Sessions Kontext.'},
+      {brand:'Holt Renfrew', contact:'Franco Savastano, President & CEO', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'CEO-Level Zürich. DM 21.4.'},
+      {brand:'BMS Sailing Wear', contact:'Mikko Schröder, Managing Director', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-21', note:'Letztes Jahr VTO Interesse. DM 21.4.'},
+      {brand:'Hugo Boss', contact:'Thomas George, Global E-Commerce Process Mgmt', platform:'', channel:'LinkedIn', status:'kontaktiert', rev:'', date:'2026-04-20', note:'DM 20.4. gesendet.'},
+      {brand:'Mapp Digital', contact:'Maurizio Alberti, SVP Revenue', platform:'', channel:'LinkedIn', status:'warm', rev:'', date:'2026-01-01', note:'Jan Call geführt. DM 21.4. Follow-up VTO Prototype.'},
+      {brand:'Miriam Bartsch', contact:'Hugo Boss Omnichannel', platform:'', channel:'LinkedIn', status:'vernetzt', rev:'', date:'2026-04-22', note:'Heute vernetzt — DM ausstehend.'},
+      {brand:'Surbhi Marwah', contact:'Ex-Zalando Head of Product', platform:'', channel:'LinkedIn', status:'vernetzt', rev:'', date:'2026-04-22', note:'7 Jahre Zalando, Apr 2026 ausgetreten. Heute vernetzt.'},
     ];
     localStorage.setItem('pilots', JSON.stringify(pilots));
   }
@@ -1615,6 +1801,128 @@ try {
   }
 } catch(e) {}
 
+
+renderToday();
+renderGCalLinks();
+updateLastSave();
+
+// ── LI LEADS DATA ──
+const LI_LEADS = [
+  // ── 1st Degree / Akzeptiert ──
+  {name:'Sergey Mityagin', title:'Chief Digital Officer', company:'PHILIPP PLEIN', region:'Lugano, CH', degree:1, action:'akzeptiert', date:'24.4.2026', tags:['fashion','ch'], priority:'high'},
+  {name:'Jacqueline C.', title:'Director of Digital Content', company:'HUGO BOSS', region:'New York, USA', degree:1, action:'akzeptiert', date:'24.4.2026', tags:['fashion'], priority:'high'},
+  {name:'Carlo Terreni', title:'President & Board Member', company:'Dagorà LifeStyle Innovation Hub', region:'Lugano, CH', degree:1, action:'akzeptiert', date:'24.4.2026', tags:['ch'], priority:'mid'},
+  {name:'Taha Mashhadi', title:'Director – International Scaling', company:'Rover.com', region:'London, UK', degree:1, action:'akzeptiert', date:'24.4.2026', tags:[], priority:'low'},
+  {name:'Alisa Petrescu', title:'Barcelona Hub Inside Sales Director', company:'Elastic', region:'Barcelona', degree:1, action:'akzeptiert', date:'24.4.2026', tags:[], priority:'low'},
+  {name:'Frank Thonüs', title:'Business Development Executive', company:'ITRIS One AG', region:'Zürich, CH', degree:1, action:'akzeptiert', date:'24.4.2026', tags:['ch'], priority:'mid'},
+  {name:'Adam Smith', title:'—', company:'—', region:'London, UK', degree:1, action:'akzeptiert', date:'24.4.2026', tags:[], priority:'low'},
+  {name:'Catherine Mayou Njikam', title:'Unternehmertum', company:'—', region:'Schweiz', degree:1, action:'akzeptiert', date:'24.4.2026', tags:['ch'], priority:'low'},
+  {name:'Simon Weber', title:'Marketplace Manager', company:'Ledlenser GmbH', region:'Köln, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:[], priority:'low'},
+  {name:'Sérgio Filipe Oliveira Pereira', title:'Marketing Manager', company:'Asphaltgold GmbH', region:'Frankfurt, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['fashion'], priority:'high'},
+  {name:'Elif Kissling', title:'Head of Quality Customer Service', company:'Tamedia', region:'Schweiz', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['ch'], priority:'low'},
+  {name:'Ute Friederike Herms', title:'Gründer:in', company:'YOUTE', region:'Berlin, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['fashion'], priority:'mid'},
+  {name:'Jeanice Bartak', title:'Program Operations & Network Managerin', company:'10 more in GmbH', region:'München, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:[], priority:'low'},
+  {name:'Guilherme Spinardi', title:'Senior Marketplace Manager', company:'S.OLIVER GROUP', region:'Berlin, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['fashion'], priority:'high'},
+  {name:'Rüdiger Traub', title:'Director E-Commerce', company:'Brax | Leineweber GmbH', region:'Herford, DE', degree:1, action:'nachricht', date:'23.4.2026', tags:['fashion','ecom'], priority:'high'},
+  {name:'Camilla Tan', title:'—', company:'—', region:'USA', degree:1, action:'akzeptiert', date:'23.4.2026', tags:[], priority:'low'},
+  {name:'Pascal Egger', title:'Founder & CEO', company:'MANILO GmbH', region:'Luzern, CH', degree:1, action:'nachricht', date:'23.4.2026', tags:['fashion','ch','ceo'], priority:'high'},
+  {name:'Thomas Forstpointner', title:'Interim Chief Digital Officer', company:'MORE & MORE GmbH', region:'Starnberg, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['fashion','ecom'], priority:'high'},
+  {name:'Josh Hill', title:'Partner & Co-Founder', company:'North Star Partners', region:'Sydney, AU', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Wibke Laier', title:'Area Vice President EMEA Central / DACH', company:'Elastic', region:'Frankfurt, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:[], priority:'mid'},
+  {name:'Ekaterina Khabaeva', title:'Head of International Sales', company:'ARMEDANGELS', region:'Düsseldorf, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['fashion'], priority:'high'},
+  {name:'John Milionis', title:'Director – Channel & Distribution ANZ', company:'Fortinet', region:'Melbourne, AU', degree:1, action:'akzeptiert', date:'23.4.2026', tags:[], priority:'low'},
+  {name:'Andy Hodel', title:'Chairman of the Board', company:'—', region:'Luzern, CH', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['ch'], priority:'mid'},
+  {name:'Bülent Bayraktar', title:'Marketing & Social-Media Manager', company:'ADAC Nordbayern e.V.', region:'Nürnberg, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:[], priority:'low'},
+  {name:'Manuela Hug', title:'Co-Founder', company:'KI Power', region:'Winterthur, CH', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['ch','ceo'], priority:'mid'},
+  {name:'Federico Merlo', title:'Global Director of CRM, VIC and Events', company:'Langosteria', region:'Italien', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['fashion'], priority:'mid'},
+  {name:'Dr. Carsten Keller', title:'Chief Executive Officer', company:'Chrono24', region:'Berlin, DE', degree:1, action:'akzeptiert', date:'23.4.2026', tags:['ceo','ecom'], priority:'mid'},
+  {name:'Stefan Wenzel', title:'Executive Advisor | Fractional Executive | Keynote Speaker', company:'stefanwenzel.com', region:'Hamburg, DE', degree:1, action:'nachricht', date:'23.4.2026', tags:['ceo'], priority:'mid'},
+  {name:'Caterina Ticchio', title:'Merchandising Collection & Omnichannel | DTC Planning', company:'C.P. Company', region:'Lugano, CH', degree:2, action:'nachricht', date:'23.4.2026', tags:['fashion','ch'], priority:'high'},
+  {name:'Mike Dietz', title:'Director, Global Talent Partner', company:'Azul', region:'USA', degree:1, action:'akzeptiert', date:'23.4.2026', tags:[], priority:'mid'},
+  {name:'Maryann Kovacevic', title:'Sr. Director, Global Talent Acquisition', company:'Azul', region:'Chicago, USA', degree:1, action:'akzeptiert', date:'17.4.2026', tags:[], priority:'mid'},
+  {name:'Franco Savastano', title:'President & CEO', company:'Holt Renfrew', region:'Zürich, CH', degree:1, action:'akzeptiert', date:'16.4.2026', tags:['fashion','ch','ceo'], priority:'high'},
+  {name:'Daniel Kravtschenko', title:'Senior Sales Manager', company:'Cloudflare', region:'Basel, CH', degree:2, action:'nachricht', date:'16.4.2026', tags:['ch'], priority:'high'},
+  {name:'Wais Azizi', title:'Senior Head of Sales & Brand Strategy', company:'Urban Styles Agency', region:'Köln, DE', degree:1, action:'akzeptiert', date:'9.4.2026', tags:['fashion'], priority:'high'},
+  {name:'Tobias Stork', title:'Head of E-Commerce & CRM', company:'Takko Fashion', region:'Deutschland', degree:1, action:'nachricht', date:'9.4.2026', tags:['fashion','ecom'], priority:'high'},
+  {name:'Christian Kettl', title:'Head of E-Commerce', company:'LOWA Sportschuhe GmbH', region:'Ingolstadt, DE', degree:1, action:'akzeptiert', date:'9.4.2026', tags:['ecom'], priority:'mid'},
+  {name:'Jan Pohlkamp', title:'Head of Commerce (Webshop, Marketing & Marketplace)', company:'hygi.de GmbH & Co. KG', region:'Telgte, DE', degree:1, action:'akzeptiert', date:'9.4.2026', tags:['ecom'], priority:'mid'},
+  {name:'Reto Siegenthaler', title:'CIO, CDO, CCO / Mitglied der Geschäftsleitung', company:'Ospelt Gruppe', region:'Liechtenstein', degree:1, action:'akzeptiert', date:'9.4.2026', tags:['ch'], priority:'mid'},
+  {name:'Lee-Ann Falconer', title:'Senior Global TA Lead (US, EMEA, APAC, LATAM)', company:'Bitwarden', region:'UK', degree:3, action:'keine', date:'1.4.2026', tags:[], priority:'low'},
+
+  // ── 2nd/3rd Degree — Empfohlene Leads ──
+  {name:'Tian Su', title:'VP Product Development, Technology, AI & Science', company:'Zalando', region:'Berlin, DE', degree:2, action:'keine', date:'24.4.2026', tags:['fashion','ecom','ceo'], priority:'high'},
+  {name:'Dennis Schröder', title:'CEO', company:'SNIPES', region:'Düsseldorf, DE', degree:2, action:'keine', date:'24.4.2026', tags:['fashion','ecom','ceo'], priority:'high'},
+  {name:'Ralf Buehler', title:'Chief Executive Officer', company:'Conrad Electronic Group', region:'München, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','ecom'], priority:'mid'},
+  {name:'Patric Dahse', title:'CEO', company:'Natuvion GmbH', region:'München, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Markus Gatzke', title:'CEO', company:'evidanza | The BI & Planning Company', region:'München, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Bernhard Rannegger', title:'Founder and CEO', company:'ScyAI', region:'Zürich, CH', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Johannes Mueller', title:'CEO', company:'Workpath', region:'München, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Estella Benz', title:'CEO | Board Member | Founder', company:'Inference Beauty', region:'Zürich, CH', degree:2, action:'keine', date:'24.4.2026', tags:['fashion','ch','ceo'], priority:'high'},
+  {name:'Stefan Schiefer', title:'CEO', company:'Genesis Cloud', region:'München, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Oliver Samwer', title:'Founder & CEO', company:'Rocket Internet SE', region:'München, DE', degree:3, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Markus Buechtmann', title:'CEO', company:'MindDoc', region:'Bayern, DE', degree:3, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Dr. Nicolas Höflinger', title:'Founder & MD', company:'VoiceLine', region:'Bayern, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Jörn Grunert', title:'CEO & Cofounder', company:'Exactag', region:'Düsseldorf, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Joël L. Capt', title:'CEO & Founder', company:'Peakora', region:'Zürich, CH', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Michael Kliger', title:'Chief Executive Officer', company:'LuxExperience', region:'Aschheim, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','ecom'], priority:'mid'},
+  {name:'Anton Hofmeier', title:'CEO', company:'TS Textile Solutions Group', region:'München, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','fashion'], priority:'high'},
+  {name:'André Holhozinskyj', title:'CEO', company:'Cloudflight', region:'Bayern, DE', degree:2, action:'keine', date:'24.4.2026', tags:['ceo'], priority:'low'},
+  {name:'Joachim Schreiner', title:'Chief Revenue Officer (CRO)', company:'ATOSS Software SE', region:'Erding, DE', degree:2, action:'keine', date:'24.4.2026', tags:[], priority:'low'},
+  {name:'Jesper Gustafsson', title:'Chief Executive Officer', company:'Nomaka AG', region:'Zürich, CH', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Julian Studer', title:'CEO and Founder', company:'LORIOT', region:'Thalwil, CH', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Matteo Delbrück', title:'Co-Chief Executive Officer', company:'NIRLAB', region:'Zürich, CH', degree:2, action:'keine', date:'24.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Pavo Kohler', title:'Chief Executive Officer', company:'ERNI', region:'Zürich, CH', degree:2, action:'keine', date:'19.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Fabian Bollhalder', title:'CEO & Founder', company:'MyBikePlan (JobRad Group)', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Markus Naef', title:'CEO', company:'bexio AG', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Stefano Santinelli', title:'CEO', company:'localsearch (Swisscom Directories AG)', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Oddmund Braaten', title:'Chief Executive Officer', company:'Interprefy', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Nick Vandesype', title:'Founder and CEO', company:'Predikt', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Jean-Thomas Célette', title:'CEO', company:'Coresystems AG', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Remo Noser', title:'Chief Executive Officer', company:'Noser Engineering AG', region:'Zürich, CH', degree:2, action:'keine', date:'12.4.2026', tags:['ceo','ch'], priority:'low'},
+  {name:'Cristian Mudure', title:'CEO & Founder', company:'Stackfield', region:'München, DE', degree:2, action:'keine', date:'12.4.2026', tags:['ceo'], priority:'low'},
+];
+
+function renderLILeads(filter) {
+  const filtered = filter === 'all' ? LI_LEADS : LI_LEADS.filter(l => {
+    if(filter === '1') return l.degree === 1;
+    if(filter === '2') return l.degree === 2 || l.degree === 3;
+    if(filter === 'fashion') return l.tags.includes('fashion') || l.tags.includes('ecom');
+    if(filter === 'ch') return l.tags.includes('ch');
+    if(filter === 'msg') return l.action === 'nachricht';
+    if(filter === 'ceo') return l.tags.includes('ceo');
+    return true;
+  });
+
+  const direct = filtered.filter(l => l.degree === 1 || (l.degree === 2 && l.action === 'nachricht'));
+  const recommended = filtered.filter(l => !(l.degree === 1 || (l.degree === 2 && l.action === 'nachricht')));
+
+  function row(l) {
+    const degClass = l.degree === 1 ? 'degree-1' : l.degree === 2 ? 'degree-2' : 'degree-3';
+    const actClass = l.action === 'akzeptiert' ? 'action-akzeptiert' : l.action === 'nachricht' ? 'action-nachricht' : 'action-keine';
+    const actLabel = l.action === 'akzeptiert' ? '✓ Akzeptiert' : l.action === 'nachricht' ? '✉ Nachricht' : 'Keine';
+    const prioColor = l.priority === 'high' ? '#166534' : l.priority === 'mid' ? '#1d4ed8' : 'var(--gray-600)';
+    const prioBg = l.priority === 'high' ? '#dcfce7' : l.priority === 'mid' ? '#dbeafe' : 'var(--gray-50)';
+    return `<tr>
+      <td style="font-weight:500">${l.name}</td>
+      <td style="color:var(--text-muted);font-size:11px">${l.title}</td>
+      <td>${l.company}</td>
+      <td style="color:var(--text-muted);font-size:11px">${l.region}</td>
+      <td><span class="degree-badge ${degClass}">${l.degree}°</span></td>
+      <td><span class="action-badge ${actClass}">${actLabel}</span></td>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-muted)">${l.date}</td>
+      <td><span style="font-size:10px;padding:2px 8px;border-radius:10px;font-family:'DM Mono',monospace;background:${prioBg};color:${prioColor}">${l.priority === 'high' ? '🔥 High' : l.priority === 'mid' ? '→ Mid' : '– Low'}</span></td>
+    </tr>`;
+  }
+
+  document.getElementById('li-leads-body-1').innerHTML = direct.length ? direct.map(row).join('') : '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text-muted)">Keine Treffer</td></tr>';
+  document.getElementById('li-leads-body-2').innerHTML = recommended.length ? recommended.map(row).join('') : '<tr><td colspan="8" style="text-align:center;padding:20px;color:var(--text-muted)">Keine Treffer</td></tr>';
+}
+
+function filterLeads(filter, btn) {
+  document.querySelectorAll('.leads-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLILeads(filter);
+}
 
 renderToday();
 renderGCalLinks();
